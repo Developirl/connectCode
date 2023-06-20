@@ -40,9 +40,6 @@ body{
 }
 .login-html .sign-in,
 .login-html .sign-up,
-.login-form .group .check{
-  display:none;
-}
 .login-html .tab,
 .login-form .group .label,
 .login-form .group .button{

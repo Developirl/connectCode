@@ -338,7 +338,7 @@ $(function() {
          alert("인증번호 발송이 완료되었습니다. \n 휴대폰에서 인증번호를 확인해주세요.")
 
          $.ajax({
-            type : "post",
+            type : "GET",
             url : "/member/phoneChk",
             data : {
                "phone" : phone
