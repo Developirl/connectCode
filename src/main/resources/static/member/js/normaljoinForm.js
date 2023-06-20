@@ -263,11 +263,8 @@ $(function() {
          alert("인증번호 발송이 완료되었습니다. \n 휴대폰에서 인증번호를 확인해주세요.")
 
          $.ajax({
-            type : "POST",
+            type : "GET",
             url : "phoneChk",
-            beforeSend : function(xhr){
-            	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
-            },
             data : {
                "phone" : phone
             },
@@ -362,9 +359,7 @@ if((!validate_userid(id))){
 		data : {
 			'id' : id
 		},
-		
 		success : function(data){
-			
 			if(data != 0){
 				var newtext = '<font color="red">중복된 아이디가 있습니다.</font>';
 				$("#idcheck").text('');

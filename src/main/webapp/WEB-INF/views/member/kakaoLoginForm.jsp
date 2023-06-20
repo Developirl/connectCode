@@ -15,7 +15,8 @@ window.onload = function() {
 
 </head>
 <body>
-<form id="kakaotest" action="/member/menteeLogin" method="post">
+<form id="kakaotest" action="/member/login" method="post">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 <input type="hidden" name="id" value="${id }">
 <input type="hidden" name="password" value="${uuid}">
 </form>
