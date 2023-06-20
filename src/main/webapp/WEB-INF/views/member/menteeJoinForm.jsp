@@ -56,6 +56,7 @@ $(document).ready(function(){
 <div class="mentee_info">
 
 <form action="/member/kakaomain" method="post" onsubmit="return check()">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 <div class="menteecontainer">
   <h1 class="firstsub"><span>CONNECT</span><span class="firstsub2"> CODE</span></h1>
   <div class="hr"></div>

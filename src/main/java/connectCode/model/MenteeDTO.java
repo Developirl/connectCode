@@ -21,7 +21,7 @@ public class MenteeDTO {
 	private String account;
 	private String account_name;
 	private int member_no;
-	private Character uuid;
+	private String uuid;
 	
 	private int startRow;
 	private int endRow;
