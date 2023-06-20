@@ -24,7 +24,7 @@ import connectCode.service.FindMentorService;
 @Controller
 @RequestMapping("/findMentor/*")
 public class FindMentor {
-	
+//	지수
 	
 	@Autowired
 	private FindMentorService service;
