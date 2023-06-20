@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.MentorMapper">
+
+	<!-- 멘토링 신청(apply) 게시판 목록 -->
+	<select id="list" parameterType="my_mentoring" resultType="my_mentoring">
+	  SELECT *
+	  FROM mentee m JOIN mentoring mt USING (mentee_no)
+	  JOIN service ser USING (service_no)
+	  <where>
+	  	mentor_no = #{mentor_no}
+	    <if test="search == null and keyword != null">
+	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	  </where>
+		  <choose>
+			    <when test="search == null">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'new'">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'old'">
+			      ORDER BY mt.apply_time ASC
+			    </when>
+		  </choose>
+	  LIMIT #{startRow}, 10
+	</select>
+
+	<!-- 게시판 목록 
+	<select id="list" parameterType="my_mentoring" resultType="my_mentoring">
+      SELECT * from mentee m join mentoring mt 
+	  on(mt.mentee_no = m.mentee_no)
+	  
+	  order by mt.apply_time desc  
+	 
+	 검색  
+	  <where>
+	  	<if test="search == null and keyword != null ">	  		
+	  		m.name like '%'||#{keyword}||'%'  order by mt.apply_time desc limit #{startRow}, 10 
+		정렬 
+		<choose>
+		  	<when test="search == null ">	  		
+		  		order by mt.apply_time desc  limit #{startRow}, 10 
+		  	</when>
+		  	<when test="search == 'new' ">	  		
+		  		order by mt.apply_time desc  limit #{startRow}, 10
+		  	</when>
+		  	<when test="search == 'old' ">
+		  		order by mt.apply_time asc  limit #{startRow}, 10
+		  	</when>
+	  	</choose>
+	  	</if>
+	  	</where>    
+	  	 limit #{startRow}, 10
+	</select> -->
+	
+	<!-- 멘토링 신청(apply) 게시판 총게시물 수 -->
+	<select id="getListCount" parameterType="my_mentoring" resultType="int">
+		select count(*) from mentee m
+		JOIN mentoring mt USING(mentee_no) 
+		JOIN service ser USING (service_no)
+		<where>
+		mentor_no = #{mentor_no}
+	    <if test="search == null and keyword != null">
+	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	  </where>
+	</select>
+	<!--          신청 게시판 끝                    -->
+	
+	<!-- 멘토링 예약(Accepted) 게시판 목록 -->
+	<select id="acceptedList" parameterType="my_mentoring" resultType="my_mentoring">
+	  SELECT *
+	  FROM mentee m JOIN mentoring mt ON (mt.mentee_no = m.mentee_no)
+	  JOIN service s ON mt.service_no = s.service_no
+	  where mt.classification in (31,32)
+	 <!--  <where> -->
+	    <if test="search == null and keyword != null">
+	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	 <!--  </where> -->
+		  <choose>
+			    <when test="search == 'all'">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'accept'">
+			      and mt.classification='31' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'cancel'">
+			      and mt.classification='32' ORDER BY mt.apply_time DESC
+			    </when>
+		  </choose>
+	  LIMIT #{startRow}, 10
+	</select>
+	
+	<!-- 멘토링 예약(Accepted) 게시판 총게시물 수 -->
+	<select id="getAcceptedListCount" parameterType="my_mentoring" resultType="int">
+		select count(*) from mentee m join mentoring mt 
+		on(mt.mentee_no = m.mentee_no) JOIN service s ON mt.service_no = s.service_no 
+		where mt.classification in (31,32)
+		<!--  <where> -->
+	    <if test="search == null and keyword != null">
+	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	 <!--  </where> -->
+	  	<choose>
+			    <when test="search == 'all'">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'accept'">
+			      and mt.classification='31' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'cancel'">
+			      and mt.classification='32' ORDER BY mt.apply_time DESC
+			    </when>
+		  </choose>
+	</select>
+</mapper>

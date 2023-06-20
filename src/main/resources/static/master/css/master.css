@@ -1,0 +1,140 @@
+.navbar {
+	background-color: #ffffff;
+	width: 100%;
+	left: 160px;
+}
+
+.chartbox1 {
+	margin: 30px 30px;
+	color: gray;
+	background-color: white;
+	padding: 20px;
+	width: 500px;
+	height: 280px;
+	float: left;
+}
+
+.chartbox2 {
+	margin: 30px 560px;
+	color: gray;
+	background-color: white;
+	padding: 20px;
+	width: 720px;
+	height: 280px;
+}
+
+.totalbox1 {
+	margin: 0px 30px;
+	color: gray;
+	background-color: white;
+	padding: 110px;
+	width: 820px;
+	height: 330px;
+	float: left;
+}
+
+.totalbox2 {
+	margin: 0px 30px;
+	color: white;
+	background-color: #004EA2;
+	padding: 8px 0;
+	position: absolute;
+	width: 300px;
+	height: 45px;
+	top: 420px;
+	left: 420px;
+	border-radius: 30px;
+}
+
+.statisticsbox1 {
+	margin: 20px 880px;
+	color: gray;
+	background-color: white;
+	padding: 100px;
+	width: 400px;
+	height: 330px;
+}
+
+.statisticsbox2 {
+	margin: 0px 30px;
+	color: white;
+	background-color: #004EA2;
+	padding: 8px 0;
+	position: absolute;
+	width: 200px;
+	height: 45px;
+	top: 420px;
+	left: 1120px;
+	border-radius: 30px;
+}
+
+.m_box {
+	background-color: white;
+	width: 1250px;
+	height: 100%;
+	margin-top: 30px;
+	margin-left: 206px;
+	padding: 30px;
+}
+
+.appBtn{
+	position: relative;
+	float: left;
+	left: 370px;
+	width: 200px;
+	height: 45px;
+	background-color: #004EA2;
+	color: white;
+	margin-top: 22px;
+}
+
+.refBtn{
+	width: 200px;
+	height: 45px;
+	left: 30px;
+	background-color: #004EA2;
+	color: white;
+}
+.search_sel0 {
+   width:100px;
+   height: 40px;
+   appearance: none;
+   text-align: center;
+   border: 1px solid #CCCCCC;
+   border-radius: 30px;
+   cursor: pointer;
+   background-color: white;
+}
+
+#mentor_profile{
+	width: 230px;
+	height: 251px;
+	float: left;
+}
+
+#mentor_det1{
+	width: 940px;
+	height: 114px;
+	margin-left:250px;
+	border-color:#f3f3f3;
+}
+
+#mentor_det2{
+	width: 1190px;
+	height: 114px;
+	border-color:#f3f3f3;
+}
+
+#mentor_det3{
+	width: 1190px;
+	height: 114px;
+	border-color:#d3d3d3;
+}
+
+.intro_box{
+	border: 1px solid;
+	width: 1190px;
+	height: 100px;
+	padding: 100px 0;
+	border-color:#d3d3d3;
+}

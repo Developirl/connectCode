@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.InqueryDao">
+
+	<!-- 게시판 목록 --> 
+	<select id="inqueryList" parameterType="inquery" resultType="inquery">
+	  SELECT *
+	  FROM board b JOIN post p ON (b.board_no = p.board_no)
+	  	where p.member_no = 14
+	  
+		  <choose>
+			    <when test="search == null">
+			     	order by p.reg_date ASC
+			    </when>
+			    <when test="search == 'start'">
+			      	and reply_yn='n'  order by p.reg_date ASC
+			    </when>
+			    <when test="search == 'end'">
+			      	and reply_yn='y' order by p.reg_date ASC
+			    </when>
+		  </choose>
+		  
+	  LIMIT #{startRow}, 10
+	</select>
+
+	<!-- 게시판 총게시물 수 -->
+	<select id="getInqueryListCount" parameterType="inquery" resultType="int">
+		select count(*) from board b join post p 
+		on(b.board_no = p.board_no) where p.member_no = 14
+		
+		<choose>
+			    <when test="search == null">
+			     	order by p.reg_date ASC
+			    </when>
+			    <when test="search == 'start'">
+			      	and reply_yn='n'  order by p.reg_date ASC
+			    </when>
+			    <when test="search == 'end'">
+			      	and reply_yn='y' order by p.reg_date ASC
+			    </when>
+		  </choose>
+		
+	</select>
+</mapper>

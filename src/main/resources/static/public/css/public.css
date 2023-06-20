@@ -1,0 +1,27 @@
+*{
+    font-family: 'Gothic A1', sans-serif;
+}
+.nav-link{
+    color: black;
+    font-weight: 700;
+    font-size: 12pt;
+    padding-left: 0;
+    padding-right: 30px;
+}
+.mino-title, .mino-title>span{
+    font-family: 'Angkor', cursive;
+    font-size: 18pt;
+}
+header{
+    padding-top: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(228, 224, 224);
+}
+.mino-align-right{
+    text-align: right;
+}
+footer{
+    border-top: 1px solid rgb(228, 224, 224);
+    height: 150px;
+    padding-top: 20px;
+}
