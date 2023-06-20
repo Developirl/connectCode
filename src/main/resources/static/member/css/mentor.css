@@ -1,0 +1,160 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Angkor&display=swap');
+
+.bi-arrow-left{
+	font-size: 45px;
+	line-height: 45px;
+	color: gray;
+	position: absolute;
+	top: 23px;
+	left: 300px;
+}
+
+
+.form-control.filled {
+  /* 값이 채워져 있을 때의 스타일 정의 */
+  background-color: #e7f1fd;
+}
+
+.join_mentee {
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	padding: 25px 0px 25px 0px;
+}
+
+.mentee_info label{
+	display: inline-block;
+	font-size: 15px;
+	font-weight: bold;
+}
+
+.mentee_info .mtemail{
+	width: 60%;
+}
+
+.join_mentee .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .join_mentee .form-group .form-control {
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .form-group .button{
+  	border: none;
+	width: 120px;
+	height: 37.6px;
+	border-radius: 5px;
+	background-color: #0080FF;
+	color: white;
+	font-weight: bold;
+  }
+  
+  .submitBtn{
+  border: none;
+	width: 150px;
+	height: 40px;
+	border-radius: 5px;
+	background-color: #0080FF;
+	color: white;
+	font-weight: bold;
+  }
+  
+  .resetBtn{
+  	border: none;
+	width: 150px;
+	height: 40px;
+	border-radius: 5px;
+	background-color: gray;
+	color: white;
+	font-weight: bold;
+  }
+  
+  .require{
+  color: red;
+  font-weight: bold;
+  }
+  
+  /* 라디오버튼 css입히기 */
+  .genselect {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10px;
+}
+.genselect input[type=radio]{
+    display: none;
+}
+
+.genselect input[type=radio]+label{
+    display: inline-block;
+    cursor: pointer;
+    height: 37.6px;
+    width: 360px;
+    border: 1px ridge #C4D4FF;
+    line-height: 24px;
+    text-align: center;
+    font-weight:bold;
+    font-size:15px;
+    padding: 7px;
+    border-radius: 5px;
+}
+.genselect input[type=radio]+label{
+    background-color: #fff;
+    color: #333;
+}
+.genselect input[type=radio]:checked+label{
+    background-color: #0080FF;
+    color: #fff;
+}
+
+/* 상단 헤더 제목 */
+.menteecontainer { 
+  max-width: 960px; 
+  height: 100%;
+  margin: 0 auto; 
+  padding: 20px;
+  text-align: center;
+  background-color: white;
+}
+
+h1 { font-size: 32px; margin-bottom: 50px;}
+
+.hr{
+  height:2px;
+  margin:10px 0 10px 0;
+  background:gray;
+}
+
+
+h1.firstsub span {
+  display: inline;
+  background-size: 100% 15%;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  font-family: 'Angkor', cursive;
+}
+
+.firstsub2{
+  color: rgb(66, 18, 143);
+}
+
+.secondsub{
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.ys_certify{
+	margin-top: 20px;
+}
+
+.successPhoneChk{
+	font-weight: bold;
+	color: #848484;
+	font-size: 12pt;
+}

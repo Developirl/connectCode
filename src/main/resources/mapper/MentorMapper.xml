@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.MentorMapper">
+
+<!-- Mentor 테이블 mentor_no으로 조회 -->
+<select id="mentorProfile" resultType="MentorDTO">
+	SELECT
+	 *
+	FROM mentor
+	WHERE mentor_no=#{mentor_no}
+</select>
+
+<!-- mentor 테이블 update -->
+<update id="mentorBasic_update" parameterType="MentorDTO">
+	UPDATE mentor 
+	SET intro = #{intro} 
+	 , unable_date = #{unable_date}  
+	 , mentoring_time = #{mentoring_time} 
+	WHERE mentor_no = #{mentor_no}
+</update>
+
+<!-- <insert id="fileInsert">
+	
+</insert> -->
+
+<!-- mentor 테이블 update -->
+<update id="mentorPerson_update" parameterType="MentorDTO">
+	UPDATE mentor 
+	SET phone = #{phone} 
+	 , email = #{email}  
+	WHERE mentor_no = #{mentor_no}
+</update>
+
+<!-- <insert id="service_insert" parameterType="MentorDTO">
+	INSERT INTO service (
+	 mentoring_kind, mentoring_fee, available_NY
+	) VALUES (
+	 51,#{call_mentoring_fee},#{call_mentoring}
+	)
+</insert> -->
+
+<insert id="education_insert" parameterType="MentorDTO">
+	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
+		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
+		FROM file
+	</selectKey>
+
+	INSERT INTO education (
+	 school, entering_date, graduation_date, degree, major, minor, file_no, mentor_no
+	) VALUES (
+	 #{school},concat(#{entering_date},'-01'),concat(#{graduation_date},'-01'),#{degree},#{major},#{minor},#{file_no},#{mentor_no}
+	)
+</insert>
+
+</mapper>

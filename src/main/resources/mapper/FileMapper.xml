@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.FileMapper">
+
+	<!-- <sql id="fileColumns">
+		  file_serial_number
+		, file_no
+		, origin_name
+		, physical_name
+		, file_url
+		, size
+		, extension
+	</sql> -->
+
+
+	<select id="getMaxSerial" parameterType="int" resultType="int">
+		SELECT COALESCE(MAX(file_serial_number),0)+1 AS file_serial_number
+			FROM file
+		WHERE file_no = #{file_no}
+	</select>
+
+
+	<insert id="dbSaveFile" parameterType="FileDTO">
+	
+		insert into file(file_no,file_serial_number,origin_name,physical_name,
+		file_url,size,extension) values(#{file_no},#{file_serial_number},
+		#{origin_name},#{physical_name},#{file_url},#{size},#{extension}
+		)
+	</insert>
+
+	<!-- 
+	<insert id="saveAll" parameterType="list">
+		<selectKey keyProperty="file_serial_number" resultType="int" order="AFTER">
+			SELECT COALESCE(MAX(file_serial_number),0)+1 AS file_serial_number
+			FROM file
+			WHERE file_no = #{file.file_no}
+		</selectKey>
+
+		INSERT INTO file (
+			<include refid="fileColumns"/>
+		) VALUES
+		<foreach item="file" collection="list" separator=","> 
+		item = 리스트에 담긴 각각의 FileDTO 객체 / collection = 파라미터의 타입 / separator = 각 쿼리를 구분할 구분자
+		(
+			  #{file_serial_number}
+			, #{file.file_no}
+			, #{file.origin_name}
+			, #{file.physical_name}
+			, #{file.file_url}
+			, #{file.size}
+			, #{file.extension}
+		)
+		</foreach>
+	</insert> -->
+	
+</mapper>

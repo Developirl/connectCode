@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Angkor&display=swap');
+
+*{margin: 0;padding: 0;box-sizing: border-box}
+body{background-color: #f7f7f7;}
+ul>li{list-style: none}
+a{text-decoration: none;}
+.clearfix::after{content: "";display: block;clear: both;}
+
+#constractForm{width: 700px; height:700px; margin: 0 auto; padding: 10px;}
+ul.join_box{border: 1px solid #ddd;background-color: #fff; height:560px; margin-top: -15px;}
+.checkBox,.checkBox>ul{position: relative;}
+.checkBox>ul>li{float: left; }
+.checkBox>ul>li:first-child{width: 85%;padding: 15px;font-weight: 600;color: #212529; margin-left:-45px;}
+.checkBox>ul>li:nth-child(2){position: absolute;top: 50%;right: 30px;margin-top: -12px; margin: 0px,-20px;}
+.checkBox textarea{width: 96%;height: 100px; margin: 0;background-color: #f7f7f7;color: #606b75; border: none;}
+.footBtwrap{margin-top: 15px;}
+.footBtwrap>li{float: left;width: 50%;height: 60px;}
+.footBtwrap>li>button{float: right;  margin-right: 60px; display: block; width: 70%;height: 80%; font-size: 22px; text-align: center; margin-top: -4px;}
+.fpmgBt1{background-color: #8f8f8f;color: #fff; border-radius: 7px; border: none;}
+.fpmgBt2{background-color: #0080ff;color: #fff; border-radius: 7px;  border: none;}
+.constractTitle{font-family: 'Gothic A1', sans-serif; font-weight: bold;}
+
+.bi-check-all{
+   font-size: 30px;
+    line-height: 30px;
+    color:#0080ff;
+    }
+
+.bi-check-lg{
+   font-size: 20px;
+    line-height: 20px;
+    color:#0080ff;
+}
+
+.mino-title, .mino-title{
+    font-family: 'Angkor', cursive;
+    font-size: 24pt;
+    margin-top: -30px;
+    margin-left: 200px;
+}
+
+
+/* 체크박스 디자인 */
+[type=checkbox] {
+  width: 24px;
+  height: 24px;
+  color: dodgerblue;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  outline: 0;
+  flex-grow: 0;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  transition: background 300ms;
+  cursor: pointer;
+}
+[type=checkbox]::before {
+  content: "";
+  color: transparent;
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: inherit;
+  border: 0;
+  background-color: transparent;
+  background-size: contain;
+  box-shadow: inset 0 0 0 1px #CCD3D8;
+}
+[type=checkbox]:checked {
+  background-color: currentcolor;
+}
+[type=checkbox]:checked::before {
+  box-shadow: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+}

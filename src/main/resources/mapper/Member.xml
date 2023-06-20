@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.MemberMapper">
+  
+  <!-- 로그인 할 때 회원 정보 가져오는 sql 문 -->
+  <select id="getAuth" resultType="MemberDTO">
+		SELECT member_no, id, password, classification FROM member WHERE id=#{id}
+  </select>
+  
+  <select id="getMember" resultType="MemberDTO">
+  		SELECT * FROM member WHERE id = #{id}
+  </select>
+  
+  <!-- member테이블에 카카오 로그인 한사람 있는지 확인 -->
+  <select id="findUuid" resultType="MemberDTO">
+  	  select * from member where uuid = #{uuid}
+  </select>
+  
+  <!-- member테이블에 insert -->
+  <insert id="insertMenteeMember">
+	  insert into member (id,password,last_login_date,reg_date,change_pwd_date,pwd_err_cnt,
+	  need_change_pwd_yn,pwd_err_date,classification,uuid)
+	  values(#{id}, #{password}, null, sysdate(),null,0,'N',null,0012,#{uuid})
+  </insert>
+  
+  <!-- member_no 찾는 메서드 -->
+  <select id="getMemberNo" resultType="int">
+ 	  select member_no from member where uuid = #{uuid}
+  </select>
+  
+  <!-- 카카오 insert 멘티 -->
+  <insert id="insertMentee">
+	  insert into mentee (name, phone, gender, birthday, email, mentoring_location,
+	  desired_job, technology_stack, git, blog, bank, account, account_name, member_no)
+	  values(#{param1.name}, #{param1.phone}, #{param1.gender}, #{param1.birthday}, #{param1.email},
+	  #{param1.mentoring_location},#{param1.desired_job}, #{param1.technology_stack},
+	    #{param1.git}, #{param1.blog}, #{param1.bank}, #{param1.account},
+	    #{param1.account_name}, #{param2})
+  </insert>
+  
+  <!-- 일반회원 아이디 중복검사 -->
+  <select id="getSameId" resultType="int">
+  select count(*) from member where id = #{param1}
+  </select>
+  
+  <!-- 일반회원 insert 멤버테이블 -->
+  <insert id="normalMenteeMemberInsert">
+  INSERT INTO member (id,password,last_login_date,reg_date,change_pwd_date,pwd_err_cnt,
+	  need_change_pwd_yn,pwd_err_date,classification,uuid)
+	  VALUES(#{id}, #{password}, null, sysdate(),null,0,'N',null,0012,null)
+  </insert>
+  
+  <!-- 일반회원 member_no 가져오기 -->
+  <select id="getNormalMemberNo" resultType="int">
+  SELECT member_no from member where id = #{id}
+  </select>
+  
+  <!-- 일반회원 insert 멘티 -->
+  <insert id="insertNormalMentee">
+  INSERT INTO MENTEE (name, phone, gender, birthday, email, mentoring_location,
+	  desired_job, technology_stack, git, blog, bank, account, account_name, member_no)
+	  VALUES(#{param1.name}, #{param1.phone}, #{param1.gender},
+	   #{param1.birthday}, #{param1.email},#{param1.mentoring_location},#{param1.desired_job},
+	   #{param1.technology_stack},#{param1.git}, #{param1.blog}, #{param1.bank}, #{param1.account},
+	   #{param1.account_name}, #{param2})	  
+  </insert>
+  
+  <!--멘티테이블 member_no찾기 폰번호로(null값일때는 0이 리턴됨) -->
+  <select id="findMenteeId" resultType="int">
+  SELECT IFNULL((SELECT member_no FROM mentee WHERE phone = #{phone}), 0) AS member_no;
+  </select>
+  
+  <!-- member_no로 memberdto다 가져가기 -->
+  <select id="getMemberMentee" resultType="MemberDTO">
+  SELECT * FROM member WHERE member_no = #{member_no}
+  </select>
+  
+  <!-- 멘티 비밀번호 재설정 -->
+  <update id="updateMenteePw">
+  UPDATE member SET password = #{param1} WHERE id = #{param2}
+  </update>
+  
+    <!-- ////////////////////////용경멘토 -->
+  
+<!-- member테이블에 insert(mentor) -->
+  <insert id="insertMentorMember">
+	  insert into member (id,password,last_login_date,reg_date,change_pwd_date,pwd_err_cnt,
+	  need_change_pwd_yn,pwd_err_date,classification,uuid)
+	  values(#{id}, #{password}, null, sysdate(),null,0,'N',null,0013,null)
+  </insert>
+  
+  <!-- 멘토 테이블 insert -->
+   <insert id="insertNormalMentor">
+  INSERT INTO MENTOR (name, phone, gender, birthday, email, intro, account, bank, account_name,
+  profile_img_no, technology, mentoring_location, unable_date, mentoring_time, profile_completed_yn,
+  member_no)	 
+  VALUES(#{param1.name}, #{param1.phone}, #{param1.gender}, #{param1.birthday}, #{param1.email},
+   #{param1.intro},  #{param1.account}, #{param1.bank},  #{param1.account_name}, null,
+   null, #{param1.mentoring_location}, null, null, null, #{param2}) 
+  </insert>  
+  
+  <!--멘토테이블 member_no찾기 폰번호로(null값일때는 0이 리턴됨) -->
+  <select id="findMentorId" resultType="int">
+  SELECT IFNULL((SELECT member_no FROM mentor WHERE phone = #{phone}), 0) AS member_no;
+  </select>
+  
+  <!-- member_no로 memberdto다 가져가기 -->
+  <select id="getMemberMentor" resultType="MemberDTO">
+  SELECT * FROM member WHERE member_no = #{member_no}
+  </select>
+  
+  <!-- 멘토 비밀번호 재설정 -->
+  <update id="updateMentorPw">
+  UPDATE member SET password = #{param1} WHERE id = #{param2}
+  </update>
+  
+
+
+</mapper>
