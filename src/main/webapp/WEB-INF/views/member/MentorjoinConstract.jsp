@@ -28,7 +28,7 @@
 			<div class="col-8"><br><br>
 				<!--  @@@@@@@@@@@@@@@여기다가 작업하세요@@@@@@@@@@@@@@@ -->
 				
-				<form action="/member/menteejoinform" id="constractForm" onsubmit="return check()">
+				<form action="/member/mentorJoinForm" id="constractForm" onsubmit="return check()">
 				<div class="col-3 mino-title">CONNECT&nbsp;<span style="color: rgb(66, 18, 143);">Code</span></div>
 				<h5 align="center" class="constractTitle">서비스 이용약관</h5><br>
 					<ul class="join_box">

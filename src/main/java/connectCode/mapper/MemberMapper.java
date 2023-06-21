@@ -1,5 +1,7 @@
 package connectCode.mapper;
 
+import java.util.List;
+
 import connectCode.model.MemberDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentorDTO;
@@ -26,9 +28,7 @@ public interface MemberMapper {
 
 	MemberDTO getMember(String id);
 
-	int findMenteeId(String phone);
-
-	MemberDTO getMemberMentee(int member_no);
+	List<MemberDTO> findId(String email, String phone);
 	
 	void updateMenteePw(String encodepw, String id);
 	

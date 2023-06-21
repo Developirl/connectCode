@@ -1,6 +1,7 @@
 package connectCode.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,16 +110,11 @@ public void insertNormalMentee(MenteeDTO mentee, int member_no) {
 	}
 
 	@Override
-	public int findMenteeId(String phone) {
+	public List<MemberDTO> findId(String email, String phone) {
 		// TODO Auto-generated method stub
-		return membermapper.findMenteeId(phone);
+		return membermapper.findId(email, phone);
 	}
 	
-	@Override
-	public MemberDTO getMemberMentee(int member_no) {
-		// TODO Auto-generated method stub
-		return membermapper.getMemberMentee(member_no);
-	}
 	
 	@Override
 	public void updateMenteePw(String encodepw, String id) {

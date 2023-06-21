@@ -79,9 +79,9 @@
 								<div class="row" style="height: 30px" ></div>
 								<div class="row">
 									<div class="mino-loginOptions col-12" style="text-align:center;">
-										<a href="javascript:window.open('/member/menteefind_idform','id찾기','width=500 height=450 left=500 top=200')" style="text-decoration: none;">아이디 찾기</a> | 
-										<a href="javascript:window.open('/member/menteefind_pwform','비밀번호 찾기','width=500 height=450 left=500 top=200')" style="text-decoration: none;">비밀번호 찾기</a> | 
-										<a href="/member/normalmenteejoin" style="color: black; text-decoration: none;" >회원가입</a>
+										<a href="javascript:window.open('/member/find_idform','id찾기','width=500 height=450 left=500 top=200')" style="text-decoration: none;">아이디 찾기</a> | 
+										<a href="javascript:window.open('/member/find_pwform','비밀번호 찾기','width=500 height=450 left=500 top=200')" style="text-decoration: none;">비밀번호 찾기</a> | 
+										<a href="/member/chooseForm" style="color: black; text-decoration: none;" >회원가입</a>
 									</div>
 								</div>
 							</form>

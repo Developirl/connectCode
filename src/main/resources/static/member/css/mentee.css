@@ -7,6 +7,22 @@
 	margin-top: 25px;
 }
 
+.idlist2{
+color: gray;
+font-family: 'Noto Sans KR', sans-serif; 
+}
+
+.redirectpw{
+	border: none;
+	width: 120px;
+	height: 37.6px;
+	border-radius: 5px;
+	background-color: #0080FF;
+	color: white;
+	font-weight: bold;	
+}
+
+
 .ys_findidfont{
 	font-family: 'Noto Sans KR', sans-serif;
 }

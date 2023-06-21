@@ -2,6 +2,7 @@ package connectCode.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,24 +52,26 @@ public class MemberController {
 		return "member/map";
 	}
 	
-//////////////////////////////////////////////////////////////////// 일반 멘티 회원
+	@GetMapping("chooseForm")
+	public String chooseForm() {
+		return "/member/chooseform";
+	}
 	
 	// 일반회원 동의서 가기
 	@GetMapping("/normalmenteejoin")
 	public String menteeJoin(Model model) {
-		model.addAttribute("gotojoin", "/member/normalmenteejoinform");
 		return "member/joinConstract";
 	}
 	
 	// 일반회원 회원가입 폼
-	@RequestMapping("/normalmenteejoinform")
+	@RequestMapping("/menteejoinform")
 	public String normalMenteeJoin(Model model) {
 		model.addAttribute("javascriptkey", javascriptkey);
 		return "member/normalmenteeJoinForm";
 	}
 	
 	//일반회원 id 중복검사
-	@RequestMapping("/normalidcheck")
+	@GetMapping("/normalidcheck")
 	@ResponseBody
 	public int normalIdCheck(@RequestParam("id") String id) {
 		System.out.println("id중복검사 들어옴");
@@ -109,30 +112,30 @@ public class MemberController {
 		
 		System.out.println("회원가입 완료");
 		
-		return "redirect:/";
+		return "redirect:/member/joinSuccessForm";
 	};
 	
-	@GetMapping("menteefind_idform")
+	@GetMapping("find_idform")
 	public String menteeFindIdForm() {
 		return "member/findidform";
 	}
 	
-	@PostMapping("menteefindid")
-	public String menteeFindId(String phone, Model model) {
+	//id list뽑아 오기
+	@GetMapping("findid")
+	public String FindId(String email, String phone, Model model) {
 		
-		int member_no = memberservice.findMenteeId(phone);
+		// member_no로 멤버랑 멘티랑 멘토를 조인
+		List<MemberDTO> memberList = memberservice.findId(email, phone);		
+		System.out.println("멤버리스트: "+memberList);
 		
-		if(member_no != 0) {
-			MemberDTO member =  memberservice.getMemberMentee(member_no);
+		if(memberList.size() != 0) {
+		
+		int memberCount = memberList.size();
+		
+		model.addAttribute("membercount", memberCount);
+		model.addAttribute("memberlist", memberList);
+		model.addAttribute("findidok", "list");
 			
-			if(member.getUuid() != null) {
-				System.out.println("카카오 회원가입 회원입니다.");
-				model.addAttribute("findidok", "kakaomentee");
-			}else {
-				System.out.println("일반 회원가입 회원입니다.");
-				model.addAttribute("id", member.getId());
-				model.addAttribute("findidok", "normalmentee");
-			}
 			
 		}else {
 			System.out.println("없는 회원입니다.");
@@ -143,29 +146,29 @@ public class MemberController {
 	}
 	
 	// 비밀번호 찾기 폼
-		@GetMapping("menteefind_pwform")
-		public String menteeFindPwForm() {
+		@GetMapping("find_pwform")
+		public String menteeFindPwForm(String id, Model model) {
+			
+			if(id != null) {
+				model.addAttribute("id", id);				
+			}
+			
 			return "member/findpasswordform";
+			
 		}
 		
 		// 비밀번호 찾기
-		@PostMapping("menteefindpw")
-		public String menteeFindPw(String phone, Model model) {
+		@PostMapping("findpw")
+		public String menteeFindPw(String id, Model model) {
 			
-			int member_no = memberservice.findMenteeId(phone);
-			System.out.println("멤버_노값" + member_no);
-			
-			if(member_no != 0) {
-				MemberDTO member =  memberservice.getMemberMentee(member_no);
+			MemberDTO member = memberservice.getMember(id);
+		
+			if(member != null) {
 				
-				if(member.getUuid() != null) {
-					System.out.println("카카오 회원가입 회원입니다.");
-					model.addAttribute("findpwok", "kakaomentee");
-				}else {
-					System.out.println("일반 회원가입 회원입니다.");
+			System.out.println("일반 회원가입 회원입니다.");
 					model.addAttribute("id", member.getId());
-					model.addAttribute("findpwok", "normalmentee");
-				}
+					model.addAttribute("findpwok", "normalmember");
+				
 				
 			}else {
 				System.out.println("없는 회원입니다.");
@@ -176,7 +179,7 @@ public class MemberController {
 		}
 		
 		// 비밀번호 재설정
-		@PostMapping("menteenewpw")
+		@PostMapping("newpw")
 		public String menteeNewPw(String id, String password, Model model) {
 			
 			//비밀번호 암호화
@@ -190,14 +193,20 @@ public class MemberController {
 			
 			return "member/findpasswordform";
 		}
+		
+		@GetMapping("joinSuccessForm")
+		public String joinSucessForm(){
+			return "member/joinsuccessform";
+		}
+			
+		
 	
 /////////////////////////////////////////////////////////////////////////////////////////////용경 멘토
 	
 	// 멘토회원 동의서 가기
 	@GetMapping("/mentorjoin")
 	public String mentorJoin(Model model) {
-		model.addAttribute("gotojoin", "/member/mentorJoinForm");
-		return "member/joinConstract";
+		return "member/MentorjoinConstract";
 	}
 
 	// 멘토회원 회원가입 폼
@@ -237,77 +246,9 @@ public class MemberController {
 		//mentee 테이블에 insert
 		memberservice.insertNormalMentor(mentor, member_no);
 		
-		return "/";
+		return "redirect:/member/joinSuccessForm";
 	}
-	
-	//멘토아이디 찾기폼
-	@GetMapping("mentorfind_idform")
-	public String mentorFindIdForm() {
-	   return "member/mentorfind_idform";
-	}
-
-	// 멘토 아이디 찾기
-	@PostMapping("mentorfindid")
-	public String mentorFindId(String phone, Model model) {
-	   
-	   int member_no = memberservice.findMentorId(phone);
-	   System.out.println("멤버_노값" + member_no);
-	   
-	   if(member_no != 0) {
-	      MemberDTO member =  memberservice.getMemberMentor(member_no);
-	         System.out.println("일반 회원가입 회원입니다.");
-	         model.addAttribute("id", member.getId());
-	         model.addAttribute("findidok", "normalmentor");
-	      
-	      
-	   }else {
-	      System.out.println("없는 회원입니다.");
-	      model.addAttribute("findidok", "no");
-	   }
-	   
-	   return "member/mentorfind_idform";
-	}
-
-	@GetMapping("mentorfind_pwform")
-	public String mentorFindPwForm() {
-	   return "member/mentorfind_pwform";
-	}
-
-	@PostMapping("mentorfindpw")
-	public String mentorFindPw(String phone, Model model) {
-	   
-	   int member_no = memberservice.findMentorId(phone);
-	   System.out.println("멤버_노값" + member_no);
-	   
-	   if(member_no != 0) {
-	      MemberDTO member =  memberservice.getMemberMentor(member_no);
-	         System.out.println("일반 회원가입 회원입니다.");
-	         model.addAttribute("id", member.getId());
-	         model.addAttribute("findpwok", "normalmentor");
-	      }
-	      
-	   else {
-	      System.out.println("없는 회원입니다.");
-	      model.addAttribute("findpwok", "no");
-	   }
-	   
-	   return "member/mentorfind_pwform";
-	}
-
-	@PostMapping("mentornewpw")
-	public String mentorNewPw(String id, String password, Model model) {
-	   
-	   //비밀번호 암호화
-	   String encodepw = passwordEncorder.encode(password);
-	   
-	   // 새 비밀번호 재설정
-	   memberservice.updateMenteePw(encodepw, id);
-	   
-	   model.addAttribute("findpwok", "newpw");
-	   
-	   
-	   return "member/mentorfind_pwform";
-	}
+		
 	
 	
 }

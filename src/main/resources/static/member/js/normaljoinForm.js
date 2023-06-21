@@ -193,11 +193,7 @@ $(document).ready(function() {
           $("#find_address").on('click', function(event){
           	event.preventDefault();
               window.open("/member/find_map", "지도보기", "resizeable=no, location=0, status=0, width=730px, height=800px, left="+popupX+", top="+popupY);
-          });
-          
-        // input date에 max 속성값 추가
-        var today = new Date().toISOString().split("T")[0];
-         document.getElementById("changebirthday").max = today;
+          });                  
     	
     	// 예금주명 클릭했을때 이름값을 가지고 똑같은 값을 넣는다.
     	$("#account_name").on("click",function(){
@@ -264,7 +260,10 @@ $(function() {
 
          $.ajax({
             type : "GET",
-            url : "phoneChk",
+            url : "/member/phoneChk",
+//            beforeSend : function(xhr){
+//            	xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+//            },
             data : {
                "phone" : phone
             },
@@ -359,7 +358,9 @@ if((!validate_userid(id))){
 		data : {
 			'id' : id
 		},
+		
 		success : function(data){
+			
 			if(data != 0){
 				var newtext = '<font color="red">중복된 아이디가 있습니다.</font>';
 				$("#idcheck").text('');
@@ -435,5 +436,81 @@ function passwordCheck(){
 	}
 };
 
-	
+////////////////////////////////////////////////////////////////////////////////////////////////
 
+function findpw(){
+	if ($.trim($("#password").val()) == "") {
+		alert("비밀번호를 입력하세요.");
+		$("#passwd").val("").focus();
+		return false;
+	}
+	if ($.trim($("#password2").val()) == "") {
+		alert("새 비밀번호 확인을 입력해주세요.");
+		$("#passwd2").val("").focus();
+		return false;
+	}
+	if (passchkbtn == false) {
+		alert("비밀번호 확인 버튼을 눌러주세요.");
+		$("#password").focus();
+		return false;
+	}
+	return true;
+}
+
+function findpwcheck(){
+	if ($.trim($("#id").val()) == "") {
+		alert("ID를 입력하세요.");
+		$("#id").val("").focus();
+		return false;
+	}
+	if ($.trim($("#phone").val()) == "") {
+		alert("휴대폰 번호를 입력하세요.");
+		$("#phone").val("").focus();
+		return false;
+	}
+	if (isNaN($("#phone").val())) {
+		alert("숫자만 입력하세요");
+		$("#phone").val("").focus();
+		return false;
+	}
+	if (phoneBtnChk == false) {
+		alert("휴대폰 인증번호 전송을 눌러주세요.");
+		$("#phone_certify").focus();
+		return false;
+	}
+	if ($.trim($("#phone_certify").val()) == "") {
+		alert("휴대폰 인증번호를 입력하세요.");
+		$("#phone_certify").focus();
+		return false;
+	}
+	if (certifyBtnChk == false) {
+		alert("휴대폰 인증하기를 눌러주세요.");
+		$("#phone_certify").focus();
+		return false;
+	}
+	if (phoneCertifyChk == false) {
+		alert("휴대폰 인증번호가 일치하지 않습니다.");
+		$("#phone_certify").val("").focus();
+		return false;
+	}
+	return true;
+};
+
+function findidcheck(){
+	if ($.trim($("#email").val()) == "") {
+		alert("이메일을 입력하세요.");
+		$("#email").val("").focus();
+		return false;
+	}
+	if ($.trim($("#phone").val()) == "") {
+		alert("휴대폰 번호를 입력하세요.");
+		$("#phone").val("").focus();
+		return false;
+	}
+	if (isNaN($("#phone").val())) {
+		alert("숫자만 입력하세요");
+		$("#phone").val("").focus();
+		return false;
+	}	
+	return true;
+};

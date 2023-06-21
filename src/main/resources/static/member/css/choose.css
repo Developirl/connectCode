@@ -1,0 +1,58 @@
+ @import url('https://fonts.googleapis.com/css2?family=Angkor&display=swap');
+ 
+.container {
+      text-align: center;
+      margin-top: 0px;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .button-container h2{
+    color: black;
+    }
+    .headline{
+    font-family: 'Angkor', cursive;
+    font-size: 70px;
+    }
+    
+    .headline2{
+    font-family: 'Angkor', cursive;
+    font-size: 70px;
+    color: rgb(66, 18, 143);
+    }
+    
+    .button {
+      flex: 1;
+      height: 300px;
+      width: 300px;
+    }
+    .button a {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      height: 100%;
+    }
+    .button img {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+    .mentee{
+    padding-left: 300px;
+    }
+    .mentor{
+    padding-right: 300px;
+    }
+    
+    .button h2 {
+      margin: 0;
+    }
+	.menteea{
+	border-right: 2px solid black; 
+	}
+	

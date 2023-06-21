@@ -30,6 +30,7 @@
 <div class="mentee_info">
 
 <form method="post" action="/member/join_normalmentor" onsubmit="return check()">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 <div class="menteecontainer">
   <h1 class="firstsub"><span>CONNECT</span><span class="firstsub2"> CODE</span></h1>
   <div class="hr"></div>
