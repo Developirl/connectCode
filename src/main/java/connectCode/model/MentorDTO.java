@@ -69,7 +69,19 @@ public class MentorDTO {
    
    // 조인
    private int number;
-   private String memberNum;
+   private String age;
+   private String mentor_name;
+   private String mentee_name;
+   private String mentee_no;
+	
+   private String id;
+   private Date reg_date;
+   private String desired_job;        
+   private String technology_stack;
+   private String git;              
+   private String blog;
+   private Date e_date;
+   private Date g_date;
    
    // 첨부파일 List
    private List<MultipartFile> files = new ArrayList<>();

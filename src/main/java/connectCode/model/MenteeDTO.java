@@ -25,4 +25,7 @@ public class MenteeDTO {
 	
 	private int startRow;
 	private int endRow;
+	
+	private String member;
+	private String id;
 }

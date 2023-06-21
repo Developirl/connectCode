@@ -77,7 +77,7 @@
 	padding: 30px;
 }
 
-.appBtn{
+.appBtn {
 	position: relative;
 	float: left;
 	left: 370px;
@@ -88,53 +88,145 @@
 	margin-top: 22px;
 }
 
-.refBtn{
+.refBtn {
 	width: 200px;
 	height: 45px;
 	left: 30px;
 	background-color: #004EA2;
 	color: white;
 }
+
 .search_sel0 {
-   width:100px;
-   height: 40px;
-   appearance: none;
-   text-align: center;
-   border: 1px solid #CCCCCC;
-   border-radius: 30px;
-   cursor: pointer;
-   background-color: white;
+	width: 100px;
+	height: 40px;
+	appearance: none;
+	text-align: center;
+	border: 1px solid #CCCCCC;
+	border-radius: 30px;
+	cursor: pointer;
+	background-color: white;
 }
 
-#mentor_profile{
+#mentor_profile {
 	width: 230px;
 	height: 251px;
 	float: left;
 }
 
-#mentor_det1{
+#mentor_det1 {
 	width: 940px;
 	height: 114px;
-	margin-left:250px;
-	border-color:#f3f3f3;
+	margin-left: 250px;
+	border-color: #f3f3f3;
 }
 
-#mentor_det2{
+#mentor_det2 {
 	width: 1190px;
 	height: 114px;
-	border-color:#f3f3f3;
+	border-color: #f3f3f3;
 }
 
-#mentor_det3{
+#mentor_det3 {
 	width: 1190px;
 	height: 114px;
-	border-color:#d3d3d3;
+	border-color: #d3d3d3;
 }
 
-.intro_box{
+.intro_box {
 	border: 1px solid;
 	width: 1190px;
 	height: 100px;
 	padding: 100px 0;
-	border-color:#d3d3d3;
+	border-color: #d3d3d3;
+}
+
+.mailBtn {
+	position: relative;
+	float: left;
+	margin: 68px 0px;
+	width: 200px;
+	height: 45px;
+	background-color: #004EA2;
+	color: white;
+	left: 250px;
+}
+
+.listBtn {
+	position: relative;
+	float: left;
+	width: 200px;
+	margin: 45px 0px;
+	height: 45px;
+	background-color: #004EA2;
+	color: white;
+	left: 280px;
+}
+
+.delBtn {
+	position: relative;
+	float: left;
+	width: 200px;
+	height: 45px;
+	background-color: #004EA2;
+	color: white;
+	left: 310px;
+}
+
+.m_box2 {
+	background-color: white;
+	width: 1300px;
+	height: 900px;
+	margin-top: 30px;
+	margin-left: 206px;
+	padding: 50px;
+}
+
+.m_box3 {
+	background-color: white;
+	width: 1300px;
+	height: 1500px;
+	margin-top: 30px;
+	margin-left: 206px;
+	padding: 50px;
+}
+
+#mentee_det1 {
+	width: 1190px;
+	height: 180px;
+	border-color: #d3d3d3;
+	margin-top: 5px;
+}
+
+#mentee_det2 {
+	width: 1190px;
+	height: 114px;
+	border-color: #d3d3d3;
+	margin-top: 5px;
+}
+
+#spanBox {
+	display: flex;
+	color: #004EA2;
+	align: left;
+	margin-left: 10px;
+}
+
+#spanBox11 {
+	display: flex;
+	color: #004EA2;
+	align: left;
+	margin-left: 260px;
+}
+
+#mentor_det11 {
+	width: 940px;
+	height: 114px;
+	margin-left: 250px;
+	border-color: #d3d3d3;
+}
+.mailBtn1{
+	width: 140px;
+	height: 30px;
+	background-color: #f3f3f3;
+	border: none;
 }

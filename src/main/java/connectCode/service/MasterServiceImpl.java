@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import connectCode.mapper.MasterDAO;
+import connectCode.model.FileDTO;
 import connectCode.model.MailDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentorDTO;
@@ -80,6 +81,24 @@ public class MasterServiceImpl implements MasterService {
 	@Override
 	public List<MentorDTO> mentorService(int mentor_no) {
 		return md.mentorService(mentor_no);
+	}
+	
+	// 멘토 경력 파일
+	@Override
+	public List<MentorDTO> mentorCareerFile(int mentor_no) {
+		return md.mentorCareerFile(mentor_no);
+	}
+	
+	// 멘토 학벌 파일
+	@Override
+	public List<MentorDTO> mentorEducationFile(int mentor_no) {
+		return md.mentorEducationFile(mentor_no);
+	}
+	
+	// 멘토 자격증 파일
+	@Override
+	public List<MentorDTO> mentorLicenseFile(int mentor_no) {
+		return md.mentorLicenseFile(mentor_no);
 	}
 
 	// 멘토 승인 요청_승인
@@ -218,25 +237,25 @@ public class MasterServiceImpl implements MasterService {
 	}
 
 	// 신고 총 데이터
-	@Override
-	public int getReport(ReportDTO report) {
-
-		return md.getReport(report);
-	}
-
-	// 신고 목록_미처리
-	@Override
-	public List<ReportDTO> reportUncomplete(ReportDTO report) {
-
-		return md.reportUncomplete(report);
-	}
-
-	// 신고 목록_처리
-	@Override
-	public List<ReportDTO> reportComplete(ReportDTO report) {
-		
-		return md.reportComplete(report);
-	}
+//	@Override
+//	public int getReport(ReportDTO report) {
+//
+//		return md.getReport(report);
+//	}
+//
+//	// 신고 목록_미처리
+//	@Override
+//	public List<ReportDTO> reportUncomplete(ReportDTO report) {
+//
+//		return md.reportUncomplete(report);
+//	}
+//
+//	// 신고 목록_처리
+//	@Override
+//	public List<ReportDTO> reportComplete(ReportDTO report) {
+//		
+//		return md.reportComplete(report);
+//	}
 
 	// 메일 전송
 	@Override
@@ -255,10 +274,106 @@ public class MasterServiceImpl implements MasterService {
 	// 파일 다운로드
 	@Override
 	public Map<String, Object> selectFile(Map<String, Object> map) {
+		
 		return md.selectFile(map);
 	}
 
+	// 멘토 신고
+	@Override
+	public int mentorReport(int mentor_no) {
+		
+		return md.mentorReport(mentor_no);
+	}
 
+
+	// 멘티 멘토링
+	@Override
+	public List<MenteeDTO> menteeMentoring(MenteeDTO mentee) {
+
+		return md.menteeMentoring(mentee);
+	}
+
+	// 멘티 정보 구해오기
+	@Override
+	public MenteeDTO menteeDelete(int member_no) {
+
+		return md.menteeDelete(member_no);
+	}
+
+	// 멘티 탈퇴
+	@Override
+	public int mmDelete(int member_no) {
+
+		return md.mmDelete(member_no);
+	}
+
+	// 멘토 탈퇴 정보 업데이트
+	@Override
+	public int mmDelUpdate(int member_no) {
+
+		return md.mmDelUpdate(member_no);
+	}
+
+	// 멘토링 후기수
+	@Override
+	public int mentorReview(int mentor_no) {
+
+		return md.mentorReview(mentor_no);
+	}
+
+	// 멘토링 평균
+	@Override
+	public double mentorAVG(int mentor_no) {
+
+		return md.mentorAVG(mentor_no);
+	}
+
+	// 신고 총 데이터
+	@Override
+	public int getReport(ReportDTO report) {
+
+		return md.getReport(report);
+	}
+
+	// 신고 목록
+	@Override
+	public List<ReportDTO> reportList(ReportDTO report) {
+		
+		return md.reportList(report);
+	}
+	
+	// 신고 상세 내역
+	@Override
+	public ReportDTO reportDetail(int report_no) {
+		
+		return md.reportDetail(report_no);
+	}
+	
+	// 파일 
+	@Override
+	public FileDTO file(int mentor_no) {
+		
+		return md.file(mentor_no);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 //*****************************병걸 작성***************************************
 
 	@Override
@@ -296,6 +411,13 @@ public class MasterServiceImpl implements MasterService {
 	public int getReadyMentors() {
 		return md.getReadyMentors();
 	}
+
+
+
+
+
+
+
 
 //*****************************병걸 작성***************************************
 
