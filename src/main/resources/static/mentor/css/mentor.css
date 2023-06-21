@@ -122,3 +122,18 @@ input[type=file]::file-selector-button {
 	max-height: 200px;
 	overflow-y: auto;
 }
+
+.passTitle_jh {
+	text-align: right;
+	margin-right: 30px;
+}
+
+.passInput_jh {
+	width: 70%;
+	border: 1px solid #CCC;
+	border-radius: 8px;
+}
+
+.alarm_div {
+	width: 25%;
+}

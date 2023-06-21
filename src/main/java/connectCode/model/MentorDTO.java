@@ -78,4 +78,7 @@ public class MentorDTO {
    private String file_url;
    private String origin_name;
    
+   // 알람수
+   private int alarm_count;
+   
 }

@@ -38,8 +38,14 @@
 		</div>
 		<div align="center" style="color: #fff;">${msel.name }</div>
 		<div align="center">
-			소속<br>
-			<button class="profileEdit_btn" onclick="location.href='mentorProfileModifyPage'">내 프로필 관리</button>
+			<c:if test="${empty msel.company}">
+				소속 없음
+			</c:if>
+			<c:if test="${!empty msel.company}">
+				${msel.company}
+			</c:if>
+			<br>
+			<button class="profileEdit_btn" onclick="location.href='mentorProfileModifyPage?mentor_no=${msel.mentor_no}'">내 프로필 관리</button>
 		</div>
 
 		<hr class="division_hr">
@@ -52,7 +58,7 @@
 
 		<hr class="division_hr">
 		
-		<a href="#" class="w3-bar-item w3-button">알림</a>
+		<a href="mentorAlarmListPage" class="w3-bar-item w3-button">알림&nbsp;<span>${msel.alarm_count}</span></a>
 		
 		<c:choose>
 			<c:when test="${msel.classification != '23'}">
@@ -76,13 +82,13 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-		<a href="#" class="w3-bar-item w3-button">1:1 문의</a>
+		<a href="mentorInqueryListPage" class="w3-bar-item w3-button">1:1 문의</a>
 
 		<div class="bottomContent">
 			
 			<hr class="division_hr">
 
-			<a href="#" class="w3-bar-item bottom_a">비밀번호 변경</a>
+			<a href="mentorPwModifyPage" class="w3-bar-item bottom_a">비밀번호 변경</a>
 			<a href="#" class="w3-bar-item bottom_a">로그아웃</a>
 			<a href="#" class="w3-bar-item bottom_a">회원탈퇴</a>
 
