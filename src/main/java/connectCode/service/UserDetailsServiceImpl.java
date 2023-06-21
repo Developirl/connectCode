@@ -19,9 +19,12 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+		
 		MemberDTO member = mapper.getAuth(id);
-		System.out.println("UserDetailsServiceImpl 도달");
-		return member == null? null:new AuthUser(member);
+		int mentor_no = mapper.getMentor_no(member.getMember_no());
+		int mentee_no = mapper.getMentee_no(member.getMember_no());
+		
+		return member == null? null:new AuthUser(member, mentor_no, mentee_no);
 	}
 
 }

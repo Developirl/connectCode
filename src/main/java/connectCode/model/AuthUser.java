@@ -16,12 +16,15 @@ public class AuthUser extends User{
 	private static final long serialVersionUID = 1L;
 	
 	private MemberDTO member;
-	private String mentor_id;
+	private int mentor_no;
+	private int mentee_no;
 	
-	public AuthUser(MemberDTO member) {
+	public AuthUser(MemberDTO member, int mentor_no, int mentee_no) {
 		super(member.getId(), member.getPassword(), mapAuthorities(member.getClassification()));
 		
 		this.member = member;
+		this.mentor_no = mentor_no;
+		this.mentee_no = mentee_no;
 	}
 	
 	private static Collection<? extends GrantedAuthority> mapAuthorities(Integer classification) {

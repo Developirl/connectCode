@@ -20,8 +20,42 @@ header{
 .mino-align-right{
     text-align: right;
 }
-footer{
+.mino-footer {
     border-top: 1px solid rgb(228, 224, 224);
-    height: 150px;
     padding-top: 20px;
+    background-color: rgb(36, 33, 46);
+    color: aliceblue;
+    padding: 20px 50px;
+    font-size: 14px;
+}
+.mino-footerDetail {
+    line-height: 25px;
+}
+.mino-footerHr {
+    height: 1px;
+    background: rgb(131, 130, 130);
+    border: 0;
+}
+.mino-mainImg {
+    height: 250px;
+    background-image: url("/public/img/mainpageImg.png");
+}
+.mino-card {
+    height: 300px;
+}
+.mino-card > img {
+    width: inherit;
+    height: 200px;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+    border: 1px solid rgb(216, 213, 213);
+    border-radius: 5px;
+}
+.mino-bold {
+    font-weight: bold;
+}
+.mino-card-body span {
+    font-size: 14px;
+    color: rgb(104, 103, 103);
 }

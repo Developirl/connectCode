@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.HomeMapper">
+	
+	<select id="getPopularMentorList" resultType="FindMentorDTO">
+		SELECT mentor_no, name, technology, mentoring_location, company, years, file_url 
+		FROM (
+				SELECT mentor.mentor_no, name, technology, mentoring_location, company, years, profile_img_no
+				FROM mentor INNER JOIN (SELECT * 
+										FROM career 
+										WHERE (mentor_no, entering_date) IN (SELECT mentor_no, MAX(entering_date) 
+																			 FROM career
+																			 WHERE  mentor_no IN (SELECT mentor_no
+																								   FROM (SELECT mentor_no, COUNT(mentor_no) cnt 
+																										 FROM mentoring INNER JOIN service 
+																														ON (mentoring.service_no = service.service_no) 
+																										 GROUP BY mentor_no 
+																										 ORDER BY cnt 
+																										 limit 8) A)
+																			 GROUP BY mentor_no)) B
+							ON (mentor.mentor_no = B.mentor_no)) C 
+			                INNER JOIN file ON (C.profile_img_no = file.file_no);
+	</select>
+	
+</mapper>
