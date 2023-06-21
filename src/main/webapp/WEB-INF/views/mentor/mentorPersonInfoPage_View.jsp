@@ -22,7 +22,7 @@
 	</div>
 	<div style="display: flex;">
 		<div class="mentor_info infoCtg">휴대폰번호</div>
-		<div class="mentor_info infoInp">${msel.phone}</div>
+		<div class="mentor_info infoInp" id="phoneNumber"></div>
 	</div>
 	<div style="display: flex;">
 		<div class="mentor_info infoCtg">이메일</div>

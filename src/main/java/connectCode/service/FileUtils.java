@@ -72,7 +72,12 @@ public class FileUtils {
 		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
 		return uuid; // 디스크에 저장할 파일명
 	}
-
+	
+	/* 업로드 경로 반환 */
+	private String getUploadPath() {
+		return makeDirectories(uploadPath); // 업로드 경로
+	}
+	
 	/* 업로드 경로 반환 */
 	private String getUploadPath(String addPath) {
 		return makeDirectories(uploadPath + File.separator + addPath);

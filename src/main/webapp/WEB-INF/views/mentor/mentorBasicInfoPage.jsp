@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<form method="post" action="mentorBasicInfo_Up" id="myform" enctype="multipart/form-data">
+<form method="post" action="mentorBasicInfo_Up?mentor_no=${mentor_no}" id="myform" enctype="multipart/form-data">
 
 	<div class="cont_mar">
 		<div class="infoTitle">프로필 사진  <span class="small_jh">[선택]</span></div>
 		<div class="mentor_info" style="padding: 0px 50px;">
 			<div style="display:flex;">
 				<div style="width: 70%; padding: 100px 0px;">
-					<input type="file" id="origin_name" name="origin_name" accept=".jpg,.jpeg,.png">
+					<input type="file" id="files" name="files" accept=".jpg,.jpeg,.png">
 				</div>
 				<div style="width: 30%; margin-top: 20px;">
 					<div class="mentoProfileBox uplode_pro">

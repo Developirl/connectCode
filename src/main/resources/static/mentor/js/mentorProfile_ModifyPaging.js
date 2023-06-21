@@ -1,3 +1,4 @@
+// *******************************************[변수선언 start]*******************************************
 
 // 멘토 [프로필 관리] 내비바 active 주는 css
 var active = {
@@ -12,17 +13,26 @@ var clicked = false;
 // 현재 날짜 [datepicker에 사용]
 var currentDate = new Date();
 
+
 // 반복문으로 출력하기 위한 배열 선언 [button/select의 value가 될것임]
+// [기본정보]
 var date = ['월','화','수','목','금','토','일'];
 var hour = ['12','13','14','15','16','17','18'];
 var min = ['00','30'];
 
+// [인적사항]
 var domain = ['직접입력','naver.com','gmail.com','daum.net','nate.com'];
+
+// [서비스 요금]
+var bank = ['','신한은행','국민은행','기업은행','농협은행','산업은행','수협은행','신협은행','우리은행','하나은행','한국씨티은행','카카오뱅크','케이뱅크','토스뱅크',
+	'경남은행','광주은행','대구은행','부산은행','전북은행','제주은행','새마을은행','우체국','저축은행'];
+
 
 //active 된 버튼의 value 값을 form으로 넘기기 위한 Set 객체 생성 [중복 값 없애기 위함]
 var set_unable_date = new Set();
 var set_mentoring_time = new Set();
 
+// *******************************************[변수선언 end]*******************************************
 
 // ******************************************[파일 처리 start]**********************************************
 // 아래 function 호출해서 사용하기
@@ -32,7 +42,7 @@ function selectFile(element) {
 
     const file = element.files[0];
     const filename = element.closest('.file_input').firstElementChild;
-
+    console.log(file);
     // 1. 파일 선택 창에서 취소 버튼이 클릭된 경우
     if ( !file ) {
         filename.value = '';
@@ -49,7 +59,8 @@ function selectFile(element) {
     }
 
     // 3. 파일명 지정
-    filename.value = file.name;
+//    filename.value = file.name;
+    console.log(file);
 }
 
 
@@ -58,12 +69,9 @@ function addFile() {
     const fileDiv = document.createElement('div');
     fileDiv.innerHTML =`
         <div class="file_input">
-            <input type="text" readonly />
-            <label> 첨부파일
-                <input type="file" name="files" onchange="selectFile(this);" />
-            </label>
+           <input type="file" name="files" onchange="selectFile(this);" />
+	       <button type="button" onclick="removeFile(this);" class="small_jh btn_jh add_btn"><span>삭제</span></button>
         </div>
-        <button type="button" onclick="removeFile(this);" class="small_jh btn_jh add_btn"><span>삭제</span></button>
     `;
     document.querySelector('.file_list').appendChild(fileDiv);
 }
@@ -84,7 +92,7 @@ function removeFile(element) {
 // ******************************************[기본정보 start]**********************************************
 
 // 내비바의 [기본정보] 클릭 시
-function basicInfo_load(check, unable_date, mentoring_time) {
+function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 
 // 버튼 관련 함수 정의 start [함수 총 3개] ********************************************************
 	
@@ -200,12 +208,13 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 	console.log(check);
 	
 // msel.intro 가 빈문자열 혹은 [수정하기] 버튼을 클릭한 경우
-	if(check == '' || check == true) {
+	if(check == '' || check == null || check == true) {
 		
 	// <div id=load_location>에 [기본정보] page 불러오는 ajax
 		$.ajax({
 			url: 'mentorBasicInfoPage',	// 작성 전 페이지 = 수정 페이지
 			method: 'GET',
+			data: {mentor_no : mentor_no},
 			success: function(data) {
 				$('#load_location').empty().html(data);
 				$('#load_location, .nav_items').removeAttr('style');
@@ -214,7 +223,7 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 				$("span:contains('[선택]')").css('color', '#004EA2');
 				
 				// [프로필 사진] 첨부 파일 미리보기
-				$('#origin_name').on('change input', function(event) {
+				$('#files').on('change input', function(event) {
 					
 					var file = event.target.files[0];
 					
@@ -230,10 +239,13 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 					
 				});
 				
+				// 파일 처리
+				//selectFile(element);
+				
 				// [상담 불가능한 요일] & [상담 가능한 시간] 버튼 처리하는 부분 !!!!!!
 				
-				basicInfo_btn();
-				basicInfo_btn_css();
+				basicInfo_btn(); 		// 버튼 출력하는 함수 호출
+				basicInfo_btn_css();	// 버튼에 active 클래스 있으면 css 주고 set 객체에 저장
 				
 				// active 된 버튼만 form으로 전송 [앞서 선언해둔 set객체 사용]
 				$('#myform').submit(function(event){
@@ -266,6 +278,13 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 					}
 				// 유효성 검사 end
 					
+					/*// hidden value에 mentor_no 정의
+					var mentor_no_hidden = $('<input>').attr({
+						type : 'hidden',
+						name : 'mentor_no',
+						value : mentor_no
+					});*/
+					
 					// hidden value에 var unable_date_values [배열] 정의
 					var unable_date_hidden = $('<input>').attr({
 						type : 'hidden',
@@ -287,7 +306,7 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 					$.post($(this).attr('action'), $(this).serialize(), function(response) {
 						
 						// 입력 완료 후 페이지 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-						basicInfo_load(intro, unable_date, mentoring_time);
+						basicInfo_load(intro, mentor_no, unable_date, mentoring_time);
 						
 						// [상담 불가능한 요일] & [상담 가능한 시간] 버튼 처리하는 부분 !!!!!!
 						actived_btn();
@@ -299,20 +318,27 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 						      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 						      
 						      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-						      basicInfo_load(clicked, unable_date, mentoring_time);	
+						      basicInfo_load(clicked, mentor_no, unable_date, mentoring_time);	
 						      
 						});  // [수정하기] 클릭 이벤트 end
 						
-						// update 했으니, 게이지바 value 증가시키기
-						$('#progress').val(25);
+						/*// update 했으니, 게이지바 value 증가시키기
+						$('#progress').val(25);*/
+						
+						if(check == '' || check == null) {
+							// progress 올리기
+							var currentValue = parseInt($('#progress').val());
+							var updatedValue = currentValue + 25;
+							$('#progress').val(updatedValue);
+						}
 						
 					});
 					
 				}); // submit end
 				
-			} // basicInfo_load() ajax-success end
+			} // [mentorBasicInfoPage] ajax-success end ******************************************* 추가 start *******************************************
 		
-		}); // basicInfo_load() ajax end
+		}); // [mentorBasicInfoPage] ajax end ******************************************* 추가 end *******************************************
 		
 	}else { // if end, else start
 		
@@ -320,6 +346,7 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 		$.ajax({
 			url: 'mentorBasicInfoPage_View',  // 입력 완료 페이지
 			method: 'GET',
+			data: {mentor_no : mentor_no},
 			success: function(data) {
 				$('#load_location').empty().html(data);
 				$('#load_location, .nav_items').removeAttr('style');
@@ -335,13 +362,13 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 			      
 			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-			      basicInfo_load(clicked, unable_date, mentoring_time);	
+			      basicInfo_load(clicked, mentor_no, unable_date, mentoring_time);	
 			      
 			    }); // [수정하기] 클릭 이벤트 end
 			    
-			} // basicInfo_load() ajax-success end
+			} // [mentorBasicInfoPage_View] ajax-success end ******************************************* 추가 start *******************************************
 		
-		}); // basicInfo_load() ajax end
+		}); // [mentorBasicInfoPage_View] ajax end ******************************************* 추가 end *******************************************
 		
 	} // else end
 			
@@ -351,25 +378,31 @@ function basicInfo_load(check, unable_date, mentoring_time) {
 // ******************************************[인적사항 start]**********************************************
 
 // 내비바의 [인적사항] 클릭 시
-function personInfo_load(old_phone,old_email) {
+function personInfo_load(mentor_no, old_phone, old_email) {
 	
 	$.ajax({
-		url: 'mentorPersonInfoPage_View',  // JSP 파일의 URL
+		url: 'mentorPersonInfoPage_View',  // 입력 완료 페이지
+		data: {mentor_no : mentor_no},
 		method: 'GET',
 		success: function(data) {
 			$('#load_location').empty().append(data);
 			$('#load_location, .nav_items').removeAttr('style');
 			$('.personInfo').css(active);
 			
+			// 전화번호에 구분기호(-) 넣어서 화면단으로 출력
+			var formattedPhoneNumber = old_phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+			$('#phoneNumber').append(formattedPhoneNumber);
+			
+			// 수정하기 버튼 클릭시
 			$('#edit_btn').click(function(){
 				$.ajax({
-					url: 'mentorPersonInfoPage',  // JSP 파일의 URL
+					url: 'mentorPersonInfoPage',  // 수정 페이지
+					data: {mentor_no : mentor_no},
 					method: 'GET',
 					success: function(data) {
 						$('#load_location').empty().append(data);
 						$('#load_location, .nav_items').removeAttr('style');
 						$('.personInfo').css(active);
-						$("span:contains('[필수]')").css('color', 'red');
 						$("span:contains('[선택]')").css('color', '#004EA2');
 						
 						// [도메인] select option
@@ -379,6 +412,54 @@ function personInfo_load(old_phone,old_email) {
 							}).text(domain[i]); // 값 설정
 							$('#domain_sel').append(option);
 						}
+						
+						$('#myform').submit(function(event){
+							event.preventDefault(); // form 기본 동작 막기
+							
+						// 유효성 검사 start
+							var new_phone = $('#phone').val();
+							var new_email = $('#email_id').val() + '@' + $('#domain').val();
+							
+							if(new_phone === old_phone){
+								if (confirm('기존의 휴대폰번호와 동일한 번호로 저장합니다.')) {
+
+								} else {
+									alert('휴대폰 번호를 입력한 후 [인증하기] 버튼을 클릭하여 인증 후,\n[저장하기] 버튼을 클릭해주세요.')
+									$('#phone').focus();
+								    return;
+								}
+							}
+								
+							if(new_email === old_email){
+								if(confirm('기존의 이메일과 동일한 이메일로 저장합니다.')) {
+
+								} else {
+									alert('변경할 메일 주소를 입력해주세요.')
+									$('#email_id').focus();
+								    return;
+								}
+							}
+							
+						// 유효성 검사 end
+							
+							// hidden value에 var new_email 정의
+							var email_hidden = $('<input>').attr({
+								type : 'hidden',
+								name : 'email',
+								value : new_email
+							});
+							
+							// 설정한 값으로 hidden 생성
+							$('#myform').append(email_hidden);
+							
+							// form 통해서 전송할 데이터 직렬화
+							$.post($(this).attr('action'), $(this).serialize(), function(response) {
+
+								personInfo_load(mentor_no, new_phone, new_email);
+							
+							}); 
+							
+						}); // submit end
 						
 					}
 				});
@@ -394,233 +475,508 @@ function personInfo_load(old_phone,old_email) {
 // ******************************************[인적사항 end]**********************************************
 // ******************************************[서비스요금 start]**********************************************
 
+// ******************************************* 추가 start *******************************************
 // 서비스요금 page 불러오기
-function serviceChar_load() {
+function serviceChar_load(check,mentor_no) {
 	
-	var bank = ['','신한은행','국민은행','기업은행','농협은행','산업은행','수협은행','신협은행','우리은행','하나은행','한국씨티은행','카카오뱅크','케이뱅크','토스뱅크',
-				'경남은행','광주은행','대구은행','부산은행','전북은행','제주은행','새마을은행','우체국','저축은행'];
+// 지금부터 ajax로 페이지 전환 간드아아아아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
-	$.ajax({
-		url: 'mentorServiceCharPage',  // JSP 파일의 URL
-		method: 'GET',
-		success: function(data) {
-			$('#load_location').empty().append(data);
-			$('#load_location, .nav_items').removeAttr('style');
-			$('.serviceChar').css(active);
-			$("span:contains('[필수]')").css('color', 'red');
-			$("span:contains('[선택]')").css('color', '#004EA2');
-			
-			// [은행명] select option
-			for (var i = 0; i < bank.length; i++) {
-				if(bank[i] == ''){
-					var option = $('<option>').attr({
-						value : ''
-					}).text('선택'); // 값 설정
-				}else {
-					var option = $('<option>').attr({
-						value : bank[i]
-					}).text(bank[i]); // 값 설정
+	console.log(check);
+	
+// msel.account 가 빈문자열 혹은 [수정하기] 버튼을 클릭한 경우
+	if(check == '' || check == null || check == true) {
+	
+		$.ajax({
+			url: 'mentorServiceCharPage',  // JSP 파일의 URL
+			method: 'GET',
+			data: {mentor_no : mentor_no},
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.serviceChar').css(active);
+				$("span:contains('[필수]')").css('color', 'red');
+				$("span:contains('[선택]')").css('color', '#004EA2');
+				
+				// [은행명] select option
+				for (var i = 0; i < bank.length; i++) {
+					if(bank[i] == ''){
+						var option = $('<option>').attr({
+							value : ''
+						}).text('선택'); // 값 설정
+					}else {
+						var option = $('<option>').attr({
+							value : bank[i]
+						}).text(bank[i]); // 값 설정
+					}
+					$('#bank').append(option);
 				}
-				$('#bank').append(option);
-			}
-			
-			/*$('#myform').submit(function(event){
 				
+				// [상담 종류 :: 전화상담] 체크박스 체크되면 value='Y'로 하고, [전화 상담 요금] input text 활성
+				$('#call_mentoring').change(function() {
+					if ($(this).is(':checked')) {
+						$(this).val('Y'); // value를 'on' 말고 'Y'로 바꿈
+						$('#call_mentoring_fee').removeAttr('readonly');
+					} else {
+					   $('#call_mentoring_fee').prop('readonly', true);
+					}
+				});
 				
-				// 체크박스 체크 감지
-				$('#call_mentoring, #meet_mentoring').change(function() {
+				// [상담 종류 :: 대면상담] 체크박스 체크되면 value='Y'로 하고, [대면 상담 요금] input text 활성
+				$('#meet_mentoring').change(function() {
+					if ($(this).is(':checked')) {
+						$(this).val('Y'); // value를 'on' 말고 'Y'로 바꿈
+						$('#meet_mentoring_fee').removeAttr('readonly');
+					} else {
+						$('#meet_mentoring_fee').prop('readonly', true);
+					}
+				});
+				
+				$('#myform').submit(function(event){
 					event.preventDefault(); // form 기본 동작 막기
 					
-					if ($(this).is(':checked')) {
-						var value = $(this).val(); // 체크된 체크박스의 값을 가져옴 (여기서는 'Y')
-						
-					}else {
-						
+				// 유효성 검사 start
+					var mentoring_kind_checked = $('input[type=checkbox]:checked');
+					
+					var call_mentoring_checked = $('#call_mentoring').is(':checked');
+					var meet_mentoring_checked = $('#meet_mentoring').is(':checked');
+					
+					if(mentoring_kind_checked.length < 1) {
+						alert('이용하실 상담 종류를 1개 이상 체크하세요.');
+						return;
 					}
 					
-				)};
+					if(call_mentoring_checked) {
+						if($('#call_mentoring_fee').val() === '') {
+							alert('[전화]상담의 요금을 입력하세요.');
+							$('#call_mentoring_fee').focus();
+							return;
+						}
+					}
+					if(meet_mentoring_checked) {
+						if($('#meet_mentoring_fee').val() === '') {
+							alert('[대면]상담의 요금을 입력하세요.');
+							$('#meet_mentoring_fee').focus();
+							return;
+						}
+					}
+					
+					// 은행명
+					var bank = $('#bank').val();
+					if (bank.trim() === '') {
+						alert('은행을 선택하세요.');
+						$('#bank').focus();
+						return;
+					}
+					// 계좌번호
+					var account = $('#account').val();
+					if (account.trim() === '') {
+						alert('계좌번호를 입력하세요.');
+						$('#account').focus();
+						return;
+					}
+					// 예금주
+					var account_name = $('#account_name').val();
+					if (account_name.trim() === '') {
+						alert('예금주명을 입력하세요.');
+						$('#account_name').focus();
+						return;
+					}
+				// 유효성 검사 end
+					
+					// [상담 종류] 체크박스 체크 안된 경우 value="N"으로 바꿔서 보냄
+					if (!$('#call_mentoring').is(':checked')) {
+						$(this).append('<input type="hidden" name="call_mentoring" value="N">');
+					}
+					
+					if (!$('#meet_mentoring').is(':checked')) {
+						$(this).append('<input type="hidden" name="meet_mentoring" value="N">');
+					}
+					
+					// form 통해서 전송할 데이터 직렬화
+					$.post($(this).attr('action'), $(this).serialize(), function(response) {
+					
+						// 입력 완료 후 페이지 전환 (serviceChar_load()에 매개변수 새로 넣어서 재호출)
+						serviceChar_load(account);
+						
+						// [수정하기] 버튼 클릭 이벤트
+						$('#edit_btn').click(function() {
+						      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+						      
+						      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+						      serviceChar_load(clicked,mentor_no);	
+						      
+						});  // [수정하기] 클릭 이벤트 end
+						
+						if(check == '' || check == null) {
+							// progress 올리기
+							var currentValue = parseInt($('#progress').val());
+							var updatedValue = currentValue + 25;
+							$('#progress').val(updatedValue);
+						}
+						
+					});
+				}); // submit end
 				
-				// form 통해서 전송할 데이터 직렬화
-				$.post($(this).attr('action'), $(this).serialize(), function(response) {
+			} // [mentorServiceCharPage] ajax-success end
+		}); // [mentorServiceCharPage] ajax end
+		
+	}else { // if end, else start
+		
+		// msel.intro 에 데이터가 있는 경우
+				$.ajax({
+					url: 'mentorServiceCharPage_View',  // 입력 완료 페이지
+					method: 'GET',
+					data: {mentor_no : mentor_no},
+					success: function(data) {
+						$('#load_location').empty().html(data);
+						$('#load_location, .nav_items').removeAttr('style');
+						$('.serviceChar').css(active);
+			
+						// [수정하기] 버튼 클릭 이벤트
+					    $('#edit_btn').click(function() {
+					      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+					      
+					      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+					      serviceChar_load(clicked,mentor_no);	
+					      
+					    }); // [수정하기] 클릭 이벤트 end
+					    
+					} // [mentorServiceCharPage_View] ajax-success end
 				
-			}); // submit end
-*/			
-		} // serviceChar_load() ajax-success end
-	}); // serviceChar_load() ajax end
+				}); // [mentorServiceCharPage_View] ajax end
+				
+			} // else end		
+		
+		
 } // serviceChar_load() end
+
+// ******************************************* 추가 end *******************************************
 
 // ******************************************[서비스요금 end]**********************************************
 // ******************************************[학력사항 start]**********************************************
 
 // 학력사항 page 불러오기
-function eduInfo_load() {
+function eduInfo_load(check,mentor_no) {
 	
 	var degree = ['','학사','석사','박사'];
 	
-	$.ajax({
-		url: 'mentorEduInfoPage',  // JSP 파일의 URL
-		method: 'GET',
-		success: function(data) {
-			$('#load_location').empty().append(data);
-			$('#load_location, .nav_items').removeAttr('style');
-			$('.eduInfo').css(active);
-			$("span:contains('[필수]')").css('color', 'red');
-			$("span:contains('[선택]')").css('color', '#004EA2');
-			
-			// [학위] select option
-			for (var i = 0; i < degree.length; i++) {
-				if(degree[i] == ''){
-					var option = $('<option>').attr({
-						value : 'N'
-					}).text('선택'); // 값 설정
-				}else {
-					var option = $('<option>').attr({
-						value : degree[i]
-					}).text(degree[i]); // 값 설정
+	console.log(check);
+	
+	if(check == 0 || check == true) {
+		
+		$.ajax({
+			url: 'mentorEduInfoPage',  // JSP 파일의 URL
+			method: 'GET',
+			data: {mentor_no : mentor_no},
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.eduInfo').css(active);
+				$("span:contains('[필수]')").css('color', 'red');
+				$("span:contains('[선택]')").css('color', '#004EA2');
+				
+				// [학위] select option
+				for (var i = 0; i < degree.length; i++) {
+					if(degree[i] == ''){
+						var option = $('<option>').attr({
+							value : 'N'
+						}).text('선택'); // 값 설정
+					}else {
+						var option = $('<option>').attr({
+							value : degree[i]
+						}).text(degree[i]); // 값 설정
+					}
+					$('#degree').append(option);
 				}
-				$('#degree').append(option);
-			}
-			
-			// Air-datePicker 호출
-			$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			
-			// 추가,삭제 버튼 구현 start
-			
-			// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-			var plus_content_read = $('#plus_content').html();
-			
-			// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
-			var plus_div_cnt = $(".plus_div").length;
-			
-			// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
-			var del_cnt = '';
-			
-			del_cnt = plus_div_cnt; 
-			
-			// [추가하기] 버튼 클릭 이벤트
-			$('.plus_btn').click(function(){
 				
-				$('#plus_content').append('<div id="del_div'
-									+	del_cnt
-									+	'"><hr class="title_hr">'
-									+	plus_content_read
-									+	'<div align="right" style="margin-top: 10px;">'
-									+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
-									+	del_cnt+'"'
-									+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
-								);
-				
-				del_cnt++;
-				
-				// Air-datePicker 호출 따로 또 해줘야함..
+				// Air-datePicker 호출
 				$(".datepicker-here").datepicker({maxDate : currentDate}); 
 				
+				// 추가,삭제 버튼 구현 start
 				
-			});
-			
-			// 파일 처리
-			selectFile(element);
-			addFile();
-			removeFile(element)
-			
-			$('#myform').submit(function(){
-				event.preventDefault(); // form 기본 동작 막기
+				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+				var plus_content_read = $('#plus_content').html();
 				
-				//var after_plus_content_read = $('#plus_content').html();
-				//var find_input_minor = $(after_plus_content_read).filter('input[id="minor"]');
-
-				//find_input_minor.each(function() {
-			        //var currentMinor = $(this);
-			        if ($('#minor').val() === '') { // 값이 빈 문자열인 경우
-			        	$('#minor').val('N'); // 'N'으로 설정
-			        }
-			    //});
+				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+				var plus_div_cnt = $(".plus_div").length;
 				
-				// form 통해서 전송할 데이터 직렬화
-				$.post($(this).attr('action'), $(this).serialize(), function(response) {
+				// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+				var del_cnt = '';
+				
+				del_cnt = plus_div_cnt; 
+				
+				// [추가하기] 버튼 클릭 이벤트
+				$('.plus_btn').click(function(){
 					
-					// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
-					eduInfo_load();
-				
+					$('#plus_content').append('<div id="del_div'
+										+	del_cnt
+										+	'"><hr class="title_hr">'
+										+	plus_content_read
+										+	'<div align="right" style="margin-top: 10px;">'
+										+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+										+	del_cnt+'"'
+										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+									);
+					
+					// id 값이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
+					var new_id = 'minor' + del_cnt;
+					$('#minor0').attr('id', new_id);
+					
+					// id 값에 minor를 포함하는 input text 찾기
+					var minorTextInputs = $('input[type="text"]').filter(function() {
+						return $(this).attr('id') && $(this).attr('id').indexOf('minor') !== -1;
+					});
+					
+					// 찾은 input text의 갯수 구하기
+					var count = minorTextInputs.length;
+					console.log('minorTextInputs count:::'+count);
+					
+					// 갯수만큼 루프돌리면서, hidden으로 minor 값 전달 [minor1 부터만 처리(minor0은 click 이벤트 밖에서 처리..)]
+					for(var i=1; i<count; i++) {
+						if ($('#minor'+i).val() == '') {
+							$('#myform').append('<input type="hidden" name="minor" value="N">');
+						}else {
+							$('#myform').append('<input type="hidden" name="minor" value="'+$('#minor'+i).val()+'">');
+						}
+					}
+					
+					del_cnt++;
+					
+					console.log(del_cnt);
+					
+					// Air-datePicker 호출 따로 또 해줘야함..
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+					
 				});
+				
+				$('#myform').submit(function(){
+					event.preventDefault(); // form 기본 동작 막기
 					
-			}); // submit end
-		
+				 // 유효성 검사 start
+						// 소개글
+						var school = $('#school').val();
+						if (school.trim() === '') {
+							alert('학교명을 입력하세요.');
+							$('#school').focus();
+							return;
+						}
+						// 입학일자
+						var entering_date = $('#entering_date').val();
+						if (entering_date.trim() === '') {
+							alert('입학일자를 선택하세요.');
+							$('#entering_date').focus();
+							return;
+						}
+						// 졸업일자
+						var graduation_date = $('#graduation_date').val();
+						if (graduation_date.trim() === '') {
+							alert('졸업일자를 선택하세요.');
+							$('#graduation_date').focus();
+							return;
+						}
+						/*// 학위
+						var degree_checked = $('#meet_mentoring').is(':selected');
+						if(!degree_checked) {
+							alert('학위를 선택하세요.');
+							return;
+						}*/
+						// 전공명
+						var major = $('#major').val();
+						if (major.trim() === '') {
+							alert('전공명을 입력하세요.');
+							$('#major').focus();
+							return;
+						}
+				// 유효성 검사 end
+						
+				        // minor0 value 값 전달
+						// click 이벤트 밖에 정의해야함
+						var minor = $('#minor0').val();
+						
+						if (minor === '') {
+							$('#myform').append('<input type="hidden" name="minor" value="N">');
+						}else {
+							$('#myform').append('<input type="hidden" name="minor" value="'+minor+'">');
+						}
+						
+						
+					// form 통해서 전송할 데이터 직렬화
+					/*$.post($(this).attr('action'), $(this).serialize(), function(response) {
+						
+						// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
+						eduInfo_load(school,mentor_no);
+						
+						console.log("바보멍청이똥개해삼말미잘");
+					
+						if(check == '' || check == null) {
+							// progress 올리기
+							var currentValue = parseInt($('#progress').val());
+							var updatedValue = currentValue + 25;
+							$('#progress').val(updatedValue);
+						}
+						
+					});*/
+						var form = $('#myform')[0];
+						var formdata = new FormData(form);
+						
+						$.ajax({
+							url : $(this).attr('action'),
+							type : 'POST',
+							data : formdata,
+							processData : false,
+							contentType : false,
+							enctype : 'multipart/form-data',
+							success: function(){
+								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
+								eduInfo_load(school,mentor_no);
+								
+								console.log("바보멍청이똥개해삼말미잘");
+							
+								if(check == '' || check == null) {
+									// progress 올리기
+									var currentValue = parseInt($('#progress').val());
+									var updatedValue = currentValue + 25;
+									$('#progress').val(updatedValue);
+								}
+							},
+							error : function(){
+							}
+						});
+						
+				}); // submit end
 			
-		} // eduInfo_load() ajax-success end
-	}); // eduInfo_load() ajax end
+				
+			} // eduInfo_load() ajax-success end
+		}); // eduInfo_load() ajax end
+	
+	}else { // if end else start
+		
+		$.ajax({
+			url: 'mentorEduInfoPage_View',  // JSP 파일의 URL
+			method: 'GET',
+			data: {mentor_no : mentor_no},
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.eduInfo').css(active);
+				
+				// [수정하기] 버튼 클릭 이벤트
+			    $('#edit_btn').click(function() {
+			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+			      
+			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+			      eduInfo_load(clicked,mentor_no);	
+			      
+			    }); // [수정하기] 클릭 이벤트 end
+			    
+			} // [mentorEduInfoPage_View] ajax-success end
+				
+		}); // [mentorEduInfoPage_View] ajax end
+		
+	} // else end
+	
 } // eduInfo_load() end
 
 // ******************************************[학력사항 end]**********************************************
 // ******************************************[경력사항 start]**********************************************
 
 // 경력사항 page 불러오기
-function expInfo_load() {
+function expInfo_load(check) {
 	
 	var task = ['','프론트엔드','백엔드'];
 	
-	$.ajax({
-		url: 'mentorExpInfoPage',  // JSP 파일의 URL
-		method: 'GET',
-		success: function(data) {
-			$('#load_location').empty().append(data);
-			$('#load_location, .nav_items').removeAttr('style');
-			$('.expInfo').css(active);
-			$("span:contains('[필수]')").css('color', 'red');
-			$("span:contains('[선택]')").css('color', '#004EA2');
-			
-			// [직무] select option
-			for (var i = 0; i < task.length; i++) {
-				if(task[i] == ''){
-					var option = $('<option>').attr({
-						value : ''
-					}).text('선택'); // 값 설정
-				}else {
-					var option = $('<option>').attr({
-						value : task[i]
-					}).text(task[i]); // 값 설정
+	console.log(check);
+	
+	if(check == 0 || check == 'true') {
+		
+		$.ajax({
+			url: 'mentorExpInfoPage',  // JSP 파일의 URL
+			method: 'GET',
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.expInfo').css(active);
+				$("span:contains('[필수]')").css('color', 'red');
+				$("span:contains('[선택]')").css('color', '#004EA2');
+				
+				// [직무] select option
+				for (var i = 0; i < task.length; i++) {
+					if(task[i] == ''){
+						var option = $('<option>').attr({
+							value : ''
+						}).text('선택'); // 값 설정
+					}else {
+						var option = $('<option>').attr({
+							value : task[i]
+						}).text(task[i]); // 값 설정
+					}
+					$('#task').append(option);
 				}
-				$('#task').append(option);
-			}
-			
-			// Air-datePicker 호출
-			$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			
-			
-			// 추가,삭제 버튼 구현 start
-			
-			// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-			var plus_content_read = $('#plus_content').html();
-
-			// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
-			var plus_div_cnt = $(".plus_div").length;
-			
-			// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
-			var del_cnt = '';
-			
-			del_cnt = plus_div_cnt; 
-			
-			// [추가하기] 버튼 클릭 이벤트
-			$('.plus_btn').click(function(){
 				
-				$('#plus_content').append('<div id="del_div'
-									+	del_cnt
-									+	'"><hr class="title_hr">'
-									+	plus_content_read
-									+	'<div align="right" style="margin-top: 10px;">'
-									+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
-									+	del_cnt+'"'
-									+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
-								);
-				
-				del_cnt++;
-				
-				// Air-datePicker 호출 따로 또 해줘야함..
+				// Air-datePicker 호출
 				$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			});
-			
-		} // expInfo_load() ajax-success end
-	}); // expInfo_load() ajax end
+				
+				
+				// 추가,삭제 버튼 구현 start
+				
+				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+				var plus_content_read = $('#plus_content').html();
+	
+				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+				var plus_div_cnt = $(".plus_div").length;
+				
+				// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+				var del_cnt = '';
+				
+				del_cnt = plus_div_cnt; 
+				
+				// [추가하기] 버튼 클릭 이벤트
+				$('.plus_btn').click(function(){
+					
+					$('#plus_content').append('<div id="del_div'
+										+	del_cnt
+										+	'"><hr class="title_hr">'
+										+	plus_content_read
+										+	'<div align="right" style="margin-top: 10px;">'
+										+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+										+	del_cnt+'"'
+										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+									);
+					
+					del_cnt++;
+					
+					// Air-datePicker 호출 따로 또 해줘야함..
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				});
+				
+			} // expInfo_load() ajax-success end
+		}); // expInfo_load() ajax end
+	
+	}else { // if end, else start
+		
+		$.ajax({
+			url: 'mentorExpInfoPage_View',  // JSP 파일의 URL
+			method: 'GET',
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.expInfo').css(active);
+				
+				// [수정하기] 버튼 클릭 이벤트
+			    $('#edit_btn').click(function() {
+			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+			      
+			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+			      expInfo_load(clicked);	
+			      
+			    }); // [수정하기] 클릭 이벤트 end
+			    
+			} // [mentorEduInfoPage_View] ajax-success end
+				
+		}); // [mentorEduInfoPage_View] ajax end
+		
+	} // else end
+	
 } // expInfo_load() end
 
 // ******************************************[경력사항 end]**********************************************

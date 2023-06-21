@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
-<form method="post" action="mentorPersonInfo_UP" id="myform">
+<form method="post" action="mentorPersonInfo_UP?mentor_no=${mentor_no}" id="myform">
 
 	<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
 		<span style="color: #004EA2;">[회원가입]</span>
@@ -34,7 +34,7 @@
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">휴대폰번호  <span class="small_jh">[선택]</span></div>
 			<div class="mentor_info infoInp" style="width: 40%;" >
-				<input type="text" id="phone" name="phone" style="width: 100%;" placeholder="'-'없이 숫자만 입력하세요." value="${msel.phone}">
+				<input type="text" id="phone" name="phone" style="width: 100%;" placeholder="'-'없이 숫자만 입력하세요." maxlength="11" value="${msel.phone}">
 			</div>
 			<div class="mentor_info infoInp" style="width: 20%; text-align: right;">
 				<button type="button" class="btn_jh" style="width: 100%;">인증하기</button>
@@ -63,55 +63,6 @@
 
 <script>
 
-$('#myform').submit(function(event){
-	event.preventDefault(); // form 기본 동작 막기
-	
-// 유효성 검사 start
-	var new_phone = $('#phone').val();
-	var old_phone = '${msel.phone}'
-	
-	var new_email = $('#email_id').val() + '@' + $('#domain').val();
-	var old_email = '${msel.email}'
-	
-	if(new_phone === old_phone){
-		if (confirm('기존의 휴대폰번호와 동일한 번호로 저장합니다.')) {
 
-		} else {
-			alert('휴대폰 번호를 입력한 후 [인증하기] 버튼을 클릭하여 인증 후,\n[저장하기] 버튼을 클릭해주세요.')
-			$('#phone').focus();
-		    return;
-		}
-	}
-		
-	if(new_email === old_email){
-		if(confirm('기존의 이메일과 동일한 이메일로 저장합니다.')) {
-
-		} else {
-			alert('변경할 메일 주소를 입력해주세요.')
-			$('#email_id').focus();
-		    return;
-		}
-	}
-	
-// 유효성 검사 end
-	
-	// hidden value에 var new_email 정의
-	var email_hidden = $('<input>').attr({
-		type : 'hidden',
-		name : 'email',
-		value : new_email
-	});
-	
-	// 설정한 값으로 hidden 생성
-	$('#myform').append(email_hidden);
-	
-	// form 통해서 전송할 데이터 직렬화
-	$.post($(this).attr('action'), $(this).serialize(), function(response) {
-	    // 페이지 새로고침
-		$('#load_location').empty().html(response);
-	
-	}); 
-	
-}); // submit end
 
 </script>

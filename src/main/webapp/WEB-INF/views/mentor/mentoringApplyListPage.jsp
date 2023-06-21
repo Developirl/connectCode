@@ -60,29 +60,33 @@
 		
 		<hr class="title_hr">
 		
-		<div class="cont_mar" style="margin: 0 auto; width:1000px">
+	<!-- ******************************************* 추가 start ******************************************* -->
+		
+		<div class="cont_mar">
 			<!-- 멘토링예약 list -->
- 			<!-- <div class="appointment" onclick=""> -->
 			<c:forEach var="b" items="${list}">
-				<div style="width: 15%">
-					<!-- img 주석 풀고 c:if 써서 멘토링방법이 대면인 경우, 전화인 경우 나눠서 이미지 출력 -->
-					<!-- <img class="mentoringType_img" src="/mentor/img/talk.jpg"> -->
-					<img class="mentoringType_img" src="/mentor/img/call.jpg">
-				</div>
-				<div class="mentee_info">
-					<div style="display: flex;">
-						<div class="medium_jh" style="width: 50%;">${b.name}</div>
-						<div class="small_jh" style="width: 50%; text-align: right; color: #777777">${b.apply_time}</div>
+				<div class="appointment" style="display: flex; height: 150px; margin-bottom: 10px;" onclick="">
+					<div style="width: 20%">
+						<!-- img 주석 풀고 c:if 써서 멘토링방법이 대면인 경우, 전화인 경우 나눠서 이미지 출력 -->
+						<!-- <img class="mentoringType_img" src="/mentor/img/talk.jpg"> -->
+						<img class="mentoringType_img" src="/mentor/img/call.jpg">
 					</div>
-					<div class="small_jh">${b.desired_job}</div>
-					<div class="small_jh">${b.mentoring_location}</div>
-					<div class="small_jh">[멘토링예약]멘티신청내용</div>
+					<div class="mentee_info" style="width: 80%;">
+						<div style="display: flex;">
+							<div class="medium_jh" style="width: 50%;">${b.name}</div>
+							<div class="small_jh" style="width: 50%; text-align: right; color: #777777">${b.apply_time}</div>
+						</div>
+						<div class="small_jh">${b.desired_job}</div>
+						<div class="small_jh">${b.mentoring_location}</div>
+						<div class="small_jh">[멘토링예약]멘티신청내용</div>
+					</div>
 				</div>
-			<!-- </div> -->
 			</c:forEach>
 			<!-- 멘토링예약 list end -->
 		</div>
 		
+	<!-- ******************************************* 추가 end ******************************************* -->
+
 		<!-- 주석 풀어서 사용 /// c:if 써서 요청 상담 empty 일때 보여지도록 (페이지 버튼은 가려지게 하기~) -->
 		<c:if test="${empty list}">
 		<div class="cont_mar">

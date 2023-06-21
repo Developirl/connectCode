@@ -13,11 +13,11 @@
 		</div>
 		<hr class="title_hr">
 		<div class="cont_mar profileEditNav_div">
-			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}','${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
-			<div class="personInfo nav_items medium_jh" onclick="personInfo_load()">인적사항</div>
-			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load()">서비스 요금</div>
-			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load()">학력사항</div>
-			<div class="expInfo nav_items medium_jh" onclick="expInfo_load()">경력사항</div>
+			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}','${mentor_no}','${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
+			<div class="personInfo nav_items medium_jh" onclick="personInfo_load('${mentor_no}','${msel.phone}','${msel.email}')">인적사항</div>
+			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load('${msel.account}','${mentor_no}')">서비스 요금</div>
+			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load('${edu_list_size}','${mentor_no}')">학력사항</div>
+			<div class="expInfo nav_items medium_jh" onclick="expInfo_load('${car_list_size}')">경력사항</div>
 			<div class="techInfo nav_items medium_jh" onclick="techInfo_load()">기술 및 분야</div>
 		</div>
 			
@@ -95,9 +95,6 @@
 	</div>
 	
 	<script src="/mentor/js/mentorProfile_ModifyPaging.js"></script>
-	<c:if test="${!empty msel.intro}">
-		<script>$('#progress').val(25);</script>
-	</c:if>
 	
 	<script>
 	
@@ -111,6 +108,48 @@
 	/* $('#edit_btn').click(function(){
 		
 	}); */
+	
+	$(document).ready(function(){
+	
+		console.log('${msel.intro}'+'/'+'${msel.account}'+'/'+'${edu_list_size}'+'/'+'${car_list_size}');
+		
+		if (('${msel.intro}' && '${msel.account}' && '${edu_list_size}' && '${car_list_size}') != 0) {
+		    $('#progress').val(100);
+		    
+		} else if (('${msel.intro}' && '${msel.account}' && '${edu_list_size}') != 0 || ('${msel.intro}' && '${msel.account}' && '${car_list_size}') != 0
+		  		|| ('${msel.intro}' && '${edu_list_size}' && '${car_list_size}') != 0 || ('${msel.account}'&& '${edu_list_size}' && '${car_list_size}') != 0) {
+		  $('#progress').val(75);
+		  
+		} else if (('${msel.intro}' && '${msel.account}') != 0 || ('${msel.intro}' && '${edu_list_size}') != 0 || ('${msel.intro}' && '${car_list_size}') != 0
+		  		|| ('${msel.account}' && '${edu_list_size}') != 0 || ('${msel.account}' && '${car_list_size}') != 0 || ('${edu_list_size}' && '${car_list_size}') != 0) {
+		  $('#progress').val(50);
+		  
+		} else if (('${msel.intro}' || '${msel.account}' || '${edu_list_size}' || '${car_list_size}') != 0) {
+		  $('#progress').val(25);
+		  
+		} else {
+		  $('#progress').val(0);
+		}
+
+		/* 		if ('${msel.intro}' != '' && '${msel.account}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
+		    $('#progress').val(100);
+		    
+		} else if ('${msel.intro}' != '' && '${msel.account}' != '' && '${edu_list_size}' != 0 || '${msel.intro}' != '' && '${msel.account}' != '' && '${car_list_size}' != 0
+		  		|| '${msel.intro}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0 || '${msel.account}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
+		  $('#progress').val(75);
+		  
+		} else if ('${msel.intro}' != '' && '${msel.account}' != '' || '${msel.intro}' != '' && '${edu_list_size}' != 0 || '${msel.intro}' != '' && '${car_list_size}' != 0
+		  		|| '${msel.account}' != '' && '${edu_list_size}' || '${msel.account}' != '' && '${car_list_size}' != 0 || '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
+		  $('#progress').val(50);
+		  
+		} else if ('${msel.intro}' != '' || '${msel.account}' != '' || '${edu_list_size}' != 0 || '${car_list_size}' != 0) {
+		  $('#progress').val(25);
+		  
+		} else {
+		  $('#progress').val(0);
+		} */
+	
+	});
 	
 	</script>
 	

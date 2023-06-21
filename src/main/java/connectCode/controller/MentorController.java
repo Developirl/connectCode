@@ -22,6 +22,7 @@ import connectCode.service.FileUtils;
 import connectCode.service.InqueryServiceImpl;
 import connectCode.service.MentorService;
 import connectCode.service.Paging;
+import retrofit2.http.HTTP;
 
 @Controller
 @RequestMapping("/mentor/*")
@@ -47,13 +48,18 @@ public class MentorController {
 		//session.setAttribute("mentor_no", 5); // 최멘토 21(미승인)
 		//session.setAttribute("mentor_no", 3); // 김멘토 22(승인요청)
  		//session.setAttribute("mentor_no", 4); // 오멘토 23(승인)
- 		session.setAttribute("mentor_no", 13); // 송강 23(승인)
+ 		//session.setAttribute("mentor_no", 13); // 송강 23(승인)
+		session.setAttribute("mentor_no", 19); // 김방정
 		System.out.println("누가 접속 하셨나요?:" + (int)session.getAttribute("mentor_no"));
 		
 		// mentor 객체에 mentor_no = session 할당
 		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
-		
-		// mentor_no으로 mentor 테이블 전체 검색
+
+		// mentor_no으로 member_no 찾아서 할당 [alarm 테이블 조회에 사용]
+		int member_no = ms.select_member_no(mentor); // member_no 찾기
+		mentor.setMember_no(member_no);				 // mentor 객체에 member_no 할당
+
+		// mentor_no으로 mentor JOIN career & alarm 테이블 검색 [사이드바 출력 내용]
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
 		model.addAttribute("msel", mentor_select);
@@ -63,15 +69,26 @@ public class MentorController {
 
 	// 멘토 프로필 관리 페이지
 	@GetMapping("mentorProfileModifyPage")
-	public String mentorProfileModifyPage(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorProfileModifyPage(MentorDTO mentor, Model model) {
 
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorProfileModifyPage :: mentor_no :: "+mentor.getMentor_no());
 		
-		// mentor_no으로 mentor 테이블 전체 검색
-		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		// mentor_no으로 member_no 찾아서 할당 [alarm 테이블 조회에 사용] 
+		int member_no = ms.select_member_no(mentor); // member_no 찾기 
+		mentor.setMember_no(member_no);				 // mentor 객체에 member_no 할당
+		  
+		// mentor_no으로 mentor JOIN career & alarm 테이블 검색 [사이드바 출력 내용 & 입력 확인용 : progress 증감] 
+		MentorDTO  mentor_select = ms.mentorProfile(mentor);
 		
-		model.addAttribute("msel", mentor_select);
+		// mentor_no으로 education JOIN file 테이블 전체 검색 [입력 확인용 : progress 증감]
+		List<MentorDTO> education_select = ms.education_select(mentor);
+		
+		// mentor_no으로 career JOIN file 테이블 전체 검색 [입력 확인용 : progress 증감]
+		List<MentorDTO> career_select = ms.career_select(mentor);
+		
+		model.addAttribute("car_list_size", career_select.size());		// List 이므로 size로 반환하여 입력 확인
+		model.addAttribute("edu_list_size", education_select.size());	// List 이므로 size로 반환하여 입력 확인
+		model.addAttribute("msel", mentor_select); 						// 입력 확인은 intro, account로 확인
 		
 		return "mentor/mentorProfileModifyPage";
 	}
@@ -81,40 +98,37 @@ public class MentorController {
 	
 	// 멘토 프로필 수정 [기본정보 입력 전] 페이지
 	@GetMapping("mentorBasicInfoPage")
-	public String mentorBasicInfoPage(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorBasicInfoPage(MentorDTO mentor, Model model) {
 		
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorBasicInfoPage :: mentor_no :: "+mentor.getMentor_no());
 		
-		// mentor_no으로 mentor 테이블 전체 검색
+		// mentor_no으로 mentor 테이블 전체 검색 [수정폼 value 출력용]
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		model.addAttribute("msel", mentor_select);
 		
-		/*
-		 * if(mentor_select.getIntro() != null & mentor_select.getUnable_date() != null
-		 * & mentor_select.getMentoring_time() != null) {
-		 * 
-		 * model.addAttribute("msel", mentor_select);
-		 * 
-		 * return "mentor/mentorBasicInfoPage_View"; // 입력 완료 페이지 (상세페이지)
-		 * 
-		 * } else {
-		 */
-			model.addAttribute("msel", mentor_select);
-			return "mentor/mentorBasicInfoPage"; // 입력 전 페이지 (입력폼)
-		/*}*/
+		return "mentor/mentorBasicInfoPage"; // 입력 전 페이지 (입력폼)
 	}
 	
 	// 멘토 프로필 수정 [기본정보] 입력 정보 DB에 update
 	@PostMapping("mentorBasicInfo_Up")
-	public String mentorBasicInfo_Up(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorBasicInfo_Up(MentorDTO mentor, Model model) {
 
-		// mentor 객체에 member_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorBasicInfo_Up :: mentor_no :: "+mentor.getMentor_no());
 
-		// update 수행
-		ms.mentorBasic_update(mentor);
+		// mentor 테이블 update 수행 [프사, 소개글, 상담불가요일, 상담가능시간]
+		ms.mentorTBL_update(mentor);
 
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		
+		System.out.println(mentor.getFiles() == null);
+		System.out.println("mentor.getFile_no(): "+mentor.getFile_no());
+		System.out.println("mentor.getFiles(): "+mentor.getFiles());
+		
+		// file 테이블 insert [다중 파일 처리] 
+		List<FileDTO> files = fileUtils.uploadFiles(mentor.getFiles()); 
+		System.out.println(files);
+		  
+		fileService.saveFiles(mentor.getFile_no(), files);
 		
 		model.addAttribute("msel", mentor_select);
 
@@ -123,10 +137,9 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [기본정보 입력 완료] 페이지
 	@GetMapping("mentorBasicInfoPage_View")
-	public String mentorBasicInfoPage_View(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorBasicInfoPage_View(MentorDTO mentor, Model model) {
 		
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorBasicInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
 		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
@@ -141,10 +154,9 @@ public class MentorController {
 	
 	// 멘토 프로필 수정 [인적사항 작성 전] 페이지
 	@GetMapping("mentorPersonInfoPage")
-	public String mentorPersonInfoPage(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorPersonInfoPage(MentorDTO mentor, Model model) {
 
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorPersonInfoPage :: mentor_no :: "+mentor.getMentor_no());
 		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
@@ -162,10 +174,9 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [인적사항] 입력 정보 DB에  update
 	@PostMapping("mentorPersonInfo_UP")
-	public String mentorPersonInfo_UP(MentorDTO mentor, HttpSession session, Model model) {
-		
-		// mentor 객체에 member_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+	public String mentorPersonInfo_UP(MentorDTO mentor, Model model) {
+
+		System.out.println("mentorPersonInfo_UP :: mentor_no :: "+mentor.getMentor_no());
 
 		// update 수행
 		int result = ms.mentorPerson_update(mentor);
@@ -180,10 +191,9 @@ public class MentorController {
 	
 	// 멘토 프로필 수정 [인적사항 작성 완료] 페이지
 	@GetMapping("mentorPersonInfoPage_View")
-	public String mentorPersonInfoPage_View(MentorDTO mentor, HttpSession session, Model model) {
-		
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+	public String mentorPersonInfoPage_View(MentorDTO mentor, Model model) {
+
+		System.out.println("mentorPersonInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
 		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
@@ -198,42 +208,116 @@ public class MentorController {
 	
 	// 멘토 프로필 수정 [서비스요금 작성 전] 페이지
 	@GetMapping("mentorServiceCharPage")
-	public String mentorServiceCharPage() {
+	public String mentorServiceCharPage(MentorDTO mentor, Model model) {
+		
+		System.out.println("mentorServiceCharPage :: mentor_no :: "+mentor.getMentor_no());
+		
+		// mentor_no으로 mentor 테이블 전체 검색 
+		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		
+		/*
+		 * List<MentorDTO> serviceTBL_select = ms.serviceTBL_select(mentor); MentorDTO[]
+		 * serviceTBL_select_array = serviceTBL_select.toArray(new MentorDTO[0]);
+		 * 
+		 * for(int i=0; i<serviceTBL_select_array.length; i++) {
+		 * System.out.println(serviceTBL_select_array[i]); }
+		 * model.addAttribute("ser_sel", serviceTBL_select_array);
+		 */
+		
+		model.addAttribute("msel", mentor_select);
 		
 		return "mentor/mentorServiceCharPage";
 	}
 	
-	// 멘토 프로필 수정 [서비스요금] 입력 정보 DB에 insert
-	@PostMapping("mentorServiceChar_Up")
-	public String mentorServiceChar_Up(@RequestParam("call_mentoring") String call_mentoring, 
+	// 멘토 프로필 수정 [서비스요금] 입력 정보 DB에 insert & update
+	@PostMapping("mentorServiceChar_Up_first")
+	public String mentorServiceChar_Up_first(@RequestParam("call_mentoring") String call_mentoring, 
 										@RequestParam("meet_mentoring") String meet_mentoring, 
-										@RequestParam("call_mentoring_fee") int call_mentoring_fee, 
-										@RequestParam("meet_mentoring_fee") int meet_mentoring_fee, 
-										MentorDTO mentor, HttpSession session, Model model) {
+										@RequestParam("call_mentoring_fee") String call_mentoring_fee, 
+										@RequestParam("meet_mentoring_fee") String meet_mentoring_fee, 
+										MentorDTO mentor, Model model) {
+
+		System.out.println("mentorServiceChar_Up_first :: mentor_no :: "+mentor.getMentor_no());
 		
-		System.out.println("call_mentoring:"+call_mentoring);
-		System.out.println("meet_mentoring:"+meet_mentoring);
-		System.out.println("***************************************");
-		System.out.println("call_mentoring_fee:"+call_mentoring_fee);
-		System.out.println("meet_mentoring_fee:"+meet_mentoring_fee);
-		System.out.println("***************************************");
-		System.out.println("bank:"+mentor.getBank());
-		System.out.println("account:"+mentor.getAccount());
-		System.out.println("account_name:"+mentor.getAccount_name());
+		// 이용하지 않을 [상담 종류] 체크 안할 경우, [상담 요금]에 "0"을 넣음 => null 값 insert 못하므로오 ..왜?!
+		if(call_mentoring_fee.equals("")) {
+			call_mentoring_fee = "0";
+		}
+		if(meet_mentoring_fee.equals("")) {
+			meet_mentoring_fee = "0";
+		}
 		
+		// service 테이블 insert
+		// 전화상담
+		mentor.setMentoring_kind("20분 전화 멘토링");
+		mentor.setMentoring_fee(Integer.parseInt(call_mentoring_fee));
+		mentor.setAvailable_NY(call_mentoring);
+		ms.serviceTBL_insert(mentor);
 		
-		/*
-		 * int result = ms.service_kind_insert(mentor);
-		 * System.out.println("result: "+result);
-		 */
-		 
+		// 대면상담
+		mentor.setMentoring_kind("30분 대면 멘토링");
+		mentor.setMentoring_fee(Integer.parseInt(meet_mentoring_fee));
+		mentor.setAvailable_NY(meet_mentoring);
+		ms.serviceTBL_insert(mentor);
+		
+		// mentor 테이블 update 수행 [은행, 계좌번호, 예금주명]
+		ms.mentorTBL_update(mentor);
 		
 		return "mentor/mentorServiceCharPage_View";
 	}
 
 	// 멘토 프로필 수정 [서비스요금 작성 완료] 페이지
-	@PostMapping("mentorServiceCharPage_View")
+	@GetMapping("mentorServiceCharPage_View")
 	public String mentorServiceCharPage_View(MentorDTO mentor, HttpSession session, Model model) {
+		
+		System.out.println("mentorServiceCharPage_View :: mentor_no :: "+mentor.getMentor_no());
+
+		// mentorDTO에 mentor_no 주입
+		mentor.setMentor_no((int)session.getAttribute("mentor_no"));
+		
+		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		List<MentorDTO> serviceTBL_select = ms.serviceTBL_select(mentor);
+		
+		model.addAttribute("msel", mentor_select);
+		model.addAttribute("ser_sel", serviceTBL_select);
+		
+		return "mentor/mentorServiceCharPage_View";
+	}
+	
+	@PostMapping("mentorServiceChar_Up")
+	public String mentorServiceChar_Up(@RequestParam("call_mentoring") String call_mentoring, 
+										@RequestParam("meet_mentoring") String meet_mentoring, 
+										@RequestParam("call_mentoring_fee") String call_mentoring_fee, 
+										@RequestParam("meet_mentoring_fee") String meet_mentoring_fee, 
+										MentorDTO mentor, HttpSession session, Model model) {
+		
+		System.out.println("mentorServiceChar_Up :: mentor_no :: "+mentor.getMentor_no());
+
+		// 이용하지 않을 [상담 종류] 체크 안할 경우, [상담 요금]에 "0"을 넣음 => null 값 insert 못하므로오 ..왜?!
+		if(call_mentoring_fee.equals("")) {
+			call_mentoring_fee = "0";
+		}
+		if(meet_mentoring_fee.equals("")) {
+			meet_mentoring_fee = "0";
+		}
+		
+		// service 테이블 insert
+		// 전화상담
+		mentor.setMentoring_kind("20분 전화 멘토링");
+		mentor.setMentoring_fee(Integer.parseInt(call_mentoring_fee));
+		mentor.setAvailable_NY(call_mentoring);
+		int result1 = ms.serviceTBL_update(mentor);
+		System.out.println("20전화 result::"+result1);
+		
+		// 대면상담
+		mentor.setMentoring_kind("30분 대면 멘토링");
+		mentor.setMentoring_fee(Integer.parseInt(meet_mentoring_fee));
+		mentor.setAvailable_NY(meet_mentoring);
+		int result2 = ms.serviceTBL_update(mentor);
+		System.out.println("30대면 result::"+result2);
+		
+		// mentor 테이블 update 수행 [은행, 계좌번호, 예금주명]
+		ms.mentorTBL_update(mentor);
 		
 		
 		return "mentor/mentorServiceCharPage_View";
@@ -244,8 +328,16 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [학력사항 작성 전] 페이지
 	@GetMapping("mentorEduInfoPage")
-	public String mentorEduInfoPage() {
+	public String mentorEduInfoPage(MentorDTO mentor, HttpSession session, Model model) {
+		
+		System.out.println("mentorEduInfoPage :: mentor_no :: "+mentor.getMentor_no());
 
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		List<MentorDTO> education_select = ms.education_select(mentor);
+		
+		model.addAttribute("edu_sel", education_select);
 		
 		return "mentor/mentorEduInfoPage";
 	}
@@ -254,6 +346,8 @@ public class MentorController {
 	@PostMapping("mentorEduInfo_UP")
 	public String mentorEduInfo_UP(MentorDTO mentor, HttpSession session, Model model) {
 		
+		System.out.println("mentorEduInfo_UP :: mentor_no :: "+mentor.getMentor_no());
+
 		String[] school = mentor.getSchool().split(",");
 		String[] entering_date = mentor.getEntering_date().split(",");
 		String[] graduation_date = mentor.getGraduation_date().split(",");
@@ -305,7 +399,8 @@ public class MentorController {
 		  // System.out.println("education_insert:"+result);
 		  
 		  for (int i=0; i<mentor.getFiles().size(); i++) {
-		  System.out.println("mentor.getFiles:"+mentor.getFiles().get(i)); }
+			  System.out.println("mentor.getFiles:"+mentor.getFiles().get(i));
+		  }
 		  
 		  System.out.println(mentor.getFiles() == null);
 		  System.out.println("mentor.getFile_no(): "+mentor.getFile_no());
@@ -323,8 +418,16 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [학력사항 작성 완료] 페이지
 	@GetMapping("mentorEduInfoPage_View")
-	public String mentorEduInfoPage_View() {
+	public String mentorEduInfoPage_View(MentorDTO mentor, HttpSession session, Model model) {
 		
+		System.out.println("mentorEduInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
+
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		List<MentorDTO> education_select = ms.education_select(mentor);
+		
+		model.addAttribute("edu_sel", education_select);
 		
 		return "mentor/mentorEduInfoPage_View";
 	}
@@ -334,13 +437,42 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [경력사항] 페이지
 	@GetMapping("mentorExpInfoPage")
-	public String mentorExpInfoPage() {
+	public String mentorExpInfoPage(MentorDTO mentor, HttpSession session, Model model) {
 
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		List<MentorDTO> career_select = ms.career_select(mentor);
+		
+		model.addAttribute("car_sel", career_select);
+		
 		return "mentor/mentorExpInfoPage";
 	}
 	
-	//   **********************************************[학력사항 end]******************************************************
-	//   **********************************************[경력사항 start]******************************************************
+	// 멘토 프로필 수정 [경력사항] 페이지
+	@GetMapping("mentorExpInfoPage_Up")
+	public String mentorExpInfoPage_Up(MentorDTO mentor, HttpSession session, Model model) {
+
+		
+		
+		return "mentor/mentorExpInfoPage_View";
+	}
+
+	// 멘토 프로필 수정 [학력사항 작성 완료] 페이지
+	@GetMapping("mentorExpInfoPage_View")
+	public String mentorExpInfoPage_View(MentorDTO mentor, HttpSession session, Model model) {
+		
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		List<MentorDTO> career_select = ms.career_select(mentor);
+		
+		model.addAttribute("car_sel", career_select);
+		
+		return "mentor/mentorExpInfoPage_View";
+	}
+	//   **********************************************[경력사항 end]******************************************************
+	//   **********************************************[기술및분야 start]******************************************************
 
 	// 멘토 프로필 수정 [기술및분야] 페이지
 	@GetMapping("mentorTechInfoPage")
@@ -349,7 +481,7 @@ public class MentorController {
 		return "mentor/mentorTechInfoPage";
 	}
 
-	//   **********************************************[경력사항 end]******************************************************
+	//   **********************************************[기술및분야 end]******************************************************
 
 	
 	//   **********************************************[큰 지현]******************************************************
@@ -514,4 +646,44 @@ public class MentorController {
 		return "mentor/mentorInqueryListPage";	//	작성 후 리스트로 이동 
 	}
 		
+	
+	// ********************************************************************
+	@GetMapping("mentorPwModifyPage")
+	public String mentorPwModifyPage(MentorDTO mentor, HttpSession session, Model model) {
+		
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		// member_no 찾아서 할당
+		int member_no = ms.select_member_no(mentor);
+		mentor.setMember_no(member_no);
+		
+		// mentor_no으로 mentor 테이블 전체 검색
+		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		
+		model.addAttribute("msel", mentor_select);
+		
+		return "mentor/mentorPwModifyPage";
+	}
+	
+	@GetMapping("mentorAlarmListPage")
+	public String mentorAlarmListPage(MentorDTO mentor, HttpSession session, Model model) {
+		
+		// mentor 객체에 mentor_no = session 할당
+		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		
+		// member_no 찾아서 할당
+		int member_no = ms.select_member_no(mentor);
+		mentor.setMember_no(member_no);
+		
+		// mentor_no으로 mentor 테이블 전체 검색
+		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		
+		model.addAttribute("msel", mentor_select);
+		
+		return "mentor/mentorAlarmListPage";
+	}
+	
+	
+	
 }

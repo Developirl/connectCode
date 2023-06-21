@@ -4,22 +4,82 @@
 
 <mapper namespace="connectCode.mapper.MentorMapper">
 
-<!-- Mentor 테이블 mentor_no으로 조회 -->
-<select id="mentorProfile" resultType="MentorDTO">
-	SELECT
-	 *
+<!-- Mentor 테이블 mentor_no으로 member_no 조회 -->
+<select id="select_member_no" resultType="int">
+	SELECT member_no
 	FROM mentor
 	WHERE mentor_no=#{mentor_no}
 </select>
 
+<!-- Mentor 테이블 mentor_no으로 조회 [mentor 테이블 전체 & 재직중인 회사 & 알람수 조회] -->
+<select id="mentorProfile" resultType="MentorDTO">
+	SELECT
+	 *
+	FROM mentor
+	LEFT JOIN (
+		SELECT mentor_no, company, entering_date, departure_date 
+		FROM career 
+		WHERE departure_date IS NULL
+		) c 
+	USING (mentor_no)
+	LEFT JOIN (
+		SELECT COUNT(*) AS alarm_count, receiver_mem_no AS member_no 
+		FROM alarm 
+		WHERE receiver_mem_no = #{member_no} group by receiver_mem_no) a 
+	USING (member_no)
+	WHERE mentor_no=#{mentor_no}
+</select>
+
+<select id="education_select" resultType="MentorDTO">
+	SELECT 
+	  * 
+	FROM education 
+	LEFT JOIN file USING (file_no) 
+	WHERE mentor_no = #{mentor_no}
+</select>
+
+<select id="career_select" resultType="MentorDTO">
+	SELECT 
+	  * 
+	FROM career
+	LEFT JOIN file USING (file_no) 
+	WHERE mentor_no = #{mentor_no}
+</select>
+
 <!-- mentor 테이블 update -->
-<update id="mentorBasic_update" parameterType="MentorDTO">
+<update id="mentorTBL_update" parameterType="MentorDTO">
+	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
+		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
+		FROM file
+	</selectKey>
+
 	UPDATE mentor 
+	SET 
+	
+	<choose>
+		<!-- 경우 1 -->
+		<when test="intro != null and unable_date != null and mentoring_time != null">
+			intro = #{intro},
+			profile_img_no = #{file_no},
+			unable_date = #{unable_date},
+			mentoring_time = #{mentoring_time}
+		</when>
+		<!-- 경우 2 -->
+		<when test="bank != null and account != null and account_name != null">
+			bank = #{bank},
+			account = #{account},
+			account_name = #{account_name}
+		</when>	
+	</choose>
+	
+	WHERE mentor_no = #{mentor_no}
+	
+</update>
+<!-- 	UPDATE mentor 
 	SET intro = #{intro} 
 	 , unable_date = #{unable_date}  
 	 , mentoring_time = #{mentoring_time} 
-	WHERE mentor_no = #{mentor_no}
-</update>
+	WHERE mentor_no = #{mentor_no} -->
 
 <!-- <insert id="fileInsert">
 	
@@ -33,13 +93,34 @@
 	WHERE mentor_no = #{mentor_no}
 </update>
 
-<!-- <insert id="service_insert" parameterType="MentorDTO">
+<!-- service 테이블 insert -->
+<insert id="serviceTBL_insert" parameterType="MentorDTO">
 	INSERT INTO service (
-	 mentoring_kind, mentoring_fee, available_NY
+	 mentoring_kind, mentoring_fee, mentor_no, available_NY
 	) VALUES (
-	 51,#{call_mentoring_fee},#{call_mentoring}
+	    #{mentoring_kind}
+	  , #{mentoring_fee}
+	  , #{mentor_no}
+	  , #{available_NY}
 	)
-</insert> -->
+</insert>
+
+<!-- service 테이블 select -->
+<select id="serviceTBL_select" resultType="MentorDTO">
+	SELECT
+	  * 
+	FROM service 
+	WHERE mentor_no = #{mentor_no}
+</select>
+
+<!-- service 테이블 update -->
+<update id="serviceTBL_update" parameterType="MentorDTO">
+	UPDATE service 
+	SET
+	   mentoring_fee = #{mentoring_fee}
+	 , available_NY = #{available_NY}
+	WHERE mentor_no = #{mentor_no} and mentoring_kind = #{mentoring_kind}
+</update>
 
 <insert id="education_insert" parameterType="MentorDTO">
 	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
