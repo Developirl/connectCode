@@ -346,8 +346,8 @@ if((!validate_userid(id))){
 	     		
 	
 	$.ajax({ 
-		type : "POST",
-		url : 'normalidcheck',
+		type : "get",
+		url : '/member/normalidcheck',
 		data : {
 			'id' : id
 		},

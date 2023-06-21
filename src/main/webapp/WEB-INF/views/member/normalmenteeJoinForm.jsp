@@ -185,6 +185,12 @@
 <br><br>
 
   <script>
+  
+  $(document).ready(function(){
+	// input date에 max 속성값 추가
+      var today = new Date().toISOString().split("T")[0];
+       document.getElementById("changebirthday").max = today; 
+  });
    
   var bank = ['','직접입력','신한은행','국민은행','기업은행','농협은행','산업은행','수협은행','신협은행','우리은행','하나은행','한국씨티은행','카카오뱅크','케이뱅크','토스뱅크','경남은행','광주은행','대구은행','부산은행','전북은행','제주은행','새마을은행','우체국','저축은행'];
 

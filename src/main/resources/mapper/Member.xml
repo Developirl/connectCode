@@ -74,9 +74,11 @@
 	   #{param1.account_name}, #{param2})	  
   </insert>
   
-  <!--멘티테이블 member_no찾기 폰번호로(null값일때는 0이 리턴됨) -->
-  <select id="findMenteeId" resultType="int">
-  SELECT IFNULL((SELECT member_no FROM mentee WHERE phone = #{phone}), 0) AS member_no;
+  <!--union으로 mentee테이블과 mentor테이블의 member_no값을 가져와 member테이블에서 데이터 가져옴 -->
+  <select id="findId" resultType="memberDTO">
+  SELECT * FROM member WHERE member_no IN (
+  	SELECT member_no FROM mentee WHERE email = #{param1} AND phone = #{param2} UNION  
+  	SELECT member_no FROM mentor WHERE email = #{param1} AND phone = #{param2} )and classification != 14
   </select>
   
   <!-- member_no로 memberdto다 가져가기 -->

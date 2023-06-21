@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="/member/js/joinForm.js"></script>
+<script src="/member/js/normaljoinForm.js"></script>
 <link rel="stylesheet" type="text/css" href="/member/css/mentee.css" />
 
 <script>
@@ -21,31 +21,26 @@
 $(document).ready(function() {
 	  $('#modalTrigger').click(); // 모달 버튼 클릭 이벤트 자동으로 실행
 	});
-
 </script>
 
 </head>
 <body>
 
 <c:if test="${empty findidok }">
-<form action="/member/menteefindid" method="post" onsubmit="return findidcheck()">
+<form action="/member/findid" onsubmit="return findidcheck()">
 <div class="col-lg-3 container" id="ys_findidform">
 <div align="center">
   <h2><span class="ys_findidfont">ID 찾기</span></h2>
 </div>
+
 <div class="join_mentee_sub">
-<label for="phone" style="font-weight: bold;">휴대폰번호</label>
-<div class="form-group">
-<input type="text" id="phone" name="phone" class="form-control" style="width:300px;margin-right: 10px;">
-<input type="button" id="phoneChk" class="button" value="인증번호 전송"/>
+<label for="email" style="font-weight: bold;">이메일</label>
+<input type="email" id="email" name="email" class="form-control">
+
+<label for="phone" style="font-weight: bold; margin-top: 10px;">휴대폰번호</label>
+<input type="text" id="phone" name="phone" class="form-control">
 </div>
-<div class="form-group ys_certify">
-<input id="phone_certify" name="phone_certify" class="form-control" disabled="disabled" style="width:300px;margin-right: 10px;"> 
-<input type="button" id="phoneChk2" class="button" value="인증하기"> 
-</div>
-<span class="successPhoneChk">※ 휴대폰 번호는 '-' 없이 번호만 입력하세요.</span> 
-<input type="hidden" id="phoneDoubleChk" />
-</div>
+
 <div align="center">
 <button type="submit" class="submitBtn">ID찾기</button>
 <button type="button" class="resetBtn" onclick="window.close()">닫기</button>
@@ -54,56 +49,40 @@ $(document).ready(function() {
 </form>
 </c:if>
 
-<!-- 카카오 회원일때 -->
-<c:if test="${findidok == 'kakaomentee'}">
-<!-- Button trigger modal -->
- <button type="button" id="modalTrigger" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display: none;">
-  Launch static backdrop modal
-</button> 
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">ID찾기</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-            카카오 회원입니다. 카카오로그인을 해주세요.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.close()">Close</button>
-      </div>
-    </div>
-  </div>
-  </div>
-</c:if>
 
 <!-- 일반회원일때 -->
-<c:if test="${findidok == 'normalmentee'}">
-<!-- Button trigger modal -->
- <button type="button" id="modalTrigger" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="display: none;">
-  Launch static backdrop modal
-</button> 
-
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">ID찾기</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-           회원님의 아이디는 ${id} 입니다.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.close()">Close</button>
-      </div>
-    </div>
-  </div>
-  </div>
+<c:if test="${findidok == 'list'}">
+<div class="container mt-3"><br>
+  <h2><span class="idlist2">ID List</span></h2><br>         
+  <table class="table">
+    <thead align="center">
+      <tr>
+        <th>번호</th>
+		<th>멘티/멘토회원</th>
+		<th>ID</th>
+		<th>비밀번호 찾기</th>
+      </tr>
+    </thead>
+    <tbody align="center" class="idlist">
+    	<c:set var="num" value="${membercount }"></c:set>
+		<c:forEach var="memberlist" items="${memberlist }">
+      <tr>
+        <th width=10%><c:out value="${num }"></c:out></th>
+		<c:if test="${memberlist.classification == 12 }">
+		<th width=25%>멘티회원</th>
+		</c:if>
+		<c:if test="${memberlist.classification == 13 }">
+		<th width=25%>멘토회원</th>
+		</c:if>
+		<th width=15%>${memberlist.id}</th>
+		<td><a href="find_pwform?id=${memberlist.id}"><button class="redirectpw">비밀번호 찾기</button></a></td>
+      </tr>
+      
+      <c:set var="num" value="${num-1 }"></c:set>	
+      </c:forEach>
+    </tbody>
+  </table>
+</div>
 </c:if>
 
 
