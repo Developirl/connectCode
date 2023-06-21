@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import connectCode.mapper.FindMentorDAO;
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
+import connectCode.model.MenteeDTO;
 
 @Service
 public class FindMentorServiceImpl implements FindMentorService {
@@ -43,18 +44,17 @@ public class FindMentorServiceImpl implements FindMentorService {
 		
 		// for문을 돌면서 하나씩 값을 셋팅해준다. 
 		for(int i=0;i<li.size();i++) {
-			int mentor_no = list.get(i).getMentor_no();
+			int mentor_no = li.get(i).getMentor_no();
 			
 			int reviewcount = dao.getReviewcount(mentor_no);
 			list.get(i).setReviewcount(reviewcount);
 			
 			List<String> men_payment = dao.getMentoringPayment(mentor_no);
-			System.out.println("mem_payment: "+men_payment);
 			String[] str = new String[2]; 
-			for(int j=0; j<men_payment.size();j++) {
-				str[j] = men_payment.get(j);
+			for(int j=0; j<2;j++) {
+				str[j] = men_payment.get(j); // 0과 1밖에 없는데, 2까지 갔다고 에러남
 			}
-			list.get(i).setMentoring_payment(str);
+			list.get(i).setMentoring_payment(str);   
 			
 			if(string != null && !string.equals("") ) {
 				int member_no = Integer.parseInt(string);
@@ -186,19 +186,34 @@ public class FindMentorServiceImpl implements FindMentorService {
 	}
 	
 	
+	@Override
+	public int deleteBookmark(int member_no, int mentor_no) {
+		return dao.deleteBookmark(member_no,mentor_no);
+	}
+	
+	
+	@Override
+	public int insertBookmark(int member_no, int mentor_no) {
+		return dao.insertBookmark(member_no,mentor_no);
+	}
+	
+	
+	@Override
+	public MenteeDTO getMenteePortfolio(int member_no) {
+		return dao.getMenteePortfolio(member_no);
+	}
 	
 	
 	
+	@Override
+	public int getCheckedBookmark(int member_no, int mentor_no) {
+		return dao.getCheckedBookmark(member_no,mentor_no);
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public int getFileMaxNo() {
+		return dao.getFileMaxNo();
+	}
 	
 	
 	

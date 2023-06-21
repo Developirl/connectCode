@@ -14,7 +14,7 @@
 
 <script>
 
-
+// 시큐리티용 코드 
 var csrf = "${_csrf.headerName}";
 var csrfToken = "${_csrf.token}";
 
@@ -35,7 +35,7 @@ function createOrderNum(){
 	return orderNum;
 }
 
-
+//--------------------결제를 위한 영역
 
 function requestPay() {
     // IMP.request_pay(param, callback) 결제창 호출
@@ -53,11 +53,45 @@ function requestPay() {
 		
     }, function (rsp) { // callback
         if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
-            uid = rsp.imp_uid;
+            
+        	$.ajax({
+        		url : '/payment/orderInsert',
+        		type : 'post',
+        		dataType : 'json',
+        		data :{"o_no":o_no},
+        		success : function(result){
+        			if(result == 2){
+        				var msg = "결제가 완료되었습니다.";
+        			    alert(msg);
+        			    location.href="/findMentor/mentorlistpage";
+        			}
+        		}
+        	}); // ajax() end
+        
+        	
+        	
+        	/* uid = rsp.imp_uid;
         
     		alert("rsp.imp_uid:"+rsp.imp_uid);
             console.log("rsp.imp_uid:"+rsp.imp_uid);
             console.log('2차도 도달');
+            
+            
+            
+            // 데이터를 json으로 보내기 위해 바꿔준다.
+            data_d = {
+                orderNum :  rsp.merchant_uid,
+                //productNum : detailNum.textContent, //상품번호
+               // num : userNum.value, // 회원번호
+                productName : rsp.name,
+                orderDate : new Date().getTime(),
+                totalPrice : rsp.paid_amount,
+                imp_uid : rsp.imp_uid
+                //reserNum :  reserNum.textContent // 예약정보를 담고있는번호
+            }; 
+            
+            
+            
             
             
             // 결제검증
@@ -73,21 +107,11 @@ function requestPay() {
                     // jQuery로 HTTP 요청
                     // 주문정보 생성 및 테이블에 저장 
 		        	
-                        // 데이터를 json으로 보내기 위해 바꿔준다.
-                        /* data = JSON.stringify({
-                            orderNum :  rsp.merchant_uid,
-                            //productNum : detailNum.textContent, //상품번호
-                           // num : userNum.value, // 회원번호
-                            productName : rsp.name,
-                            orderDate : new Date().getTime(),
-                            totalPrice : rsp.paid_amount,
-                            imp_uid : rsp.imp_uid,
-                            //reserNum :  reserNum.textContent // 예약정보를 담고있는번호
-                        }); */
-                        
                         console.log(data);
 					
-                        jQuery.ajax({
+                       
+                        
+                        $.ajax({
                             url: "/payment/order/complete", 
                             type: "POST",
                             dataType: 'json',
@@ -95,24 +119,37 @@ function requestPay() {
                             	xhr.setRequestHeader(csrf,csrfToken);
                             },
                             contentType: 'application/json',
-                            data : data
+                            data : JSON.stringify(data_d)
                         })
                         .done(function(res) {
                             if (res > 0) {
-                                swal('주문정보 저장 성공')
+                                alert('주문정보 저장 성공')
                                 createPayInfo(uid);
                             }
                             else {
-                                swal('주문정보 저장 실패');
+                                alert('주문정보 저장 실패');
                             }
                         })
                 }
                 else {
                     alert('결제 실패');
                 }
-            })
+            }) */
             } else {
-                swal("결제에 실패하였습니다.","에러 내용: " +  rsp.error_msg,"error");
+            	$.ajax({
+	        		url : 'orderDelete.do',
+	        		type : 'post',
+	        		dataType : 'json',
+	        		data : {"o_no":o_no},
+	        		success : function(result){
+	        			if(result == 1){
+	        				var msg = "결제에 실패하였습니다.";
+	        	        	msg += ' 원인 : '+rsp.error_msg;
+	        				alert(msg);
+	        		        location.href="main.do";
+	        			}
+	        		}
+	        	}); // ajax() end
             }
         });
 }

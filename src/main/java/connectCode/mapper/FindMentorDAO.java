@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
+import connectCode.model.MenteeDTO;
 
 public interface FindMentorDAO {
 
@@ -36,5 +37,13 @@ public interface FindMentorDAO {
 	List<String> getReservedTime(@Param("reserve_date") String reserve_date,@Param("mentor_no") int mentor_no);
 
 	FindMentorDTO getMentorInfo(int mentor_no);
+
+	int deleteBookmark(@Param("member_no") int member_no,@Param("mentor_no") int mentor_no);
+
+	int insertBookmark(@Param("member_no") int member_no,@Param("mentor_no") int mentor_no);
+
+	MenteeDTO getMenteePortfolio(int member_no);
+
+	int getFileMaxNo();
 
 }

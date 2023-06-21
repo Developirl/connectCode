@@ -298,12 +298,24 @@
 	display:block;
 	margin-bottom:20px;
 }
+
+.js-icorn-box-side {
+  display: flex; 
+  justify-content: center;
+}
+
+
 </style>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 
 
 <script>
+
+
+// 시큐리티용 변수 
+var csrf = "${_csrf.headerName}";
+var csrfToken = "${_csrf.token}";
 
 
 
@@ -363,12 +375,84 @@ function itemClick(e){
 
 	
 	
-/* ---------------- 후기 아코디언 클릭 효과 ----------------- */
 	
 	
 $(document).ready(function(){
+
+	
+	/* --------- 북마크 관련 설정 ----------------------*/
+	 
+	 
+	 
+	$(".bookmark-fill").hide();
+	$(".bookmark").hide();
+
+
+		if($(".js-bookmarkyn").val() == 1){
+			$(".bookmark-fill").show();
+		}else{
+			$(".bookmark").show();
+		}
+		
+		
+		$(".js-bookmarkclick").click(function(){
+			
+			var mentor_no = ${mentorInfo.mentor_no };
+			var clickchecked = 90;
+			
+			if($(this).data('value')==1){
+				clickchecked=0;
+			}else if($(this).data('value')==0){
+				clickchecked=1;
+			}
+			
+			$.ajax({
+				 url: '/findMentor/bookmarkChange',
+				  method: 'POST', 
+				  data: {
+					  clickchecked : clickchecked,
+					  mentor_no : mentor_no  
+				  },
+		 		  beforeSend: function(xhr){
+		       		xhr.setRequestHeader(csrf,csrfToken);
+		          }, 
+				  success: function(bookmark) {
+					  
+				
+					  
+					    // 즐겨찾기 취소한 경우
+					  if(parseInt(bookmark) === 0){
+						  $(".bookmark").show();
+						  $(".bookmark-fill").hide();
+						  
+						// 즐겨찾기 한 경우	  
+					  }else if(parseInt(bookmark) === 1){
+						  $(".bookmark").hide();
+						  $(".bookmark-fill").show();
+						  
+						  
+					  }
+					
+					  
+				  },
+				  error: function(xhr, status, error) {
+				    console.log(error); 
+				  }
+				});
+				
+			
+		});
+		
 	
 	
+	
+	
+	
+	
+	
+	
+	
+/* ---------------- 후기 아코디언 클릭 효과 ----------------- */
 	var accordionclick = true;
 	
 	if(accordionclick){
@@ -437,7 +521,7 @@ function goApplyMentoringPage(kind){
 				<div class="js-sharebox" >
 					<span class="js-sharefont">공유하기</span>
 					<img src="/findMentor/img/icon-facebook.png" onclick="javascript:shareFacebook();" id="btnFacebook">
-					<img src="/findMentor/img/icon-kakao.png" onclick="shareKakao();" id="btnKakao">
+					<img src="/findMentor/img/icon-kakao.png" onclick="javascript:shareKakao();" id="btnKakao">
 					<img src="/findMentor/img/icon-twitter.png" onclick="javascript:shareTwitter();" id="btnTwitter">
             	</div>
             	</div>    
@@ -465,19 +549,24 @@ function goApplyMentoringPage(kind){
             	    <td colspan="2" class="js-mentortitlefont"><span class="js-profileFont">${mentorInfo.name } 멘토 프로필</span></td>
             	    <td colspan="1" align="right">
             	    
+            	    
+            	    <input type="hidden" class="js-bookmarkyn" value="${mentorInfo.checkedBookmark }">
+            	    
+            	    <div class="js-icorn-box-side">
             	       <sec:authorize access="isAuthenticated()"> 
-	            	       <c:if test="${mentorInfo.checkedBookmark == 1 }">
-	            	        <i class="bi bi-bookmark-fill fs-3" style="color:#F2B661;"></i>
-	            	       </c:if> 
+	            	        <div class="bookmark-fill" style="width:auto;">
+	            	        	<i class="bi bi-bookmark-fill fs-3 js-bookmarkclick" style="color:#F2B661;" data-value="1"></i>
+	            	   		</div>
 	            	   </sec:authorize>     
             	       <sec:authorize access="isAuthenticated()"> 
-	            	       <c:if test="${mentorInfo.checkedBookmark == 0 }">
-	            	        <i class="bi bi-bookmark fs-3" style="color:#F2B661;"></i>
-	            	       </c:if> 
-	            	   </sec:authorize>&nbsp;     
-            	        <div class="js-modal-icon" >
-            	        <i class="bi bi-box-arrow-up fs-3" onclick="itemClick(event);"></i>
+	            	        <div class="bookmark">
+		            	        <i class="bi bi-bookmark fs-3 js-bookmarkclick" style="color:#F2B661;" data-value="0"></i>
+	            	   		</div>
+	            	   </sec:authorize>
+            	        <div class="js-modal-icon" style="display:inline;" >
+            	        <i class="bi bi-box-arrow-up fs-3 " onclick="itemClick(event);"></i>
 						</div>
+	            	</div>	        
             	        
             	    </td>
             	    </tr>

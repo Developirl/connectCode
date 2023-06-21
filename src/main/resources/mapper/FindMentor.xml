@@ -54,14 +54,12 @@
 		JOIN career c
 		USING (mentor_no)
 		<where>
+		m.classification = 23 
+		
 			<if test="gender != null and gender != ''">
 				AND gender = #{gender}
 			</if>
 
-			<!-- <if test="technology != null and technology != ''"> <trim prefix="AND" 
-				prefixOverrides="OR"> <foreach item="keyword" collection="technology.split(',')" 
-				separator=" OR "> FIND_IN_SET(#{keyword}, REPLACE(technology, ' ', '')) > 
-				0 OR </foreach> </trim> </if> -->
 			<if test="technology != null and technology != ''">
 				AND (
 				<foreach item="keyword" collection="technology.split(';')"
@@ -271,11 +269,32 @@
 	</select>
 	
 	
+	<!-- 북마크 삭제 -->
+	<delete id="deleteBookmark">
+		DELETE FROM bookmark WHERE 
+		mentee_no = (SELECT mentee_no FROM mentee JOIN member 
+		USING(member_no) WHERE member_no = #{member_no}) AND mentor_no = #{mentor_no};
+	</delete>
 	
 	
+	<!--  북마크 추가 -->
+	<insert id="insertBookmark">
+		INSERT INTO bookmark(reg_date,mentee_no,mentor_no) 
+		VALUES(sysdate(),(
+		SELECT mentee_no FROM mentee JOIN member 
+		USING(member_no) 
+		WHERE member_no = #{member_no}),#{mentor_no}); 
+	</insert>
 	
 	
+	<!--  멘티의 깃허브, 블로그 주소를 가져온다.  -->
+	<select id="getMenteePortfolio" parameterType="int" resultType="MenteeDTO">
+		SELECT * FROM mentee WHERE member_no = #{member_no};
+	</select>
 	
-	
+	<!-- file 테이블의 file_no MAX 값을 가져온다. -->
+	<select id="getFileMaxNo" resultType="int">
+		SELECT COALESCE(MAX(file_no),0)+1 from file
+	</select>
 
 </mapper>
