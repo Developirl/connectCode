@@ -8,6 +8,13 @@
   <select id="getAuth" resultType="MemberDTO">
 		SELECT member_no, id, password, classification FROM member WHERE id=#{id}
   </select>
+  <select id="getMentor_no" resultType="int">
+  		SELECT mentor_no FROM mentor WHERE member_no=#{member_no} 
+  </select>
+  <select id="getMentee_no">
+  		SELECT mentee_no FROM mentee WHERE member_no=#{member_no}
+  </select>
+  <!-- 로그인 할 때 회원 정보 가져오는 sql 문 -->
   
   <select id="getMember" resultType="MemberDTO">
   		SELECT * FROM member WHERE id = #{id}

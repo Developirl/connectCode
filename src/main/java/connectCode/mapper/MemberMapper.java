@@ -6,7 +6,14 @@ import connectCode.model.MentorDTO;
 
 public interface MemberMapper {
 
+	//UserDetailsServiceImpl에서 사용하는 메서드 시작
+	
 	MemberDTO getAuth(String id);
+	
+	int getMentor_no(int member_no);
+	int getMentee_no(int member_no);
+	
+	//UserDetailsServiceImpl에서 사용하는 메서드 끝
 	
 	MemberDTO findUuid(Long uuid);
 
