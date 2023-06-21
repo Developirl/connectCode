@@ -16,10 +16,10 @@ public class AuthUser extends User{
 	private static final long serialVersionUID = 1L;
 	
 	private MemberDTO member;
-	private int mentor_no;
-	private int mentee_no;
+	private Integer mentor_no;
+	private Integer mentee_no;
 	
-	public AuthUser(MemberDTO member, int mentor_no, int mentee_no) {
+	public AuthUser(MemberDTO member, Integer mentor_no, Integer mentee_no) {
 		super(member.getId(), member.getPassword(), mapAuthorities(member.getClassification()));
 		
 		this.member = member;

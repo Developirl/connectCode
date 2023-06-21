@@ -21,8 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 		
 		MemberDTO member = mapper.getAuth(id);
-		int mentor_no = mapper.getMentor_no(member.getMember_no());
-		int mentee_no = mapper.getMentee_no(member.getMember_no());
+		Integer mentor_no = mapper.getMentor_no(member.getMember_no());
+		Integer mentee_no = mapper.getMentee_no(member.getMember_no());
 		
 		return member == null? null:new AuthUser(member, mentor_no, mentee_no);
 	}
