@@ -167,6 +167,7 @@
 
 .bi-bookmark,.bi-bookmark-fill{
     cursor: pointer;
+    color:#F2B661;
 }
 
 .js-tech-tabletd{
@@ -338,6 +339,88 @@ function filterappend(str){
 
 $(document).ready(function(){
 	
+	// 시큐리티용 변수 
+	var csrf = "${_csrf.headerName}";
+	var csrfToken = "${_csrf.token}";
+	
+	// 우선 북마크들을 숨긴다. 
+	$(".bi-bookmark").hide();
+	$(".bi-bookmark-fill").hide();
+	
+	var size = ${listsize};
+	
+	
+	for(let i=0; i<size ; i++){
+		
+		if($(".bookmark_hiddenbox_"+i).val()==0){
+			var mentor_no = $(".bookmark_hiddenbox_"+i).attr('id').substring(10);
+			$("#bookmark_"+mentor_no+" i").show();
+			
+		}else if($(".bookmark_hiddenbox_"+i).val()==1){
+			var mentor_no = $(".bookmark_hiddenbox_"+i).attr('id').substring(10);
+			$("#bookmarkfill_"+mentor_no+" i").show();
+			
+		}
+	}
+
+	
+	
+	// 북마크 Ajax 처리하기!
+	$(".mybookmark").click(function(){
+		
+		// 해당 북마크 유무 가져옴
+		var clickchecked = $(this).data('value');
+		//DB에 update할 값 설정
+		if(clickchecked==0){
+			clickchecked = 1;
+		}else{
+			clickchecked = 0;
+		}
+		
+		//mentor_no을 가져온다
+		var mentor_no = $(this).parent().data('value');
+		
+		$.ajax({
+			
+			  url: '/findMentor/bookmarkChange',
+			  method: 'POST', 
+			  data: {
+				  clickchecked : clickchecked,
+				  mentor_no : mentor_no  
+			  },
+	 		  beforeSend: function(xhr){
+	       		xhr.setRequestHeader(csrf,csrfToken);
+	          }, 
+			  success: function(bookmark) {
+				  
+			
+				  
+				    // 즐겨찾기 취소한 경우
+				  if(parseInt(bookmark) === 0){
+					  $("#bookmark_"+mentor_no+" i").show();
+					  $("#bookmarkfill_"+mentor_no+" i").hide();
+					  
+					// 즐겨찾기 한 경우	  
+				  }else if(parseInt(bookmark) === 1){
+					  $("#bookmark_"+mentor_no+" i").hide();
+					  $("#bookmarkfill_"+mentor_no+" i").show();
+					  
+					  
+				  }
+				  
+				  
+				
+				  
+			  },
+			  error: function(xhr, status, error) {
+			    console.log(error); 
+			  }
+			});
+		
+	});
+	
+	
+	
 	
 	$(".js-searchbutton").hide();
 
@@ -484,7 +567,7 @@ function scrollToTop() {
 
 	
 function goMentorProfileDetailPage(mentor_no,bookmark){
-	location.href="/findMentor/MentorProfileDetailPage?mentor_no="+mentor_no+"&bookmark="+bookmark;
+	location.href="/findMentor/MentorProfileDetailPage?mentor_no="+mentor_no;
 }	
 	
 	
@@ -613,25 +696,36 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 			<div class="js-mentorlistwrapper">
 			
 			
-			   <c:forEach var="i" items="${list}">
+			   <c:forEach var="i" items="${list}" varStatus="st">
 					<div class="js-allcontentbox" >
 						<div class="js-profileCard">
 						
 						
+						<input type=hidden class="bookmark_hiddenbox_${st.index}" id="hiddenbox_${i.mentor_no}" value="${i.checkedBookmark}">
 						
 						<sec:authorize access="isAuthenticated()"> 
-							<c:if test="${i.checkedBookmark == 0 }">
-							    <div align=right><i class="bi bi-bookmark fs-3" style="color:#F2B661;"></i></div>
+							    <div align=right id="bookmark_${i.mentor_no}" data-value="${i.mentor_no}">
+							    	<i class="bi bi-bookmark fs-3 mybookmark" data-value="0"></i>
+							    </div>
+						
+							    <div align=right id="bookmarkfill_${i.mentor_no}" data-value="${i.mentor_no}">
+							    	<i class="bi bi-bookmark-fill fs-3 mybookmark" data-value="1"></i>
+							    </div>
+<%-- 							<c:if test="${i.checkedBookmark == 0 }">
+							    <div align=right id="bookmark_${i.mentor_no}" data-value="${i.mentor_no}">
+							    	<i class="bi bi-bookmark fs-3 mybookmark" data-value="0"></i>
+							    </div>
 							</c:if>
 						
 							<c:if test="${i.checkedBookmark == 1 }">
-							    <div align=right><i class="bi bi-bookmark-fill fs-3" style="color:#F2B661;"></i></div>
-							</c:if>
-						
-						
+							    <div align=right id="bookmarkfill_${i.mentor_no}" data-value="${i.mentor_no}">
+							    	<i class="bi bi-bookmark-fill fs-3 mybookmark" data-value="1"></i>
+							    </div>
+							</c:if>--%>
 						</sec:authorize>
 
 						<%--
+							<sec:authorize access="hasRole('ROLE_12')">
 							<sec:authorize access="hasAnyRole('ROLE_12')">
 								<div class="grid-sample" style="height: 600px;">
 									<div id="grid_data" style="height: 600px;">이건 멘티 계정</div>

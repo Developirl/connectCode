@@ -5,6 +5,7 @@ import java.util.List;
 
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
+import connectCode.model.MenteeDTO;
 
 public interface FindMentorService {
 
@@ -37,5 +38,15 @@ public interface FindMentorService {
 	FindMentorDTO getMentorInfo(int mentor_no);
 
 	Timestamp getReserveDate(String reserve_day, String reserve_time);
+
+	int deleteBookmark(int member_no, int mentor_no);
+
+	int insertBookmark(int member_no, int mentor_no);
+
+	MenteeDTO getMenteePortfolio(int member_no);
+
+	int getCheckedBookmark(int member_no, int mentor_no);
+
+	int getFileMaxNo();
 
 }
