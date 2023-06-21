@@ -12,8 +12,8 @@ public interface MemberMapper {
 	
 	MemberDTO getAuth(String id);
 	
-	int getMentor_no(int member_no);
-	int getMentee_no(int member_no);
+	Integer getMentor_no(int member_no);
+	Integer getMentee_no(int member_no);
 	
 	//UserDetailsServiceImpl에서 사용하는 메서드 끝
 	
