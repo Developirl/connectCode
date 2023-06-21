@@ -23,6 +23,7 @@ public class ReportDTO {
 	private String mentee_name;
 	private String report_state;
 	private int number;
+	private int member_no;
 	
 	private int startRow;
 	private int endRow;

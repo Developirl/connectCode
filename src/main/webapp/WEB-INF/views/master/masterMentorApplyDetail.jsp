@@ -47,9 +47,9 @@
 					<td>${education.degree }</td>
 					<td>${education.major }</td>
 					<td>${education.minor }</td>
-					<td><fmt:formatDate value="${education.entering_date}"
+					<td><fmt:formatDate value="${education.e_date}"
 							pattern="yy.MM.dd" /></td>
-					<td><fmt:formatDate value="${education.graduation_date}"
+					<td><fmt:formatDate value="${education.g_date}"
 							pattern="yy.MM.dd" /></td>
 				</tr>
 			</c:forEach>
@@ -68,7 +68,7 @@
 				<tr align="center">
 					<td>${career.company }</td>
 					<td>${career.task }</td>
-					<td><fmt:formatDate value="${career.entering_date }"
+					<td><fmt:formatDate value="${career.e_date }"
 							pattern="yy.MM.dd" /></td>
 					<td><fmt:formatDate value="${career.departure_date }"
 							pattern="yy.MM.dd" /></td>
@@ -125,14 +125,14 @@
 		<div class="intro_box">${mentor.intro }</div>
 
 		<div class="file-info">
-			<c:forEach var="education" items="${education }">
-				<a href='<c:url value="filedownload?education.file_no==${education.file_no }"/>'>${education.origin_name }</a>
+			<c:forEach var="education" items="${educationFile }">
+				<a href='<c:url value="filedownload?efile_no=${education.file_no }&mentor_no=${mentor.mentor_no }"/>'>${education.origin_name }</a>
 			</c:forEach>
-			<c:forEach var="career" items="${career }">
-				<a href='<c:url value="filedownload?career.file_no==${career.file_no }"/>'>${career.origin_name }</a>
+			<c:forEach var="career" items="${careerFile }">
+				<a href='<c:url value="filedownload?cfile_no=${career.file_no }&mentor_no=${mentor.mentor_no }"/>'>${career.origin_name }</a>
 			</c:forEach>
-			<c:forEach var="license" items="${license }">
-				<a href='<c:url value="filedownload?license.file_no==${license.file_no }"/>'>${license.origin_name }</a>
+			<c:forEach var="license" items="${licenseFile }">
+				<a href='<c:url value="filedownload?lfile_no=${license.file_no }&mentor_no=${mentor.mentor_no }"/>'>${license.origin_name }</a>
 			</c:forEach>
 		</div>
 

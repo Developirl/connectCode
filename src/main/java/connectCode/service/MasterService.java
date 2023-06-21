@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import connectCode.model.FileDTO;
 import connectCode.model.MailDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentorDTO;
@@ -35,6 +36,15 @@ public interface MasterService {
 	
 	// 멘토 자격증
 	List<MentorDTO> mentorLicense(int mentor_no);
+
+	// 멘토 경력 파일
+	List<MentorDTO> mentorCareerFile(int mentor_no);
+	
+	// 멘토 학벌
+	List<MentorDTO> mentorEducationFile(int mentor_no);
+	
+	// 멘토 자격증
+	List<MentorDTO> mentorLicenseFile(int mentor_no);
 
 	// 멘토 서비스
 	List<MentorDTO> mentorService(int mentor_no);
@@ -84,13 +94,13 @@ public interface MasterService {
 	MentorDTO getEmailbyMember(String memberNum);
 
 	// 신고 총 데이터
-	int getReport(ReportDTO report);
+//	int getReport(ReportDTO report);
 
 	// 신고 목록_미처리
-	List<ReportDTO> reportUncomplete(ReportDTO report);
+//	List<ReportDTO> reportUncomplete(ReportDTO report);
 
 	// 신고 목록_처리
-	List<ReportDTO> reportComplete(ReportDTO report);
+//	List<ReportDTO> reportComplete(ReportDTO report);
 
 	// 메일 전송
 	void mailSend(MailDTO mail) throws UnsupportedEncodingException, MessagingException;
@@ -98,7 +108,61 @@ public interface MasterService {
 	// 파일 다운로드
 	Map<String, Object> selectFile(Map<String, Object>map);
 
-//*****************************병걸 작성***************************************
+	// 멘토 신고수
+	int mentorReport(int mentor_no);
+
+	// 멘티 멘토링
+	List<MenteeDTO> menteeMentoring(MenteeDTO mentee);
+
+	// 멘티 정보 구해오기
+	MenteeDTO menteeDelete(int member_no);
+
+	// 멘티 탈퇴
+	int mmDelete(int member_no);
+
+	// 탈퇴 정보 업데이트
+	int mmDelUpdate(int member_no);
+
+	// 멘토 리뷰수
+	int mentorReview(int mentor_no);
+
+	// 멘토링 평균 구하기
+	double mentorAVG(int mentor_no);
+
+	// 신고 총 데이터
+	int getReport(ReportDTO report);
+
+	// 신고 목록 리스트
+	List<ReportDTO> reportList(ReportDTO report);
+	
+	// 신고 상세 내역
+	ReportDTO reportDetail(int report_no);
+
+	// 파일 정보
+	FileDTO file(int mentor_no);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//*****************************병걸 작성***************************************
 
 	void insertVisitorInfo(VisitDTO visitor);
 	
@@ -110,6 +174,12 @@ public interface MasterService {
 	int getMentees();
 	int getUnreadyMentors();
 	int getReadyMentors();
+
+
+
+
+	
+
 	
 //*****************************병걸 작성***************************************
 

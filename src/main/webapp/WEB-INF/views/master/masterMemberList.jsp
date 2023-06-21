@@ -20,9 +20,9 @@
 				<!-- SELECT 1 -->
 				<select name="search" class="search_sel small_jh"
 					style="width: 120px; float: left;">
-					<option value="">전체</option>
-					<option value="">멘토</option>
-					<option value="">멘티</option>
+					<option value="all">전체</option>
+					<option value="mentor">멘토</option>
+					<option value="mentee">멘티</option>
 				</select>
 			</div>
 
@@ -50,23 +50,35 @@
 					<th>회원번호</th>
 					<th>회원명</th>
 					<th>회원구분</th>
-<!-- 					<th>상태</th> -->
+					<th>가입일</th>
 				</tr>
 			</thead>
 			<c:forEach var="TotalMember" items="${memberlist}">
 			<tbody align="center">
 				<tr>
-<%-- 				<tr onClick="location.href='redirectToPage('${TotalMember.classification}', '${TotalMember_no}')'">
- --%>					<td><input type="checkbox" name="member_no" value="${TotalMember.member_no }"></td>
+					<td><input type="checkbox" name="member_no" value="${TotalMember.member_no }"></td>
  					<td>${TotalMember.member_no}</td>
-					<td>${TotalMember.name}</td>
+					<td>${TotalMember.mentor_name}${TotalMember.mentee_name }</td>
+					<td>	
+						<c:choose>
+								<c:when test="${TotalMember.classification == '11'}">관리자</c:when>
+								<c:when test="${TotalMember.classification == '12'}">
+									<a href="masterMenteeDetail?member_no=${TotalMember.member_no }&mentee_no=${TotalMember.mentee_no}&pageNum=${pageNum}">멘티</a>
+								</c:when>
+								<c:when test="${TotalMember.classification == '13'}">
+									<a href="masterMentorDetail?member_no=${TotalMember.member_no }&mentor_no=${TotalMember.mentor_no}&pageNum=${pageNum}">멘토</a>
+								</c:when>
+								<c:when test="${TotalMember.classification == '14'}">탈퇴회원</c:when>
+						</c:choose>
+					</td>
+					<td><fmt:formatDate value="${TotalMember.reg_date }" pattern="yy.MM.dd"/></td>
 				</tr>
 			</tbody>
 			</c:forEach>
 		</table>
-		
+		<br>
 		<div align="right">
-			<input type="submit" value="메일보내기">
+			<input type="submit" value="메일보내기" class="mailBtn1">
 		</div>
 		</form>
 
@@ -82,7 +94,6 @@
 			<a class="page-link" href="masterMemberList?pageNum=${i}"
 							style="color: black;">${i}</a>
 							</li>
-			
 						</c:forEach>
 
 			<c:if test="${p.endPage < p.totalPage }">
@@ -92,8 +103,7 @@
 			</c:if>
 		</ul>
 	</div>
-
-
+		
 	<%@ include file="../public/sidebar_footer.jsp"%>
 </body>
 </html>

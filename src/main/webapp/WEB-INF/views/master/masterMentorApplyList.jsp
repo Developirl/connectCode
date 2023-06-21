@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>관리자_승인요청_리스트</title>
-
 </head>
 <body>
 	<%@ include file="../public/sidebar_hj.jsp"%>
@@ -20,12 +19,11 @@
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->
-				<select name="search" id="search" class="search_sel small_jh"
-					style="width: 120px; float: left;">
-					<option value="all">전체</option>
-					<option value="wait">대기</option>
-					<option value="apply">승인완료</option>
-					<option value="refuse">승인거부</option>
+				<select name="search" id="search" class="search_sel small_jh" onchange="searchChange(this.value)" style="width: 120px; float: left;">
+					<option value="all"<c:if test="${search='all' }">selected="selected"</c:if>>전체</option>
+					<option value="wait"<c:if test="${search='wait' }">selected="selected"</c:if>>대기</option>
+					<option value="apply"<c:if test="${search='apply' }">selected="selected"</c:if>>승인완료</option>
+					<option value="refuse"<c:if test="${search='refuse' }">selected="selected"</c:if>>승인거부</option>
 				</select>
 			</div>
 
@@ -59,16 +57,15 @@
 			</thead>
 
 			<c:forEach var="mentor" items="${mentorlist}">
-				<tbody align="center">
-					<tr
-						onClick="location.href='masterMentorApplyDetail?mentor_no=${mentor.mentor_no}&pageNum=${pageNum }'">
+				<tbody align="center" id="changeCnt">
+					<tr onClick="location.href='masterMentorApplyDetail?mentor_no=${mentor.mentor_no}&pageNum=${pageNum }'">
 						<td><c:out value="${mentor.number }" /></td>
 						<td>${mentor.name }</td>
 						<td>${mentor.age }세</td>
 						<td>${mentor.task }</td>
 						<td>${mentor.years }년</td>
 						<td>${mentor.apply_date }</td>
-						<td class="reply-status">
+						<td>
 						<c:choose>
 								<c:when test="${mentor.classification == '22'}">대기</c:when>
 								<c:when test="${mentor.classification == '23'}">승인완료</c:when>
@@ -80,8 +77,29 @@
 			</c:forEach>
 		</table>
 
-		<!-- 전체 목록 페이징 처리 -->
+		<!-- 목록 페이징 처리 -->
 		<ul class="pagination justify-content-center">
+		<!-- 검색 했을 때 페이징 처리 -->
+			<c:if test="${not empty keyword}">
+			<c:if test="${p.startPage > p.pageBlk}">
+				<li class="page-item"><a class="page-link"
+					href="masterMentorApplyList?pageNum=${p.startPage-1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">이전</a></li>
+			</c:if>
+			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
+				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
+					<a class="page-link" href="masterMentorApplyList?pageNum=${i}&keyword=${keyword}&search=${search}"
+					style="color: black;">${i}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${p.endPage < p.totalPage }">
+				<li class="page-item"><a class="page-link"
+					href="masterMentorApplyList?pageNum=${p.endPage-1 }"
+					style="color: black;">다음</a></li>
+			</c:if>
+		</c:if>
+		<!-- 전체 목록의 페이징 처리 -->
+		<c:if test="${empty keyword }">
 			<c:if test="${p.startPage > p.pageBlk}">
 				<li class="page-item"><a class="page-link"
 					href="masterMentorApplyList?pageNum=${p.startPage-1 }"
@@ -92,65 +110,16 @@
 					<a class="page-link" href="masterMentorApplyList?pageNum=${i}"
 					style="color: black;">${i}</a>
 				</li>
-
 			</c:forEach>
-
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterMentorApplyList?pageNum=${p.endPage-1 }"
+					href="masterMentorApplyList?pageNum=${p.endPage-1 }&keyword=${keyword}&search=${search}"
 					style="color: black;">다음</a></li>
+			</c:if>
 			</c:if>
 		</ul>
 	</div>
 
-
 	<%@ include file="../public/sidebar_footer.jsp"%>
-	<!-- 글 정렬 script(답변대기, 답변완료) -->
-	<script>
-		$(document)
-				.ready(
-						function() {
-							$("#search")
-									.change(
-											function() {
-												var selectedValue = $(this)
-														.val();
-												var replyStatusElements = $(".reply-status");
-
-												replyStatusElements
-														.each(function() {
-															var replyStatus = $(
-																	this)
-																	.text()
-																	.trim();
-															var postRow = $(
-																	this)
-																	.closest(
-																			"tr");
-
-															if (selectedValue === "all") {
-																postRow.show();
-															} else if (selectedValue === "wait"
-																	&& replyStatus
-																			.indexOf("대기") !== -1) {
-																postRow.show();
-															} else if (selectedValue === "apply"
-																	&& replyStatus
-																			.indexOf("승인완료") !== -1) {
-																postRow.show();
-															} else if (selectedValue === "refuse"
-																	&& replyStatus
-																			.indexOf("승인거부") !== -1) {
-																postRow.show();
-															} else {
-																postRow.hide();
-															}
-														});
-											});
-
-							$("#search").change();
-						});
-	</script>
-
 </body>
 </html>

@@ -18,6 +18,7 @@
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
 				<!-- SELECT -->
+				<input type="button" id="all" name="all" value="전체" class="small_jh" style="width: 120px; float: left;" /> 
 				<input type="button" id="unReport" name="search" value="미처리" class="small_jh" style="width: 120px; float: left;" /> 
 				<input type="button" id="report" name="search" value="처리" class="small_jh" style="width: 120px; float: left;" />
 			</div>
@@ -49,18 +50,23 @@
 					</tr>
 				</thead>
 
-				<tbody id="append_location">
-					<c:forEach var="unComplete" items="${reportUncomplete }">
-						<c:if test="${!empty unComplete}">
-							<tr onClick="location.href='masterReportDetail?report_no=${unComplete.report_no}'">
-								<td>${unComplete.number }</td>
-								<td>${unComplete.mentor_name }</td>
-								<td>${unComplete.mentee_name }</td>
-								<td><fmt:formatDate value="${unComplete.reg_date }"
+				<tbody align="center">
+					<c:forEach var="reportList" items="${reportList }">
+							<tr onClick="location.href='masterReportDetail?report_no=${reportList.report_no}&member_no=${reportList.member_no }&mentor_no=${reportList.mentor_no }'">
+								<td>${reportList.report_no }</td>
+								<td>${reportList.mentor_name }</td>
+								<td>${reportList.mentee_name }</td>
+								<td><fmt:formatDate value="${reportList.reg_date }"
 										pattern="yy.MM.dd" /></td>
-								<td>${unComplete.report_state }</td>
+								<td>
+								<c:choose>
+									<c:when test ="${reportList.report_state == '36'}">환불</c:when>
+									<c:when test ="${reportList.report_state == '41'}">철회</c:when>
+									<c:when test ="${reportList.report_state == '42'}">멘토미처리</c:when>
+									<c:when test ="${reportList.report_state == '43'}">멘토처리</c:when>
+								</c:choose>
+								</td>
 							</tr>
-						</c:if>
 					</c:forEach>
 				</tbody>
 			</table>
@@ -75,7 +81,7 @@
 			</c:if>
 			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
 				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
-					<a class="page-link" href="masterReportList?pageNum=${i}&abcd=${}" style="color: black;">${i}</a>
+					<a class="page-link" href="masterReportList?pageNum=${i}" style="color: black;">${i}</a>
 				</li>
 			</c:forEach>
 
@@ -86,54 +92,6 @@
 	</div>
 
 
-	<script>
-		$(document)
-				.ready(
-						function() {
-
-							/* $('#reportCont').hide();
-
-							$('#unReport').click(function() {
-								$('#unReportCont').show();
-								$('#reportCont').hide();
-							});
-
-							$('#report').click(function() {
-								$('#reportCont').show();
-								$('#unReportCont').hide();
-
-							});*/
-
-							var unReportCont = '<c:forEach var="unComplete" items="${reportUncomplete }">'
-									+ '<c:if test="${!empty unComplete}"><tr>'
-									+ '<td>${unComplete.number }</td>'
-									+ '<td>${unComplete.mentor_name }</td>'
-									+ '<td>${unComplete.mentee_name }</td>'
-									+ '<td><fmt:formatDate value="${unComplete.reg_date }" pattern="yy.MM.dd" /></td>'
-									+ '<td>${unComplete.report_state }</td></tr></c:if></c:forEach>';
-
-							var reportCont = '<c:forEach var="complete" items="${reportComplete }">'
-									+ '<c:if test="${!empty complete}"><tr>'
-									+ '<td>${complete.number }</td>'
-									+ '<td>${complete.mentor_name }</td>'
-									+ '<td>${complete.mentee_name }</td>'
-									+ '<td><fmt:formatDate value="${complete.reg_date }" pattern="yy.MM.dd" /></td>'
-									+ '<td>${complete.report_state }</td></tr></c:if></c:forEach>';
-
-							$('#unReport').click(
-									function() {
-										$('#append_location').empty().append(
-												unReportCont);
-									});
-
-							$('#report').click(
-									function() {
-										$('#append_location').empty().append(
-												reportCont);
-									});
-
-						});
-	</script>
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
 </body>

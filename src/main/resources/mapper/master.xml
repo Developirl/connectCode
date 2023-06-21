@@ -6,8 +6,11 @@
 	<!-- 멘토 전체 데이터 -->
 	<select id="getTotal1" parameterType="MentorDTO"
 		resultType="int">
-		select
-		count(*) from mentor WHERE classification = 22 or
+		select count(distinct mentor.mentor_no) as count from
+		mentor
+		left join career on mentor.mentor_no = career.mentor_no
+		WHERE
+		classification = 22 or
 		classification=23 or classification=24
 	</select>
 
@@ -22,13 +25,16 @@
 	<select id="mentorlist" resultType="MentorDTO">
 		SELECT subquery.*,
 		subquery2.number,
-		(SELECT (YEAR(NOW()) - YEAR(subquery.birthday)) -
-		(DATE_FORMAT(subquery.birthday, '%m%d') > DATE_FORMAT(NOW(), '%m%d')))
+		(SELECT (YEAR(NOW()) -
+		YEAR(subquery.birthday)) -
+		(DATE_FORMAT(subquery.birthday, '%m%d') >
+		DATE_FORMAT(NOW(), '%m%d')))
 		AS 'age'
 		FROM (
 		SELECT DISTINCT mentor.*,
 		career.years, career.task
-		FROM mentor
+		FROM
+		mentor
 		LEFT JOIN career ON
 		mentor.mentor_no = career.mentor_no
 		WHERE
@@ -40,38 +46,114 @@
 		SELECT *,
 		row_number() OVER (ORDER BY mentor_no) AS
 		number
-		FROM mentor
+		FROM
+		mentor
 		) subquery2
 		ON subquery.mentor_no =
 		subquery2.mentor_no
-		order by apply_date desc
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					subquery.name LIKE CONCAT('%', #{keyword}, '%')
+					or
+					subquery.task LIKE CONCAT('%', #{keyword}, '%')
+					or subquery.years
+					LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+				<when test="keyword != null and search == 'wait'">
+					subquery.classification = 22 and(
+					subquery.name LIKE
+					CONCAT('%', #{keyword}, '%')
+					or subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					or subquery.years LIKE CONCAT('%', #{keyword},
+					'%'))
+				</when>
+				<when test="keyword != null and search == 'apply'">
+					subquery.classification = 23 and(
+					subquery.name LIKE
+					CONCAT('%', #{keyword}, '%')
+					or subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					or subquery.years LIKE CONCAT('%', #{keyword},
+					'%'))
+				</when>
+				<when test="keyword != null and search == 'refuse'">
+					subquery.classification = 24 and(
+					subquery.name LIKE
+					CONCAT('%', #{keyword}, '%')
+					or subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					or subquery.years LIKE CONCAT('%', #{keyword},
+					'%'))
+				</when>
+			</choose>
+		</where>
+		order by
+		apply_date desc
 		limit #{startRow},
 		#{endRow}
 	</select>
 
 	<!-- 멘토 상세페이지 -->
-	<select id="mentorDetail" parameterType="int" resultType="MentorDTO"> 
-		select * from mentor as m left join file as f on m.profile_img_no = f.file_no where mentor_no=#{mentor_no} 
+	<select id="mentorDetail" parameterType="int"
+		resultType="MentorDTO">
+		select distinct * from mentor as m left join file as f on
+		m.profile_img_no = f.file_no
+		left join member as mm on
+		mm.member_no=m.member_no
+		where
+		mentor_no=#{mentor_no}
 	</select>
-	
+
 	<!-- 멘토 경력 -->
-	<select id="mentorCareer" parameterType="int" resultType="MentorDTO"> 
-		select * from career as c left join file as f on c.mentor_no=f.file_no where mentor_no=#{mentor_no} order by entering_date
+	<select id="mentorCareer" parameterType="int"
+		resultType="MentorDTO">
+		select *, entering_date as e_date from career where
+		mentor_no=#{mentor_no} order by
+		e_date
 	</select>
 
 	<!-- 멘토 학벌 -->
-	<select id="mentorEducation" parameterType="int" resultType="MentorDTO"> 
-		select * from education as e left join file as f on e.mentor_no = f.file_no where mentor_no=#{mentor_no}  order by entering_date
+	<select id="mentorEducation" parameterType="int"
+		resultType="MentorDTO">
+		select *, entering_date as e_date, graduation_date as
+		g_date from education where mentor_no=#{mentor_no} order
+		by e_date
 	</select>
 
 	<!-- 멘토 자격증 -->
-	<select id="mentorLicense" parameterType="int" resultType="MentorDTO"> 
-		select * from license as l left join file as f on l.mentor_no = f.file_no where mentor_no=#{mentor_no} 
+	<select id="mentorLicenseFile" parameterType="int"
+		resultType="MentorDTO">
+		select * from license as l left join file as f on
+		l.file_no=f.file_no where mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 멘토 경력 파일 -->
+	<select id="mentorCareerFile" parameterType="int"
+		resultType="MentorDTO">
+		select * from career as c left join file as f on
+		c.file_no=f.file_no where mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 멘토 학벌 파일 -->
+	<select id="mentorEducationFile" parameterType="int"
+		resultType="MentorDTO">
+		select * from education as e left join file as f on
+		e.file_no=f.file_no where mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 멘토 자격증 파일 -->
+	<select id="mentorLicense" parameterType="int"
+		resultType="MentorDTO">
+		select * from license as l left join file as f on
+		l.file_no=f.file_no where mentor_no=#{mentor_no}
 	</select>
 
 	<!-- 멘토 서비스 -->
-	<select id="mentorService" parameterType="int" resultType="MentorDTO"> 
-		select * from service where mentor_no=#{mentor_no} 
+	<select id="mentorService" parameterType="int"
+		resultType="MentorDTO">
+		select * from service where mentor_no=#{mentor_no}
 	</select>
 
 	<!-- 멘토 승인완료 업데이트 -->
@@ -86,25 +168,31 @@
 		classification=24 where mentor_no=#{mentor_no}
 	</update>
 
-	<!-- 멘티 요청 리스트 -->
+	<!-- 멘티 리스트 -->
 	<select id="menteelist" resultType="MentorDTO">
-		select * from mentee
+		select * from member left
+		join mentee on member.member_no=mentee.member_no where
+		mentee.member_no=#{member_no}
 	</select>
 
 	<!-- 멘토,멘티 전체 회원 -->
 	<select id="totallist" resultType="MentorDTO">
-		select name, member_no from
-		mentor
-		union
-		select name, member_no from mentee
-		order by member_no desc
-		limit #{startRow},#{endRow}
+		select *, mentor.name as
+		mentor_name, mentee.name as mentee_name from member
+		left join mentor on
+		member.member_no=mentor.member_no
+		left join mentee on
+		member.member_no=mentee.member_no
+		order by member.member_no desc
+		limit
+		#{startRow},#{endRow}
 	</select>
 
 	<!-- 메일 -->
-	<select id="getEmailbyMember" resultType="MentorDTO"> (select email
-		from
-		mentor where member_no=#{email}) union (select email from mentee
+	<select id="getEmailbyMember" resultType="MentorDTO">
+		(select email from
+		mentor where member_no=#{email}) union (select email from
+		mentee
 		where
 		member_no=#{email})
 	</select>
@@ -123,10 +211,12 @@
 		join(
 		select name, member_no from mentor
 		union
-		select name, member_no from mentee
+		select name, member_no
+		from mentee
 		) t on p.member_no =
 		t.member_no
-		where ref_step=0 and board_no=1
+		where ref_step=0 and
+		board_no=1
 		order by p.reg_date desc
 		limit ${startRow}, #{endRow}
 	</select>
@@ -169,127 +259,216 @@
 		from mentor union select name, member_no from mentee </select> -->
 
 	<!-- 신고 미처리 총 데이터 -->
-	<select id="getReport" resultType="int">
-		select count(*) from report
-		where classification = 42 or classification = 43
-	</select>
+	<!-- <select id="getReport" resultType="int"> select count(*) from report 
+		where classification = 42 or classification = 43 </select> -->
 
 	<!-- 신고 처리 총 데이터 -->
 	<!-- <select id="getReport" resultType="int"> select count(*) from report 
 		where classification = 36 or classification = 41 </select> -->
 
 	<!-- 신고 목록_미처리 -->
-	<select id="reportUncomplete" resultType="ReportDTO">
-		select report.*,
-		mentoring.mentee_no, mentoring.service_no, service.mentor_no,
-		mentor.name as mentor_name, mentee.name as mentee_name,
-		CASE
-		WHEN
-		report.classification = '36' THEN '환불'
-		WHEN report.classification =
-		'41' THEN '철회'
-		WHEN report.classification =
-		'42' THEN '멘토미처리'
-		WHEN
-		report.classification = '43' THEN '멘토처리'
-		ELSE ''
-		END AS report_state,
-		row_number() OVER (ORDER BY report_no) AS number
-		from
-		report
-		left join
-		mentoring on report.mentoring_no = mentoring.mentoring_no
-		left join
-		service on mentoring.service_no = service.service_no
-		left
-		join mentor on
-		service.mentor_no = mentor.mentor_no
-		left join mentee on
-		mentoring.mentee_no = mentee.mentee_no
-		where
-		report.classification = 42
-		or report.classification = 43
-		order by
-		report_no desc
-		limit #{startRow},
-		#{endRow}
-	</select>
-
+	<!-- <select id="reportUncomplete" resultType="ReportDTO"> select report.*, 
+		mentoring.mentee_no, mentoring.service_no, service.mentor_no, mentor.name 
+		as mentor_name, mentee.name as mentee_name, CASE WHEN report.classification 
+		= '36' THEN '환불' WHEN report.classification = '41' THEN '철회' WHEN report.classification 
+		= '42' THEN '멘토미처리' WHEN report.classification = '43' THEN '멘토처리' ELSE '' 
+		END AS report_state, row_number() OVER (ORDER BY report_no) AS number from 
+		report left join mentoring on report.mentoring_no = mentoring.mentoring_no 
+		left join service on mentoring.service_no = service.service_no left join 
+		mentor on service.mentor_no = mentor.mentor_no left join mentee on mentoring.mentee_no 
+		= mentee.mentee_no where report.classification = 42 or report.classification 
+		= 43 order by report_no desc limit #{startRow}, #{endRow} </select> -->
 	<!-- 신고 목록_처리 -->
-	<select id="reportComplete" resultType="ReportDTO">
-		select report.*,
-		mentoring.mentee_no, mentoring.service_no, service.mentor_no,
-		mentor.name as mentor_name, mentee.name as mentee_name,
-		CASE
-		WHEN
-		report.classification = '36' THEN '환불'
-		WHEN report.classification =
-		'41' THEN '철회'
-		WHEN report.classification =
-		'42' THEN '멘토미처리'
-		WHEN
-		report.classification = '43' THEN '멘토처리'
-		ELSE ''
-		END AS report_state,
-		row_number() OVER (ORDER BY report_no) AS number
-		from
-		report
-		left join
-		mentoring on report.mentoring_no = mentoring.mentoring_no
-		left join
-		service on mentoring.service_no = service.service_no
-		left
-		join mentor on
-		service.mentor_no = mentor.mentor_no
-		left join mentee on
-		mentoring.mentee_no = mentee.mentee_no
-		where
-		report.classification = 36
-		or report.classification = 41
-		order by
-		report_no desc
-		limit #{startRow},
-		#{endRow}
-	</select>
-	
-	<select id="selectFile" parameterType="hashmap" resultType="hashmap">
+	<!-- <select id="reportComplete" resultType="ReportDTO"> select report.*, 
+		mentoring.mentee_no, mentoring.service_no, service.mentor_no, mentor.name 
+		as mentor_name, mentee.name as mentee_name, CASE WHEN report.classification 
+		= '36' THEN '환불' WHEN report.classification = '41' THEN '철회' WHEN report.classification 
+		= '42' THEN '멘토미처리' WHEN report.classification = '43' THEN '멘토처리' ELSE '' 
+		END AS report_state, row_number() OVER (ORDER BY report_no) AS number from 
+		report left join mentoring on report.mentoring_no = mentoring.mentoring_no 
+		left join service on mentoring.service_no = service.service_no left join 
+		mentor on service.mentor_no = mentor.mentor_no left join mentee on mentoring.mentee_no 
+		= mentee.mentee_no where report.classification = 36 or report.classification 
+		= 41 order by report_no desc limit #{startRow}, #{endRow} </select> -->
+
+	<!-- 첨부파일 다운로드 -->
+	<select id="selectFile" parameterType="hashmap"
+		resultType="hashmap">
 		<![CDATA[
 			select * from file where file_no=#{file_no}
-		]]>	
+		]]>
 	</select>
 
-<!-- *****************************병걸 작성*************************************** -->
+	<!-- 멘토 신고수 -->
+	<select id="mentorReport" resultType="int">
+		select count(*) as count
+		from report as r left join mentoring as ming on
+		r.mentoring_no=ming.mentoring_no
+		left join service as s on
+		s.service_no=ming.service_no where r.classification in (36, 42, 43) and s.mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 멘토 멘토링 + 리뷰 -->
+	<select id="mentorEtc" resultType="MentorDTO">
+		select * from mentoring left
+		join report on mentoring.mentoring_no=report.mentoring_no
+	</select>
+
+	<!-- 멘티 멘토링 -->
+	<select id="menteeMentoring" resultType="MenteeDTO">
+		select * from mentee
+		left join mentoring on mentee.mentee_no=mentoring.mentee_no where
+		mentee.mentee_no=#{mentee_no}
+	</select>
+
+	<!-- 멘티 정보 구해오기 -->
+	<select id="menteeDelete" resultType="MenteeDTO">
+		select * from mentee left
+		join member on mentee.member_no=member.member_no where
+		mentee.member_no=#{member_no}
+	</select>
+
+	<!-- 멘토 탈퇴 테이블 인서트 -->
+	<insert id="mmDelUpdate" parameterType="int">
+		insert into quit_member
+		values(sysdate(),'관리자 권한으로 탈퇴',#{member_no})
+	</insert>
+
+	<!-- 멘티 탈퇴 -->
+	<update id="mmDelete" parameterType="int">
+		update member set
+		classification=14 where member_no=#{member_no}
+	</update>
+
+	<!-- 멘토 리뷰수 -->
+	<select id="mentorReview" resultType="int">
+		select count(*) as count
+		from review as r left join mentoring as ming on
+		r.mentoring_no=ming.mentoring_no
+		left join service as s on
+		s.service_no=ming.service_no where
+		s.mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 멘토링 평균 -->
+	<select id="mentorAVG" resultType="double">
+		select ifnull(avg(rating),0)
+		from review
+		as r left join mentoring as ming on
+		r.mentoring_no=ming.mentoring_no
+		left join service as s on
+		s.service_no=ming.service_no where
+		s.mentor_no=#{mentor_no}
+	</select>
+
+	<!-- 신고 총 데이터 -->
+	<select id="getReport" resultType="int">
+		select count(*) from report
+	</select>
+
+	<!-- 신고 목록 -->
+	<select id="reportList" resultType="ReportDTO">
+		select *, mor.name as
+		mentor_name, mee.name as mentee_name, r.classification as report_state
+		from report as r
+		left join mentoring as m on
+		r.mentoring_no=m.mentoring_no
+		left join service as s on
+		s.service_no=m.service_no
+		left join mentor as mor on
+		s.mentor_no=mor.mentor_no
+		left join mentee as mee on
+		m.mentee_no=mee.mentee_no order by report_no
+		desc limit #{startRow},
+		#{endRow}
+	</select>
+
+	<!-- 신고 상세 내역 -->
+	<select id="reportDetail" resultType="ReportDTO">
+		select *, mor.name as
+		mentor_name, mee.name as mentee_name, r.classification as report_state
+		from report as r
+		left join mentoring as m on
+		r.mentoring_no=m.mentoring_no
+		left join service as s on
+		s.service_no=m.service_no
+		left join mentor as mor on
+		s.mentor_no=mor.mentor_no
+		left join mentee as mee on
+		m.mentee_no=mee.mentee_no
+		where r.report_no=#{report_no}
+	</select>
+
+	<!-- 파일 정보 -->
+	<select id="file" resultType="FileDTO">
+		select education_no, f.file_no, mentor_no, file_serial_number, origin_name, file_url, extension from education
+		as e
+		left join file as f on e.file_no=f.file_no where e.mentor_no=${mentor_no}
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- *****************************병걸 작성*************************************** -->
 
 	<insert id="insertVisitorInfo">
-		<selectKey keyProperty="visit_id" order="BEFORE" resultType="int">
+		<selectKey keyProperty="visit_id" order="BEFORE"
+			resultType="int">
 			SELECT IFNULL(MAX(visit_id), 0)+1 FROM visitor
 		</selectKey>
-		INSERT INTO visitor (visit_ip, visit_time, visit_refer, visit_agent) VALUES (#{visit_ip}, SYSDATE(), #{visit_refer}, #{visit_agent})
+		INSERT INTO visitor (visit_ip, visit_time, visit_refer, visit_agent)
+		VALUES (#{visit_ip}, SYSDATE(), #{visit_refer}, #{visit_agent})
 	</insert>
-	
+
 	<update id="updateExitTime">
-		UPDATE visitor SET exit_time = SYSDATE() WHERE visit_id = #{visit_id}
+		UPDATE visitor SET exit_time = SYSDATE() WHERE
+		visit_id = #{visit_id}
 	</update>
-	
+
 	<select id="getTotalVisitors" resultType="int">
-		SELECT COUNT(*) FROM visitor
+		SELECT COUNT(*) FROM
+		visitor
 	</select>
 	<select id="getTodayVisitors" resultType="int">
-		SELECT COUNT(*) FROM visitor WHERE DATE_FORMAT(visit_time, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+		SELECT COUNT(*) FROM
+		visitor WHERE DATE_FORMAT(visit_time, '%Y-%m-%d') = DATE_FORMAT(NOW(),
+		'%Y-%m-%d')
 	</select>
 	<select id="getMentors" resultType="int">
-		 SELECT COUNT(*) FROM member WHERE classification=13;
+		SELECT COUNT(*) FROM member
+		WHERE classification=13;
 	</select>
 	<select id="getMentees" resultType="int">
-		SELECT COUNT(*) FROM member WHERE classification=12;
+		SELECT COUNT(*) FROM member
+		WHERE classification=12;
 	</select>
 	<select id="getUnreadyMentors" resultType="int">
-		SELECT COUNT(*) FROM mentor INNER JOIN member ON(mentor.member_no = member.member_no) WHERE member.classification=13 AND (mentor.classification=21 OR mentor.classification=22);
+		SELECT COUNT(*) FROM
+		mentor INNER JOIN member ON(mentor.member_no = member.member_no) WHERE
+		member.classification=13 AND (mentor.classification=21 OR
+		mentor.classification=22);
 	</select>
 	<select id="getReadyMentors" resultType="int">
-		SELECT COUNT(*) FROM mentor INNER JOIN member ON(mentor.member_no = member.member_no) WHERE member.classification=13 AND mentor.classification=23;
+		SELECT COUNT(*) FROM
+		mentor INNER JOIN member ON(mentor.member_no = member.member_no) WHERE
+		member.classification=13 AND mentor.classification=23;
 	</select>
 
-<!-- *****************************병걸 작성*************************************** -->
+	<!-- *****************************병걸 작성*************************************** -->
 
 </mapper>
