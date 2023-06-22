@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="connectCode.mapper.PaymentDAO">
+
+	<insert id="insertMentoring" >
+      <selectKey keyProperty="mentoring_no" order="BEFORE" resultType="int">
+         SELECT IFNULL(MAX(mentoring_no), 0)+1 FROM mentoring
+      </selectKey>
+      INSERT INTO mentoring(mentoring_no,request_content,apply_time,reserve_date,
+      	classification,location,file_no,mentee_no,service_no,git_yn,blog_yn) 
+      VALUES(#{mentoring_no},#{request_content},#{apply_time},#{reserve_date},#{classification},
+      	(SELECT mentoring_location FROM mentee WHERE mentee_no=#{mentee_no}),
+      	#{file_no},#{mentee_no},#{service_no},#{git_yn},#{blog_yn})
+      
+   </insert>
+	
+	<insert id="insertPayment">
+		<selectKey keyProperty="payment_no" order="BEFORE" resultType="int">
+         SELECT IFNULL(MAX(payment_no), 0)+1 FROM payment
+      </selectKey>
+		INSERT INTO payment(payment_no,mentoring_no,payment_method,order_no,pay_amount,pay_state,pay_time,
+		  iamport_order_no,buyer_name,buyer_email,buyer_phone) 
+		VALUES(#{payment_no},#{mentoring_no},#{payment_method},#{order_no},#{pay_amount},#{pay_state},#{pay_time},
+		#{iamport_order_no},#{buyer_name},#{buyer_email},#{buyer_phone})
+	</insert>
+	
+	<select id="getPaymentInfo" resultType="PaymentDTO">
+		SELECT * FROM payment WHERE payment_no = #{payment_no}
+	</select>
+	
+	<update id="orderCancle">
+		UPDATE payment SET cancel_pay_time=SYSDATE() WHERE payment_no = #{payment_no}
+	</update>
+
+</mapper>

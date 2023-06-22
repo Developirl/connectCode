@@ -78,3 +78,43 @@
 	</div>
 
 
+	<div class="js-mentorInfopage-outerbox">
+	<div class="js-mentorinfo-title">결제 방법 선택</div>
+		<div class="js-mentorinfo-align-left">
+			<table width=100%>
+				<tr>
+					<td width="15%">
+						<img src="/findMentor/img/payment_icon_yellow_small.png" class="js_payment_img_kakao">
+					</td>
+					
+					<td width="20%">
+					    <label for="kakao_radio"><span class="js-mentorinfo-gray">카카오 결제</span></label>
+					</td>
+					<td>
+					    <input type="radio" name="pgName" id="kakao_radio" class="payment_method" value="kakaopay">
+					</td>
+				</tr>
+				<tr>
+					<td width="15%">
+					<img src="/findMentor/img/card.png" class="js_payment_img">
+					</td>
+					<td width="20%">			
+		 			<label for="danal_radio"><span class="js-mentorinfo-gray">카드 결제</span></label>
+					</td>
+					<td>			
+		 			<input type="radio" name="pgName" id="danal_radio" class="payment_method" value="danal_tpay">
+					</td>
+				</tr>
+			</table>
+		 			
+		 	<span class="js-pay-print"></span>
+		</div>
+	</div>
+	
+	
+<div class="js-mentorInfopage-outerbox">
+	<div class="js-mentorinfo-title">결제 금액</div>
+		<div class="js-mentorinfo-align-left">	
+			<div class="js-mentorinfo-title" id="js-final-price"></div>
+		</div>
+</div>	

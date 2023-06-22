@@ -34,7 +34,7 @@
 	position:relative;
 }
 
-@media(max-width:1600px){
+@media(max-width:1400px){
    .js-profileCard{
       width:100%;
       margin-left: 0!important;

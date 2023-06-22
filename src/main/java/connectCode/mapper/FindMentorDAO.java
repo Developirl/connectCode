@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
+import connectCode.model.MentoringDTO;
 
 public interface FindMentorDAO {
 
@@ -45,5 +46,7 @@ public interface FindMentorDAO {
 	MenteeDTO getMenteePortfolio(int member_no);
 
 	int getFileMaxNo();
+
+	MentoringDTO getMentoringInfo(int payment_no);
 
 }

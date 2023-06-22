@@ -10,7 +10,8 @@
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <%-- 부트 스트랩 아이콘을 class로 가져다 사용하기 위한 CDN --%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
 <style>
 
@@ -32,7 +33,7 @@
 	padding-right:80px;
 	margin-top:80px;
 	margin-bottom:80px;
-	background: #F2F7F7;
+	background: #F2F5F5;
 }
 
 .js-selectbox-kind{
@@ -59,12 +60,12 @@
 
 .js-selectbox-font-mini{
 	font-size: 11pt;
-	font-weight: 300;
+	font-weight: 500;
 	color:#737373;
 }
 .js-mentoring-kindbox2{
     border:2px solid #004EA2;
-    background:#F2F7F7;
+    background:#F2F5F5;
     border-radius: 10px;
     padding:5px 18px;
     color:#004EA2;
@@ -145,8 +146,8 @@
 }
 
 .js-calendar-week,.js-time-css{
-	border:3px solid #ccc;
-	background:#F2F7F7;
+	border:3px solid #ABABAB;
+	background:#F2F5F5;
 	padding:10px 20px;
 	display:inline-block;
 	margin-right: 12px;
@@ -160,11 +161,13 @@
 .js-time-css{
 	margin-top:20px;
 	margin-bottom:0px;
+	background: white;
 }
 
 .js-date-css{
-	border:3px solid #ccc;
-	background:#F2F7F7;
+	border:3px solid #ABABAB;
+	/*background:#F2F5F5;*/
+	background:white;
 	padding:10px 20px;
 	display:inline-block;
 	margin-right: 12px;
@@ -204,7 +207,7 @@
 
 /* 캘린더 겉 박스 */
 .js-week-selectbox{
-	border:1px solid #F2F7F7;
+	border:1px solid #F2F5F5;
 	margin:20px 0;
 }
 
@@ -380,7 +383,7 @@
 }
 
 .bi-x-circle{
-	font-color:#ccc;
+	font-color:#ABABAB;
 	font-size:14pt;
 }
 
@@ -396,6 +399,37 @@
 #js-gitgitgit,#js-blogblogblog{
 	font-size:11pt;
 	color:#BFBFBF;
+}
+
+
+
+
+/* ---------------- 첨부파일 관련 css ------------------ */
+
+
+input[type=file]::file-selector-button {
+   color: #f3f3f3;
+   background-color: #222222;
+   border: 1px solid gray;
+   border-radius: 8px;
+   cursor: pointer;
+   padding: 8px 30px;
+   display:inline!important;
+}
+
+
+.file_input{
+	margin-top:10px;
+}
+
+
+.js_payment_img{
+	width: 55px;
+	height: 45px;
+}
+.js_payment_img_kakao{
+	width: 60px;
+	height: 30px;
 }
 
 </style>
@@ -417,6 +451,8 @@ function addCommasToPrice(number) {
 $(document).ready(function(){
 	
 
+	/* --------------------------  깃허브 , 블로그 주소 ------------------------ */
+	
 	
 	// 처음 페이지 로드시 깃허브,블로그 주소 비공개 체크
 	$("#js-blogclose").prop("checked","checked");
@@ -451,6 +487,7 @@ $(document).ready(function(){
 	$('.js-sel-radio').change(function() {
 		  if ($(this).is(':checked')) {
 		    $("#js-pay-print").text($(this).data('pay')+' 원');
+		    $("#js-final-price").text($(this).data('pay')+' 원');
 		  }
 		});
 
@@ -474,6 +511,7 @@ $(document).ready(function(){
 		$('.js-sel-radio[data-value="${kind}"]').prop('checked', true);
 		//$("#js-pay-print").text($('.js-sel-radio[data-value="${kind}"]').data('pay')); // ------------------- 여기 변경해야함
 		$("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원'); // ------------------- 여기 변경해야함
+		
 	}
 	
 	// 처음 로드될 때 disabled 시키기 위한 기본 unabled_date와 mentoring_time을 가져온다. 
@@ -766,6 +804,8 @@ function goPaymentbox(){
 		  success: function(rsp) {
 			  
 			  $("#selected_mentor_info_box").html(rsp);
+			  var amount = $("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원');
+			  $("#js-final-price").html(amount);
 			  
 		  },
 		  error: function(xhr, status, error) {
@@ -783,7 +823,9 @@ function goPaymentbox(){
 //모달 영역
 function openPaymentModal() {
     const modal = document.querySelector('.payment_modal');
-	$(".js-pay-print").text($('input[type="radio"][name="mentoring_kind"]:checked').data('pay'));
+    var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
+    $("#js-final-price").html(amount);
+    alert("amount:"+amount);
     modal.style.display = 'block';
 }
 
@@ -830,11 +872,16 @@ function createOrderNum(){
 
 //--------------------결제를 위한 영역
 function requestPay() {
-	
-	
+	/*
+ 	var git_yn = $('input[type="radio"][class="js-gitview"]:checked').val();
+	var blog_yn = $('input[type="radio"][class="js-blogview"]:checked').val();
+	alert("git_yn null인가? "+  $('input[type="radio"][class="js-blogview"]:checked').val()==null);
+	alert("blog_yn = "+ typeof blog_yn);
+	*/
 	// 시큐리티용 변수 
 	var csrf = "${_csrf.headerName}";
 	var csrfToken = "${_csrf.token}";
+	var file_no = '';
 	
 	
 	// 파일 정보를 가져다 놓는다. 
@@ -853,6 +900,7 @@ function requestPay() {
 	      },
 	      success: function(response) {
 	    	  console.log("멘토링 신청시 실행하는 파일 업로드 성공");
+	    	  file_no = response;
 	      },
 	      error: function(xhr, status, error) {
 	    	  console.log("멘토링 신청시 첨부한 파일 저장 실패");
@@ -887,21 +935,27 @@ function requestPay() {
 	// 파일 업로드 처리하는 코드 들어와야함 ( 콜백으로 file_no  가져와서 mentoring table insert시 넣어주기 )
 	var git = $("#js-menteegit").val();
 	var blog = $("#js-menteeblog").val();
+	var pgName = $("input[type='radio'][name='pgName']:checked").val();
+	var name = $('input[type="radio"][name="mentoring_kind"]:checked').data('value');
+	var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
 	
+	alert("name :"+name);
+	alert("amount :"+amount);
 	closePaymentModal()// 기존 모달 닫기
+  //      pg: 'kakaopay',danal_tpay
 	
     // IMP.request_pay(param, callback) 결제창 호출
     var uid = '';
     IMP.init("imp04314513");
     IMP.request_pay({ // param
-        pg: 'kakaopay',
-        pay_method: "card",
+        pg:pgName,
+    	pay_method: "card",
         merchant_uid: createOrderNum(), //가맹점 주문번호 (아임포트를 사용하는 가맹점에서 중복되지 않은 임의의 문자열을 입력)
-        name: "30분 대면 멘토링", //결제창에 노출될 상품명
-        amount: 300, //금액
-        buyer_email : "userEmail@naver.com", 
-        buyer_name : "jihyn",
-        buyer_tel : "01022223333",
+        name: name, //결제창에 노출될 상품명
+        amount: amount, //금액
+        buyer_email : '${mentee.email}', 
+        buyer_name : '${mentee.name}',
+        buyer_tel : '${mentee.phone}',
     }, function (rsp) { // callback
         if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
             uid = rsp.imp_uid;
@@ -918,8 +972,16 @@ function requestPay() {
                 }
             }).done(function(data) {
                 // 결제를 요청했던 금액과 실제 결제된 금액이 같으면 해당 주문건의 결제가 정상적으로 완료된 것으로 간주한다.
-                if (300 == data.response.amount) {
+                if (amount == data.response.amount) {
                 	console.log("결제한거 저장까지 함");
+                	
+       /*         	var git_yn = $('input[type="radio"][class="js-gitview"]:checked').val();
+                	var blog_yn = $('input[type="radio"][class="js-blogview"]:checked').val();
+                	alert("git_yn = "+git_yn);
+                	alert("git_yn null인가? "+git_yn==null);
+                	alert("blog_yn = "+blog_yn==null);
+       */         	
+                	
                     // jQuery로 HTTP 요청
                     // 주문정보 생성 및 테이블에 저장 
 		        	
@@ -933,11 +995,18 @@ function requestPay() {
                             "iamport_order_no" : rsp.imp_uid,
                             "buyer_name" : rsp.buyer_name,
                             "buyer_email" : rsp.buyer_email,
-                            "buyer_phone" : rsp.buyer_tel,
+                            "buyer_phone" : rsp.buyer_tel,   //여기까지가 PaymentDTO
                             "request_content" : $("#js-mentoring-comment").val(),
                             "apply_time" : new Date().getTime(),
                             "classification" : 31,
-                            "mentee_no" : "${mentee.mentee_no}"
+                            "mentee_no" : "${mentee.mentee_no}",
+                            "file_no" : file_no,
+                            "reserve_day" : $("#reserve_day").val(),
+                            "reserve_time" : $("#reserve_time").val(),
+                            "service_no" : $('input[type="radio"][name="mentoring_kind"]:checked').val(),
+                            "git_yn" : $('input[type="radio"][class="js-gitview"]:checked').val(),
+                            "blog_yn" : $('input[type="radio"][class="js-blogview"]:checked').val()
+                            	
                         });
                     
                     console.log("requestData:"+requestData);
@@ -955,22 +1024,25 @@ function requestPay() {
                         	
                         	
                             if (res > 0) {
-                                alert('주문정보 저장 성공')
+                                alert('주문정보 저장 성공');
+                                console.log(res);
+                                location.href="/findMentor/paymentCompletePage?payment_no="+res;
+                                $("#paySuccess").append("<a href='/payment/refund?payment_no="+res+"'>결제취소</a>");             
                                 //createPayInfo(uid);
                             }
                             else {
-                            	alert('주문정보 저장 실패');
+                            	console.log('주문정보 저장 실패');
                             }
                         })
                 }
                 else {
-                    alert('결제 실패');
+                    alert('결제가 취소되었습니다. ');
                 }
             })
             
             //제일위쪽 if에 대한 else
             } else {
-                alert("결제에 실패하였습니다.","에러 내용: " +  rsp.error_msg,"error");
+                alert("결제가 취소되었습니다.");
             }
     
     
@@ -1015,15 +1087,16 @@ function addFile() {
  fileDiv.innerHTML =`
      <div class="file_input">
          <input type="text" readonly />
-         <label> 첨부파일
+         <label>
              <input type="file" name="files" onchange="selectFile(this);" />
          </label>
+         <i class="bi bi-dash-circle fs-3 " onclick="removeFile(this);" style="color:#A50000;"></i>
      </div>
-     <button type="button" onclick="removeFile(this);" class="small_jh btn_jh add_btn"><span>삭제</span></button>
  `;
  document.querySelector('.file_list').appendChild(fileDiv);
 }
 
+//     <button type="button" onclick="removeFile(this);" class="small_jh btn_jh add_btn"><span>삭제</span></button>
 
 //파일 삭제
 function removeFile(element) {
@@ -1059,20 +1132,12 @@ function removeFile(element) {
 	<div class="payment_modal">
       <div class="payment_modal_body" align=center>
     
-        <div id="selected_mentor_info_box" align=center>
-        </div>
+        <div id="selected_mentor_info_box" align=center></div>
     
     	<div class="js-modal-cancelbutt" onclick="closePaymentModal();">
     	<i class="bi bi-x-circle"></i>
     	</div>    
-    	
- 			<span>카카오 결제</span><input type="radio" class="payment_method" value="kakao">
- 			<br>
- 			<span>카드 결제</span><input type="radio" class="payment_method" value="danal">
- 			<span class="js-pay-print"></span>
- 			
- 			<br>
- 		
+			<br><br>
 
     		<input type=button value="결제하기" class="js-modal-paymentbutt" onclick="requestPay();">   
     	 
@@ -1102,7 +1167,7 @@ function removeFile(element) {
             <div class="col-8" >
             <%-- 여기 하위가 작업공간 --%>
           
-          
+          <div id="paySuccess"></div>
           
           
             <div class="js-applypage-Contentbox">
@@ -1116,7 +1181,7 @@ function removeFile(element) {
 		      			<c:forEach var="i" items="${payment }" varStatus="st">
 							<tr class="js-paymentbottommargin2">
 								<th width="10%">
-                                    <input type="radio" name="mentoring_kind" id="js-mentoring-${st.index}" class="js-sel-radio" data-value="${i.mentoring_kind}" data-pay="${i.mentoring_fee }">
+                                    <input type="radio" name="mentoring_kind" id="js-mentoring-${st.index}" class="js-sel-radio" value="${i.service_no }" data-value="${i.mentoring_kind}" data-pay="${i.mentoring_fee }">
 	 							</th>
 								<td>
 									<div class="js-mentoring-kindbox2">${i.mentoring_kind }</div>
@@ -1205,25 +1270,24 @@ function removeFile(element) {
 	            	 	
 	            	 	<tr>
 	            	 	<td>
-	            	 	
 							<form action="insertMentoring_file" id="js-file-insert-form" autocomplete="off" enctype="multipart/form-data">	            	 	
+	            	 	
 								<!-- 파일 첨부 -->
-								<div class="file_list cont_mar" style=" margin-top: 0px;">
-									<div class="file_input">
-										<input type="text" readonly="readonly"> <label>
-											<input type="file" name="files" onchange="selectFile(this);" accept=".jpg,.jpeg,.png,.docx,.pdf">
+								<div class="file_list cont_mar" style=" margin-top: 20px;width:100%;">
+									<div class="file_input"  style="display:inline;">
+										<input type="text" readonly="readonly"> 
+										<label>
+											<input type="file" name="files" id="js-file-upload-button" onchange="selectFile(this);" accept=".jpg,.jpeg,.png,.docx,.pdf">
 										</label>
 									</div>
-									<input type="button" onclick="removeFile(this);" value="삭제"></button>
-									<input type="button" onclick="addFile();" value="파일추가" ></button>
+									<!-- <input type="button" onclick="removeFile(this);" value="삭제"> -->
+									<!-- <input type="button" onclick="addFile();" value="파일추가" > -->
+									<i class="bi bi-dash-circle fs-3 " onclick="removeFile(this);" style="color:#A50000;"></i>
+									<i class="bi bi-plus-circle fs-3 " onclick="addFile();" style="text-align: right;color:#004EA2;margin-left:8px;"></i>
 								</div>
 	
-								<hr class="title_hr"> <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> <!-- 저장 btn -->
-							<%--	<div align="center" class="cont_mar">
-									<input class="custom_btn submit" type="submit" value="저장하기" style="width: 200px;">
-								</div>  --%>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"> <!-- 저장 btn -->
  							</form>
-
 						</td>
 	            	 	</tr>
 
