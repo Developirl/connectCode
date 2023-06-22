@@ -38,7 +38,7 @@
 	background-color: #0080FF;
 	color: white;
 	font-weight: bold;
-    font-size: 19px
+    font-size: 19px;
     }
     .homebut{
         margin-right: 15px;
