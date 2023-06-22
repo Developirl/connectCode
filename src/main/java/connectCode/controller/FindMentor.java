@@ -23,6 +23,7 @@ import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentoringDTO;
+import connectCode.model.PaymentDTO;
 import connectCode.service.FileService;
 import connectCode.service.FileUtils;
 import connectCode.service.FindMentorService;
@@ -247,6 +248,7 @@ public class FindMentor {
 	@PostMapping("getReservedTime")
 	@ResponseBody
 	public List<String> getReservedTime(String reserve_date,int mentor_no){
+		System.out.println("reserve_date : "+reserve_date);
 		List<String> reservedTime = service.getReservedTime(reserve_date,mentor_no);
 		
 		return reservedTime;
@@ -286,7 +288,7 @@ public class FindMentor {
 
 	@PostMapping("insertMentoring_file")
 	@ResponseBody
-	public String insertMentoring_file(MentoringDTO dto,Model model) {
+	public int insertMentoring_file(MentoringDTO dto,Model model) {
 		List<FileDTO> files = fileUtils.uploadFiles(dto.getFiles()); 
 		  System.out.println("form태그로 넘긴 파일 리스트 : "+files);
 		
@@ -294,11 +296,18 @@ public class FindMentor {
 		fileService.saveFiles(fileMaxNo, files);
 		
 		System.out.println("인설트됨 ㅋ");
-		return null;
+		return fileMaxNo;
 	}
 	
 	
-	
+	@GetMapping("paymentCompletePage")
+	public String paymentCompletePage(int payment_no,Model model) {
+		
+		MentoringDTO mentoring = service.getMentoringInfo(payment_no);
+		model.addAttribute(mentoring);
+		
+		return "findMentor/paymentComplete";
+	}
 	
 	
 	

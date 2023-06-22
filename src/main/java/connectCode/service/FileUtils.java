@@ -53,6 +53,7 @@ public class FileUtils {
 		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")).toString();
 		String uploadPath = getUploadPath(today) + File.separator + saveName;
 		File uploadFile = new File(uploadPath);
+		String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 		
 		try {
 			multipartFile.transferTo(uploadFile);
@@ -66,7 +67,7 @@ public class FileUtils {
 				.physical_name(saveName)
 				.file_url(uploadPath)
 				.size(multipartFile.getSize())
-				.extension(StringUtils.getFilenameExtension(multipartFile.getOriginalFilename()))
+				.extension(extension)
 				.build();
 	}
 	
@@ -74,7 +75,17 @@ public class FileUtils {
 	// filename = 원본 파일명
 	private String generateSaveFilename(String filename) {
 		String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-		return uuid; // 디스크에 저장할 파일명
+		String extension = getFileExtension(filename);
+		return uuid + "." + extension; // 디스크에 저장할 파일명
+	}
+	
+	// 확장자 가져오기
+	private String getFileExtension(String filename) {
+	    int dotIndex = filename.lastIndexOf(".");
+	    if (dotIndex != -1 && dotIndex < filename.length() - 1) {
+	        return filename.substring(dotIndex + 1);
+	    }
+	    return ""; // 확장자가 없는 경우 빈 문자열 반환
 	}
 	
 	/* 업로드 경로 반환 */

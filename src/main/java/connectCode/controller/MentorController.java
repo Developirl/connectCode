@@ -1,6 +1,10 @@
 package connectCode.controller;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -121,6 +125,7 @@ public class MentorController {
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
 		System.out.println(mentor.getFiles() == null);
+		System.out.println("Files size ::: "+mentor.getFiles().size());
 		System.out.println("mentor.getFile_no(): "+mentor.getFile_no());
 		System.out.println("mentor.getFiles(): "+mentor.getFiles());
 		
@@ -268,12 +273,9 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [서비스요금 작성 완료] 페이지
 	@GetMapping("mentorServiceCharPage_View")
-	public String mentorServiceCharPage_View(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorServiceCharPage_View(MentorDTO mentor, Model model) {
 		
 		System.out.println("mentorServiceCharPage_View :: mentor_no :: "+mentor.getMentor_no());
-
-		// mentorDTO에 mentor_no 주입
-		mentor.setMentor_no((int)session.getAttribute("mentor_no"));
 		
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		List<MentorDTO> serviceTBL_select = ms.serviceTBL_select(mentor);
@@ -289,7 +291,7 @@ public class MentorController {
 										@RequestParam("meet_mentoring") String meet_mentoring, 
 										@RequestParam("call_mentoring_fee") String call_mentoring_fee, 
 										@RequestParam("meet_mentoring_fee") String meet_mentoring_fee, 
-										MentorDTO mentor, HttpSession session, Model model) {
+										MentorDTO mentor, Model model) {
 		
 		System.out.println("mentorServiceChar_Up :: mentor_no :: "+mentor.getMentor_no());
 
@@ -328,12 +330,9 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [학력사항 작성 전] 페이지
 	@GetMapping("mentorEduInfoPage")
-	public String mentorEduInfoPage(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorEduInfoPage(MentorDTO mentor, Model model) {
 		
 		System.out.println("mentorEduInfoPage :: mentor_no :: "+mentor.getMentor_no());
-
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
 		
 		List<MentorDTO> education_select = ms.education_select(mentor);
 		
@@ -344,7 +343,7 @@ public class MentorController {
 	
 	// 멘토 프로필 수정 [학력사항] 페이지
 	@PostMapping("mentorEduInfo_UP")
-	public String mentorEduInfo_UP(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorEduInfo_UP(MentorDTO mentor, Model model) {
 		
 		System.out.println("mentorEduInfo_UP :: mentor_no :: "+mentor.getMentor_no());
 
@@ -363,10 +362,6 @@ public class MentorController {
 		System.out.println(Arrays.toString(minor));
 		
 		for(int i=0; i<school.length; i++) {
-			
-			// mentor 객체에 mentor_no = session 할당
-			mentor.setMentor_no((int) session.getAttribute("mentor_no"));
-			
 			mentor.setSchool(school[i]);
 			mentor.setEntering_date(entering_date[i]);
 			mentor.setGraduation_date(graduation_date[i]);
@@ -427,6 +422,10 @@ public class MentorController {
 		
 		List<MentorDTO> education_select = ms.education_select(mentor);
 		
+		MentorDTO find_file_no = education_select.get(0); // 인덱스 0번의 MentorDTO 객체 가져오기
+		int file_no = find_file_no.getFile_no();
+		System.out.println("fileNo:::"+file_no);
+		
 		model.addAttribute("edu_sel", education_select);
 		
 		return "mentor/mentorEduInfoPage_View";
@@ -437,10 +436,9 @@ public class MentorController {
 
 	// 멘토 프로필 수정 [경력사항] 페이지
 	@GetMapping("mentorExpInfoPage")
-	public String mentorExpInfoPage(MentorDTO mentor, HttpSession session, Model model) {
+	public String mentorExpInfoPage(MentorDTO mentor, Model model) {
 
-		// mentor 객체에 mentor_no = session 할당
-		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
+		System.out.println("mentorExpInfoPage :: mentor_no :: "+mentor.getMentor_no());
 		
 		List<MentorDTO> career_select = ms.career_select(mentor);
 		
@@ -450,10 +448,77 @@ public class MentorController {
 	}
 	
 	// 멘토 프로필 수정 [경력사항] 페이지
-	@GetMapping("mentorExpInfoPage_Up")
-	public String mentorExpInfoPage_Up(MentorDTO mentor, HttpSession session, Model model) {
+	@PostMapping("mentorExpInfoPage_Up")
+	public String mentorExpInfoPage_Up(MentorDTO mentor, Model model) {
 
+		System.out.println("mentorExpInfoPage_Up :: mentor_no :: "+mentor.getMentor_no());
 		
+		String[] company = mentor.getCompany().split(",");
+		String[] entering_dates = mentor.getEntering_date().split(",");
+		String[] departure_dates = mentor.getDeparture_date().split(",");
+		String[] task = mentor.getTask().split(",");
+		
+		System.out.println(Arrays.toString(company));
+		System.out.println(Arrays.toString(entering_dates));
+		System.out.println(Arrays.toString(departure_dates));
+		System.out.println(Arrays.toString(task));
+		
+		int[] years = new int[entering_dates.length]; // 연차를 저장할 배열
+		
+		for (int i = 0; i < entering_dates.length; i++) {
+		    String entering_date = entering_dates[i];
+		    
+		    if(departure_dates[i].equals("")) {
+		    	LocalDate localDate = LocalDate.now(); // 현재 날짜
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 원하는 날짜 형식 지정
+				departure_dates[i] = localDate.format(formatter); // LocalDate 타입을 String 타입으로 변환
+
+		    }
+		    String departure_date = departure_dates[i];
+		    
+			LocalDate enteringDate = LocalDate.parse(entering_date);
+			LocalDate departureDate = LocalDate.parse(departure_date);
+			
+			Period period = Period.between(enteringDate, departureDate);
+			years[i] = period.getYears();
+		}
+		
+		// 결과 확인을 위해 배열 출력
+		for (int year : years) {
+		    System.out.println("년차 ::::: " + year + "년");
+		}
+		
+		for(int i=0; i<company.length; i++) { 
+			mentor.setSchool(company[i]);
+			mentor.setEntering_date(entering_dates[i]);
+			mentor.setDeparture_date(departure_dates[i]); 
+			mentor.setMajor(task[i]);
+			mentor.setYears(mentor.getYears()+years[i]);
+			  
+			int result = ms.career_insert(mentor); 
+			System.out.println("result  "+ i + "번째  :: " + result); 
+		}
+		 
+		
+		// education 테이블 insert int result = ms.education_insert(mentor); // 글 작성 후
+		// 파일 업로드 처리(글_no 필요하므로)되도록 글 insert 실행 후 파일 insert 실행
+		  
+		// System.out.println("education_insert:"+result);
+		  
+		
+		for (int i=0; i<mentor.getFiles().size(); i++) {
+		System.out.println("mentor.getFiles:"+mentor.getFiles().get(i)); }
+		  
+		System.out.println(mentor.getFiles() == null);
+		System.out.println("mentor.getFile_no(): "+mentor.getFile_no());
+		System.out.println("mentor.getFiles(): "+mentor.getFiles());
+		  
+		// file 테이블 insert [다중 파일 처리]
+		List<FileDTO> files = fileUtils.uploadFiles(mentor.getFiles()); 
+		System.out.println(files);
+		  
+		fileService.saveFiles(mentor.getFile_no(), files);
+		 
 		
 		return "mentor/mentorExpInfoPage_View";
 	}
@@ -462,6 +527,8 @@ public class MentorController {
 	@GetMapping("mentorExpInfoPage_View")
 	public String mentorExpInfoPage_View(MentorDTO mentor, HttpSession session, Model model) {
 		
+		System.out.println("mentorExpInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
+
 		// mentor 객체에 mentor_no = session 할당
 		mentor.setMentor_no((int) session.getAttribute("mentor_no"));
 		

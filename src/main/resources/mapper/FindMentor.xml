@@ -232,7 +232,7 @@
 	
 	<!--  멘토링 비용 -->
 	<select id="getPayment" parameterType="int" resultType="FindMentorInfoDTO">
-		SELECT mentoring_kind,mentoring_fee FROM service WHERE mentor_no = #{mentor_no} AND available_NY='Y' ORDER BY SUBSTRING(mentoring_kind, 1, 2)
+		SELECT mentoring_kind,mentoring_fee,service_no FROM service WHERE mentor_no = #{mentor_no} AND available_NY='Y' ORDER BY SUBSTRING(mentoring_kind, 1, 2)
 	</select>
 	
 	<!--  멘토의 리뷰 가져오기  -->
@@ -253,10 +253,12 @@
 	<!--  선택한 시간에 이미 예약된 시간을 list로 리턴한다.  -->
 	<select id="getReservedTime" resultType="String">
 		SELECT TIME_FORMAT(reserve_date, '%H:%i') AS reserved_time
-		FROM mentoring
+		FROM mentoring m 
 			JOIN service USING (service_no)
 				WHERE service_no = (SELECT service_no FROM mentor WHERE mentor_no = #{mentor_no})
-					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date};
+					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date} AND m.classification != 32 
+					AND m.classification != 33 
+					AND m.classification != 34;
 	</select>
 	
 	<select id="getMentorInfo" parameterType="int" resultType="FindMentorDTO">
@@ -296,5 +298,12 @@
 	<select id="getFileMaxNo" resultType="int">
 		SELECT COALESCE(MAX(file_no),0)+1 from file
 	</select>
+	
+	
+	<!-- 결제 완료 페이지에서 보여줄 내역을 출력한다. -->
+	<select id="getMentoringInfo" resultType="MentoringDTO">
+		SELECT * FROM payment JOIN mentoring USING(mentoring_no) WHERE payment_no = #{payment_no};
+	</select>
+	
 
 </mapper>

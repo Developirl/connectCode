@@ -1,5 +1,8 @@
 package connectCode.config;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,9 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import connectCode.config.handler.CustomAccessDeniedHandler;
 import connectCode.config.handler.CustomAuthenticationSuccessHandler;
+import lombok.Setter;
 
 @EnableWebSecurity
 public class SecurityConfig {
@@ -47,18 +53,27 @@ public class SecurityConfig {
 	            .successHandler(authenticationSuccessHandler())
 	            .failureUrl("/member/login?error=true") 
 	            .and()
+	           .rememberMe()
+	            .key("connectCode")
+	            .tokenRepository(persistentTokenRepository())
+	            .tokenValiditySeconds(604800)
+	            .and()
             .logout()
 	            .logoutUrl("/member/logout")
 	            .logoutSuccessUrl("/member/loginform") 
 	            .invalidateHttpSession(true) 
-	            .deleteCookies("JSESSIONID") 
+	            .deleteCookies("remember-me","JSESSION_ID") 
 	            .and()
             .httpBasic()
         		.and()
-        	.userDetailsService(userDetailsService);
+        	.userDetailsService(userDetailsService)
+        	.headers().frameOptions().sameOrigin();
         
         return http.build();
     }
+    
+    @Setter(onMethod_ = {@Autowired})
+    private DataSource dataSource;
     
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -75,6 +90,12 @@ public class SecurityConfig {
         return new CustomAuthenticationSuccessHandler();
     }
     
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+    	JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+    	repo.setDataSource(dataSource);
+    	return repo;
+    }
 }
 
 

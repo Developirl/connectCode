@@ -70,7 +70,7 @@
                     </nav>
                     <div class="col-2">
                         <ul class="navbar-nav">
-                            <li class="nav-item">
+                            <li class="nav-item" style="text-align:right;">
                             	<sec:authorize access="isAnonymous()">
 	                                <a class="nav-link mino-align-right" href="/member/loginform">회원가입/로그인&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                             	</sec:authorize>

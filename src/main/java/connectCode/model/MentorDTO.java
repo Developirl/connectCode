@@ -48,7 +48,7 @@ public class MentorDTO {
    // 경력사항
    private int career_no;
    private String company;
-   private Date	departure_date;
+   private String departure_date;
    private String task;
    private int years;
    
@@ -82,6 +82,7 @@ public class MentorDTO {
    private String blog;
    private Date e_date;
    private Date g_date;
+   private Date d_date;
    
    // 첨부파일 List
    private List<MultipartFile> files = new ArrayList<>();
@@ -90,7 +91,11 @@ public class MentorDTO {
    private int file_serial_number;
    private String file_url;
    private String origin_name;
+
    private long size;
+
+   private String extension;
+
    
    // 알람수
    private int alarm_count;
