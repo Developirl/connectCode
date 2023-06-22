@@ -16,7 +16,8 @@
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">재학기간</div>
 			<div class="mentor_info infoInp" id="entering_date">
-				 <%-- <fmt:formatDate value="${edu_sel.graduation_date}" pattern="yyyy년 MM월 dd일"/> --%></div>
+				<fmt:formatDate value="${edu_sel.e_date}" pattern="yyyy년 MM월"/> ~ <fmt:formatDate value="${edu_sel.g_date}" pattern="yyyy년 MM월"/>
+			</div>
 		</div>
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">학위</div>

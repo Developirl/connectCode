@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <form method="post" action="mentorEduInfo_UP?mentor_no=${mentor_no}" id="myform" enctype="multipart/form-data">
 
@@ -10,57 +11,112 @@
 	</div>	
 	
 	<div class="cont_mar" id="plus_content" style="margin-bottom: 10px;">
-		<div class="plus_div">
-		
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
-				<div class="mentor_info infoInp">
-					<input type="text" id="school" name="school" style="width: 100%;" value="" placeholder="학교명을 입력하세요.">
-				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">
-					<div style="margin-top: 50px;">재학기간  <span class="small_jh">[필수]</span></div>
-				</div>
-				<div style="width: 60%;">
+		<c:if test="${!empty edu_sel}">
+			<c:forEach var="edu_sel" items="${edu_sel}">
+				<div style="margin-bottom: 50px;">
+				
 					<div style="display: flex;">
-						<div class="mentor_info infoCtg">입학일자</div>
+						<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
-					       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
+							<input type="text" id="school" name="school" style="width: 100%;" value="${edu_sel.school}" placeholder="학교명을 입력하세요.">
 						</div>
 					</div>
 					<div style="display: flex;">
-						<div class="mentor_info infoCtg">졸업일자</div>
+						<div class="mentor_info infoCtg">
+							<div style="margin-top: 50px;">재학기간  <span class="small_jh">[필수]</span></div>
+						</div>
+						<div style="width: 60%;">
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">입학일자</div>
+								<div class="mentor_info infoInp">
+									<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.entering_date}" readonly="readonly">
+								</div>
+							</div>
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">졸업일자</div>
+								<div class="mentor_info infoInp">
+									<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.graduation_date}" readonly="readonly">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
-					       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
+							<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
+							<select id="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;"></select>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg" style="padding-top: 30px;">전공명  <span class="small_jh">[필수]</span></div>
+						<div class="mentor_info infoInp">
+							<div class="small_jh" style="color: red;">* 최종 학력이 고등학교 졸업인 경우 '문과/이과' 입력</div>
+							<input type="text" id="major" name="major" style="width: 100%; margin-top: 5px;" value="${edu_sel.major}" placeholder="전공명을 입력하세요.">
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
+						<div class="mentor_info infoInp">
+							<input type="text" id="minor0" style="width: 100%;" value="${edu_sel.minor}" placeholder="부전공명을 입력하세요.">
 						</div>
 					</div>
 				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
-				<div class="mentor_info infoInp">
-					<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
-					<select id="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;"></select>
+			</c:forEach>
+		</c:if>
+		<c:if test="${empty edu_sel}">
+				<div class="plus_div">
+				
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
+						<div class="mentor_info infoInp">
+							<input type="text" id="school" name="school" style="width: 100%;" placeholder="학교명을 입력하세요.">
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg">
+							<div style="margin-top: 50px;">재학기간  <span class="small_jh">[필수]</span></div>
+						</div>
+						<div style="width: 60%;">
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">입학일자</div>
+								<div class="mentor_info infoInp">
+									<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
+								</div>
+							</div>
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">졸업일자</div>
+								<div class="mentor_info infoInp">
+									<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
+						<div class="mentor_info infoInp">
+							<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
+							<select id="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;"></select>
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg" style="padding-top: 30px;">전공명  <span class="small_jh">[필수]</span></div>
+						<div class="mentor_info infoInp">
+							<div class="small_jh" style="color: red;">* 최종 학력이 고등학교 졸업인 경우 '문과/이과' 입력</div>
+							<input type="text" id="major" name="major" style="width: 100%; margin-top: 5px;" placeholder="전공명을 입력하세요.">
+						</div>
+					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
+						<div class="mentor_info infoInp">
+							<input type="text" id="minor0" style="width: 100%;" placeholder="부전공명을 입력하세요.">
+						</div>
+					</div>
 				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg" style="padding-top: 30px;">전공명  <span class="small_jh">[필수]</span></div>
-				<div class="mentor_info infoInp">
-					<div class="small_jh" style="color: red;">* 최종 학력이 고등학교 졸업인 경우 '문과/이과' 입력</div>
-					<input type="text" id="major" name="major" style="width: 100%; margin-top: 5px;" value="" placeholder="전공명을 입력하세요.">
-				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
-				<div class="mentor_info infoInp">
-					<input type="text" id="minor0" style="width: 100%;" value="" placeholder="부전공명을 입력하세요.">
-				</div>
-			</div>
-		</div>
-		
+		</c:if>
 	</div>
 	
 	<!-- 추가하기 btn -->
@@ -70,8 +126,7 @@
 	
 	<!-- 파일 첨부 -->
 	<div class="file_list cont_mar">
-		<div class="file_input">
-			<input type="file" name="hello">
+		<div class="file_input" style="margin-bottom: 10px;">
 			<input type="file" name="files" onchange="selectFile(this);" accept=".jpg,.jpeg,.png,.docx,.pdf">
 			<button type="button" class="small_jh btn_jh del_btn" style="margin: 0px;" onclick="removeFile(this);"><span>삭제</span></button>
 			<button type="button" class="small_jh btn_jh add_btn" style="margin: 0px;" onclick="addFile();"><span>파일추가</span></button>

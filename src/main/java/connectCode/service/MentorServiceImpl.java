@@ -104,5 +104,10 @@ public class MentorServiceImpl implements MentorService{
 		return mm.serviceTBL_update(mentor);
 	}
 
+	@Override
+	public int career_insert(MentorDTO mentor) {
+		return mm.career_insert(mentor);
+	}
+
 	
 }

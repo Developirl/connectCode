@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<form method="post" action="mentorEduInfo_UP" id="myform" autocomplete="off" enctype="multipart/form-data">
+<form method="post" action="mentorExpInfoPage_Up?mentor_no=${mentor_no}" id="myform" autocomplete="off" enctype="multipart/form-data">
 
 	<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
 			정확한 정보를 직접 입력한 후, [재직증명서] 등 증빙자료를 첨부해 주시기 바랍니다.<br>
@@ -13,7 +13,7 @@
 			<div style="display: flex;">
 				<div class="mentor_info infoCtg">회사명  <span class="small_jh">[필수]</span></div>
 				<div class="mentor_info infoInp">
-					<input type="text" name="company" style="width: 100%;" value="" placeholder="회사명을 입력하세요.">
+					<input type="text" id="company" name="company" style="width: 100%;" value="" placeholder="회사명을 입력하세요.">
 				</div>
 			</div>
 			<div style="display: flex;">
@@ -24,14 +24,14 @@
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">입사일자</div>
 						<div class="mentor_info infoInp">
-							<input type="text" class="datepicker-here width100" name="entering_date" readonly="readonly">
+							<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date" readonly="readonly">
 							<!-- <input type="text" class="PastDateDemo" name="entering_date" readonly="readonly"> -->
 						</div>
 					</div>
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">퇴사일자</div>
 						<div class="mentor_info infoInp">
-						   <input type="text" class="datepicker-here width100" name="departure_date" readonly="readonly">
+						   <input type="text" class="datepicker-here width100" id="departure_date" name="departure_date" value="" readonly="readonly">
 							<!-- <input type="text" class="PastDateDemo" name="departure_date" readonly="readonly"> -->
 						</div>
 					</div>
@@ -40,7 +40,7 @@
 			<div style="display: flex;">
 				<div class="mentor_info infoCtg">직무  <span class="small_jh">[필수]</span></div>
 				<div class="mentor_info infoInp">
-					<select id="task" name="task" style="width: 50%; height: 30px;"></select>
+					<select id="task" id="task" name="task" style="width: 50%; height: 30px;"></select>
 				</div>
 			</div>
 			
@@ -53,18 +53,21 @@
 	</div>
 	
 	<!-- 파일 첨부 -->
-	<div class="cont_mar" style="width: 70%; margin-top: 0px;">
-		<input type="file" name="origin_name" onchange="selectFile(this);" accept=".jpg,.pdf">
+	<div class="file_list cont_mar">
+		<div class="file_input" style="margin-bottom: 10px;">
+			<input type="file" name="files" onchange="selectFile(this);" accept=".jpg,.jpeg,.png,.docx,.pdf">
+			<button type="button" class="small_jh btn_jh del_btn" style="margin: 0px;" onclick="removeFile(this);"><span>삭제</span></button>
+			<button type="button" class="small_jh btn_jh add_btn" style="margin: 0px;" onclick="addFile();"><span>파일추가</span></button>
+		</div>
 	</div>
 	
 	<hr class="title_hr">
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
-	<!-- 수정/저장 btn -->
+	<!-- 저장 btn -->
 	<div align="center" class="cont_mar">
-		<button class="custom_btn submit" type="button" style="width: 200px;">수정하기</button>
-		<!-- <input class="custom_btn submit" type="submit" value="저장하기" style="width: 200px;"> -->
+		<input class="custom_btn submit" type="submit" value="저장하기" style="width: 200px;">
 	</div>
 </form>
 

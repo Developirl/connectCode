@@ -44,5 +44,7 @@ public interface MentorMapper {
 	public List<MentorDTO> career_select(MentorDTO mentor);
 	
 	public int serviceTBL_update(MentorDTO mentor);
+	
+	public int career_insert(MentorDTO mentor);
 }
 
