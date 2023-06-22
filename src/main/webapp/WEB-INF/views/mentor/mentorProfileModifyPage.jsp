@@ -16,8 +16,8 @@
 			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}','${mentor_no}','${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
 			<div class="personInfo nav_items medium_jh" onclick="personInfo_load('${mentor_no}','${msel.phone}','${msel.email}')">인적사항</div>
 			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load('${msel.account}','${mentor_no}')">서비스 요금</div>
-			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load('${edu_list_size}','${mentor_no}')">학력사항</div>
-			<div class="expInfo nav_items medium_jh" onclick="expInfo_load('${car_list_size}')">경력사항</div>
+			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load(${edu_list_size},'${mentor_no}')">학력사항</div>
+			<div class="expInfo nav_items medium_jh" onclick="expInfo_load(${car_list_size},'${mentor_no}')">경력사항</div>
 			<div class="techInfo nav_items medium_jh" onclick="techInfo_load()">기술 및 분야</div>
 		</div>
 			

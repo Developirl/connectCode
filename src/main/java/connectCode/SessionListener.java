@@ -44,7 +44,7 @@ public class SessionListener implements HttpSessionListener {
     }
  
     public void sessionDestroyed(HttpSessionEvent se) {
-    	masterService.updateExitTime(Integer.valueOf((String)se.getSession().getAttribute("visit_id")));
+    	masterService.updateExitTime(Integer.valueOf(String.valueOf(se.getSession().getAttribute("visit_id"))));
     	System.out.println("세션 삭제");
     }
 }

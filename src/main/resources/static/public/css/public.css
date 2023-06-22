@@ -59,3 +59,19 @@ header{
     font-size: 14px;
     color: rgb(104, 103, 103);
 }
+.mino-reviewListTable {
+	width: 100%;
+    text-align: center;
+}
+.mino-reviewListTable th{
+	border-bottom: 1px solid rgb(228, 224, 224);
+	padding-bottom: 10px;
+}
+.mino-reviewListTable td{
+	padding-top:10px;
+}
+.mino-reviewContent{
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+}

@@ -55,7 +55,8 @@ public class SecurityConfig {
 	            .and()
             .httpBasic()
         		.and()
-        	.userDetailsService(userDetailsService);
+        	.userDetailsService(userDetailsService)
+        	.headers().frameOptions().sameOrigin();
         
         return http.build();
     }

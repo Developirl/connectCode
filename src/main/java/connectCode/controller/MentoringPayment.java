@@ -115,7 +115,6 @@ public class MentoringPayment {
 			}
 		    
 		    System.out.println("DB에 저장하는 내용들 : "+mentoringDTO);
-		    System.out.println("res값은?"+res);
 			//orderService.insert_pay(orderDTO); // 이게 DB에 저장하는 내용
 		    
 		    

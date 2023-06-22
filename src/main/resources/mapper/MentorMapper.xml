@@ -15,7 +15,7 @@
 <select id="mentorProfile" resultType="MentorDTO">
 	SELECT
 	 *
-	FROM mentor
+	FROM mentor m
 	LEFT JOIN (
 		SELECT mentor_no, company, entering_date, departure_date 
 		FROM career 
@@ -27,24 +27,31 @@
 		FROM alarm 
 		WHERE receiver_mem_no = #{member_no} group by receiver_mem_no) a 
 	USING (member_no)
+	LEFT JOIN file f 
+	ON m.profile_img_no = f.file_no
 	WHERE mentor_no=#{mentor_no}
 </select>
 
 <select id="education_select" resultType="MentorDTO">
 	SELECT 
-	  * 
+	  *, entering_date e_date, graduation_date g_date
 	FROM education 
-	LEFT JOIN file USING (file_no) 
 	WHERE mentor_no = #{mentor_no}
 </select>
 
 <select id="career_select" resultType="MentorDTO">
 	SELECT 
-	  * 
+	  *, entering_date e_date, departure_date d_date
 	FROM career
-	LEFT JOIN file USING (file_no) 
 	WHERE mentor_no = #{mentor_no}
 </select>
+
+<!-- <select id="file_select" resultType="">
+	SELECT 
+	  * 
+	FROM file
+	WHERE file_no = #{file_no}
+</select> -->
 
 <!-- mentor 테이블 update -->
 <update id="mentorTBL_update" parameterType="MentorDTO">
@@ -60,7 +67,9 @@
 		<!-- 경우 1 -->
 		<when test="intro != null and unable_date != null and mentoring_time != null">
 			intro = #{intro},
+			<if test="files.size() != 0">
 			profile_img_no = #{file_no},
+			</if>
 			unable_date = #{unable_date},
 			mentoring_time = #{mentoring_time}
 		</when>
@@ -129,9 +138,22 @@
 	</selectKey>
 
 	INSERT INTO education (
-	 school, entering_date, graduation_date, degree, major, minor, file_no, mentor_no
+		school, entering_date, graduation_date, degree, major, minor, file_no, mentor_no
 	) VALUES (
-	 #{school},concat(#{entering_date},'-01'),concat(#{graduation_date},'-01'),#{degree},#{major},#{minor},#{file_no},#{mentor_no}
+		#{school},concat(#{entering_date},'-01'),concat(#{graduation_date},'-01'),#{degree},#{major},#{minor},#{file_no},#{mentor_no}
+	)
+</insert>
+
+<insert id="career_insert" parameterType="MentorDTO">
+	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
+		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
+		FROM file
+	</selectKey>
+	
+	INSERT INTO career (
+		company, entering_date, departure_date, task, years, file_no, mentor_no
+	) VALUES (
+		#{company}, #{entering_date}, #{departure_date}, #{task}, #{years}, #{file_no}, #{mentor_no}
 	)
 </insert>
 

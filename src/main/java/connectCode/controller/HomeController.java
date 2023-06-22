@@ -17,6 +17,7 @@ public class HomeController {
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("pMentorList", homeService.getPopularMentorList());
+		model.addAttribute("rReviewList", homeService.getRecentReviewList());
 		return "home";
 	}
 	
