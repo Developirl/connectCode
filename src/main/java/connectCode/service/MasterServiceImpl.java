@@ -9,8 +9,11 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.catalina.webresources.FileResource;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,7 @@ import connectCode.model.FileDTO;
 import connectCode.model.MailDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentorDTO;
+import connectCode.model.PaymentDTO;
 import connectCode.model.PostDTO;
 import connectCode.model.ReportDTO;
 import connectCode.model.VisitDTO;
@@ -29,6 +33,15 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 public class MasterServiceImpl implements MasterService {
 	@Autowired
 	MasterDAO md;
+	
+	@Value("${phone_hj_1}")
+	private String phonekey1;
+
+	@Value("${phone_hj_2}")
+	private String phonekey2;
+
+	@Value("${hjphone}")
+	private String myphone;
 	
 	@Autowired
     private JavaMailSender emailSender;
@@ -104,14 +117,14 @@ public class MasterServiceImpl implements MasterService {
 	// 멘토 승인 요청_승인
 	@Override
 	public void mentorDetailApply(String phone) {
-		String api_key = "NCSZJ47HHH5NOHAB";
-		String api_secret = "KPUZ68DIOZ5ALGP7IQFNZYPR2LQWTKWT";
+		String api_key = phonekey1;
+		String api_secret = phonekey2;
 		Message coolsms = new Message(api_key, api_secret);
 
 		// 4 params(to, from, type, text) are mandatory. must be filled
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("to", phone); // 수신전화번호
-		params.put("from", "01099283713"); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+		params.put("from", myphone); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 		params.put("type", "SMS");
 		params.put("text", "[ConnectCode] 멘토요청이 승인되었습니다."); // 문자 내용 입력
 		params.put("app_version", "test app 1.2"); // application name and version
@@ -128,14 +141,14 @@ public class MasterServiceImpl implements MasterService {
 	// 멘토 승인요청_미승인
 	@Override
 	public void mentorDetailRefuse(String phone) {
-		String api_key = "NCSZJ47HHH5NOHAB";
-		String api_secret = "KPUZ68DIOZ5ALGP7IQFNZYPR2LQWTKWT";
+		String api_key = phonekey1;
+		String api_secret = phonekey2;
 		Message coolsms = new Message(api_key, api_secret);
 
 		// 4 params(to, from, type, text) are mandatory. must be filled
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put("to", phone); // 수신전화번호
-		params.put("from", "01099283713"); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
+		params.put("from", myphone); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 		params.put("type", "SMS");
 		params.put("text", "[ConnectCode] 멘토요청이 거부되었습니다."); // 문자 내용 입력
 		params.put("app_version", "test app 1.2"); // application name and version
@@ -351,19 +364,45 @@ public class MasterServiceImpl implements MasterService {
 	
 	// 파일 
 	@Override
-	public FileDTO file(int mentor_no) {
+	public FileDTO file(FileDTO fileDTO) {
 		
-		return md.file(mentor_no);
+		return md.file(fileDTO);
 	}
 
+	// 학벌  파일
+	@Override
+	public List<MentorDTO> efile(int file_no) {
+
+		return md.efile(file_no);
+	}
 	
+	// 결제 리스트
+	@Override
+	public int getPay(PaymentDTO pay) {
+
+		return md.getPay(pay);
+	}
 	
+	// 결제 리스트
+	@Override
+	public List<PaymentDTO> paylist(PaymentDTO pay) {
+
+		return md.paylist(pay);
+	}
+
+	// 신고 철회
+	@Override
+	public int reportCancle(int report_no) {
+
+		return md.reportCancle(report_no);
+	}
 	
-	
-	
-	
-	
-	
+	// 새로운 문의 요청
+	@Override
+	public int newinquire() {
+		
+		return md.newinquire();
+	}
 	
 	
 	
@@ -411,9 +450,6 @@ public class MasterServiceImpl implements MasterService {
 	public int getReadyMentors() {
 		return md.getReadyMentors();
 	}
-
-
-
 
 
 

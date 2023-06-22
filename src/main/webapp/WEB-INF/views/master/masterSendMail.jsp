@@ -14,27 +14,59 @@
 		<div class="navbar-brand">메일전송</div>
 	</nav>
 
-	<form action="emailSend" method="post">
+	<form action="emailSend" method="post" onsubmit="return check()">
   	<input type="hidden" name="allEmail" value="${allEmail }">
 		<div class="m_box" align="center">
+			<div class="mail_box" align="center">
 			<table width=1200 align="center">
-				<tr>
+				<tr align="center">
 					<td><input id="title" name="title" placeholder="제목을 입력해주세요."
 						style="width: 1000px; height: 35px;">
 					</td>
 				</tr>
-				<tr>
+				<tr align="center">
 					<td><textarea name="content" id="content" colspan="3"
 							style="width: 1000px; height: 444px;" class="smart"></textarea></td>
 				</tr>
 			</table>
 			<br> <input type="submit" id="writeBtn" value="보내기"
-				class="btn btn-outline-dark"><br>
+				class="btn btn-dark"><br>
 			<br>
+			</div>
 		</div>
 	</form>
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
+	
+	<script>
+function check(){
+
+	if($.trim($("#title").val())==""){
+		alert("제목을 입력하세요.");
+		$("#title").focus;
+		return false;	
+	}
+	
+	if($.trim($("#title").val()).length > 30){
+		alert("제목은 30자 이하로 입력하세요.");
+		$("#title").focus;
+		return false;	
+	}
+
+/* 	var content = document.getElementById("content").value;
+	$('#content').val(content);
+	if (content == '<p>&nbsp;</p>') { //비어있는 경우
+		alert("내용을 입력해주세요.")
+		oEditors.getById["content"].exec("FOCUS")
+		return false;
+	}
+ 	if (content.length > 1500) { //비어있는 경우
+		alert("내용은 1500자 이하로 작성해주세요.")
+		oEditors.getById["content"].exec("FOCUS")
+		return false;
+	}  */
+}
+</script> 
 </body>
 </html>
 

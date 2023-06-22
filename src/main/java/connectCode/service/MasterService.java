@@ -10,6 +10,7 @@ import connectCode.model.FileDTO;
 import connectCode.model.MailDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentorDTO;
+import connectCode.model.PaymentDTO;
 import connectCode.model.PostDTO;
 import connectCode.model.ReportDTO;
 import connectCode.model.VisitDTO;
@@ -139,12 +140,23 @@ public interface MasterService {
 	ReportDTO reportDetail(int report_no);
 
 	// 파일 정보
-	FileDTO file(int mentor_no);
+	FileDTO file(FileDTO fileDTO);
 
+	// 학벌 파일 
+	List<MentorDTO> efile(int file_no);
+
+	// 결제 리스트
+	int getPay(PaymentDTO pay);
 	
+	// 결제 리스트
+	List<PaymentDTO> paylist(PaymentDTO pay);
+
+	// 신고 철회
+	int reportCancle(int report_no);
 	
-	
-	
+
+	// 새로운 문의 요청
+	int newinquire();
 	
 	
 	
@@ -176,9 +188,6 @@ public interface MasterService {
 	int getReadyMentors();
 
 
-
-
-	
 
 	
 //*****************************병걸 작성***************************************

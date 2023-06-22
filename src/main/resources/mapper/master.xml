@@ -139,8 +139,8 @@
 	<!-- 멘토 학벌 파일 -->
 	<select id="mentorEducationFile" parameterType="int"
 		resultType="MentorDTO">
-		select * from education as e left join file as f on
-		e.file_no=f.file_no where mentor_no=#{mentor_no}
+		select Distinct e.education_no,f.file_no, f.origin_name, f.size from education as e left join file as f on
+		e.file_no=f.file_no where mentor_no=${mentor_no}
 	</select>
 
 	<!-- 멘토 자격증 파일 -->
@@ -291,21 +291,14 @@
 		= mentee.mentee_no where report.classification = 36 or report.classification 
 		= 41 order by report_no desc limit #{startRow}, #{endRow} </select> -->
 
-	<!-- 첨부파일 다운로드 -->
-	<select id="selectFile" parameterType="hashmap"
-		resultType="hashmap">
-		<![CDATA[
-			select * from file where file_no=#{file_no}
-		]]>
-	</select>
-
 	<!-- 멘토 신고수 -->
 	<select id="mentorReport" resultType="int">
 		select count(*) as count
 		from report as r left join mentoring as ming on
 		r.mentoring_no=ming.mentoring_no
 		left join service as s on
-		s.service_no=ming.service_no where r.classification in (36, 42, 43) and s.mentor_no=#{mentor_no}
+		s.service_no=ming.service_no where r.classification in (36, 42, 43)
+		and s.mentor_no=#{mentor_no}
 	</select>
 
 	<!-- 멘토 멘토링 + 리뷰 -->
@@ -401,17 +394,40 @@
 
 	<!-- 파일 정보 -->
 	<select id="file" resultType="FileDTO">
-		select education_no, f.file_no, mentor_no, file_serial_number, origin_name, file_url, extension from education
+		select education_no, f.file_no,
+		file_serial_number, mentor_no, file_serial_number, origin_name,
+		file_url, extension, size from education
 		as e
-		left join file as f on e.file_no=f.file_no where e.mentor_no=${mentor_no}
+		left join file as f on
+		e.file_no=f.file_no where e.file_no=#{file_no} and file_serial_number=#{file_serial_number}
 	</select>
 
+	<select id="efile" resultType="MentorDTO">
+		select * from file as f left join education as e on
+		e.file_no=f.file_no where f.file_no=#{file_no}
+	</select>
+	
+	
+	<!-- 결제 총 데이터 -->
+	<select id="getPay" resultType="int">
+		select count(*) from payment
+	</select>
+
+	<!-- 결제 리스트 -->
+	<select id="paylist" resultType="PaymentDTO">
+		select * from payment order by pay_time desc limit #{startRow}, #{endRow} 
+	</select>
+	
+	<!-- 신고 철회 -->
+	<update id="reportCancle" parameterType="int">
+		update report set classification=41 where report_no=#{report_no}
+	</update>
 
 
-
-
-
-
+	<!-- 새로운 문의요청 -->
+	<select id="newinquire" resultType="int">
+		select count(*) from post where reply_yn='N'
+	</select>
 
 
 

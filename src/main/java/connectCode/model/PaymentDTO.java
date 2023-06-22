@@ -24,4 +24,7 @@ public class PaymentDTO {
 	private String buyer_phone;
 	private int mentoring_no;
 	
+	private int startRow;
+	private int endRow;
+	
 }
