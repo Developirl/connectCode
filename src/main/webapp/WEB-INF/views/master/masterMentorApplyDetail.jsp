@@ -123,10 +123,12 @@
 		<br>
 
 		<div class="intro_box">${mentor.intro }</div>
-
-		<div class="file-info">
-			<c:forEach var="education" items="${educationFile }">
-				<a href='<c:url value="filedownload?efile_no=${education.file_no }&mentor_no=${mentor.mentor_no }"/>'>${education.origin_name }</a>
+		<br>
+		
+		<div class="file-info" align="left">
+		첨부파일:	<c:forEach var="education" items="${educationFile }">
+				<a href='<c:url value="filedownload?file_no=${education.file_no }&file_serial_number=${education.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${education.size}"/>'>${education.origin_name }</a>
+				<%-- <img src='<c:url value="filedownload?efile_no=${education.file_no }&ef_serial_no=${education.file_serial_number}&mentor_no=${mentor.mentor_no }"/>'></img> --%>
 			</c:forEach>
 			<c:forEach var="career" items="${careerFile }">
 				<a href='<c:url value="filedownload?cfile_no=${career.file_no }&mentor_no=${mentor.mentor_no }"/>'>${career.origin_name }</a>
@@ -139,17 +141,26 @@
 		<form action="mentorDetailApply">
 			<br> <input type="hidden" name="mentor_no"
 				value=${mentor.mentor_no }> <br> <br> <input
-				type="submit" value="승인" class="appBtn" />
+				type="submit" value="승인" class="appBtn" onClick="check1()"/>
 		</form>
 
 		<form action="mentorDetailRefuse">
 			<input type="hidden" name="mentor_no" value=${mentor.mentor_no }>
-			<br> <input type="submit" value="거부" class="refBtn" />
+			<br> <input type="submit" value="거부" class="refBtn" onClick="check2()"/>
 		</form>
 	</div>
 
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
+	<script>
+		function check1(){
+			alert("멘토 요청을 승인했습니다");
+		}
+
+		function check2(){
+			alert("멘토 요청을 거부했습니다");
+		}
+	</script>
 
 </body>
 </html>

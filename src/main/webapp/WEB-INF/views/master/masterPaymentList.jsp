@@ -44,7 +44,7 @@
 			<thead align="center">
 				<tr>
 					<th>결제정보번호</th>
-					<th>멘티번호</th>
+					<th>결제멘토링</th>
 					<th>상품/서비스이름</th>
 					<th>결제금액</th>
 					<th>결제수단</th>
@@ -53,16 +53,20 @@
 				</tr>
 			</thead>
 			<tbody align="center">
+			<c:forEach var="pay" items="${paylist}">
 				<tr>
-					<td>1</td>
-					<td>둘리</td>
-					<td>39</td>
+					<td>${pay.payment_no }</td>
+					<td>${pay.mentoring_no }</td>
+					<td>${pay.order_no }</td>
+					<td>${pay.pay_amount }</td>
+					<td>${pay.payment_method }</td>
+					<td>${pay.pay_state }</td>
+					<td>
+					<fmt:formatDate value="${pay.pay_time }" pattern="yy.MM.dd, HH:mm:ss"/>
+					
+					</td>
 				</tr>
-				<tr>
-					<td>2</td>
-					<td>짱구</td>
-					<td>33</td>
-				</tr>
+			</c:forEach>
 
 			</tbody>
 		</table>

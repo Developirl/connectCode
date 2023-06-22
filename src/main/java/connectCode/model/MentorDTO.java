@@ -87,8 +87,10 @@ public class MentorDTO {
    private List<MultipartFile> files = new ArrayList<>();
    
    // 파일 join용
+   private int file_serial_number;
    private String file_url;
    private String origin_name;
+   private long size;
    
    // 알람수
    private int alarm_count;

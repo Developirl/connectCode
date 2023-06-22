@@ -38,8 +38,8 @@
 		<div class="totalbox1">
 			<div class="large_jh">
 				<div class="totalbox2" align="center">TOTAL</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 멘토 승인 요청
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 멘토 승인 요청 &nbsp; ${newinquire}
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				오늘 발생한 결제 건수 <br> <br> <br>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 새로운 문의 요청
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

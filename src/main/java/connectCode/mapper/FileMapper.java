@@ -16,4 +16,6 @@ public interface FileMapper {
 	public int getMaxSerial(int file_no);
 	public void dbSaveFile(FileDTO file); 
 	
+	
+
 }

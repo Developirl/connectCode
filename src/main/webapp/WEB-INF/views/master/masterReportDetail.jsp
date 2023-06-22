@@ -79,10 +79,26 @@
 		<table border=1 id="mentor_det3">
 			<span class="large_jh" id="spanBox"> 신고 내역 </span>
 			<tr align="center">
+				<td style="background-color: #f3f3f3;">신고인</td>
 				<td style="background-color: #f3f3f3;">신고 내용</td>
+				<td style="background-color: #f3f3f3;">신고자파일</td>
 			</tr>
 			<tr align="center">
+				<td>${reportDetail.mentee_name }</td>
 				<td>${reportDetail.content }</td>
+				<td>${reportDetail.reporter_file}</td>
+			</tr>
+		</table>
+		<br>
+		<table border=1 id="mentor_det3">
+			<span class="large_jh" id="spanBox"> 멘토 반박 </span>
+			<tr align="center">
+				<td style="background-color: #f3f3f3;">멘토 회신</td>
+				<td style="background-color: #f3f3f3;">신고대상자파일</td>
+			</tr>
+			<tr align="center">
+				<td>${reportDetail.reported_response }</td>
+				<td>${reportDetail.reported_file}</td>
 			</tr>
 		</table>
 
@@ -95,8 +111,8 @@
 			<br> <input type="submit" value="목록" class="listBtn"
 				onClick="history.go(-1)" />
 
-			<form action="">
-				<input type="hidden" name="member_no"> <br> <br> <input
+			<form action="reportCancle">
+				<input type="hidden" name="report_no" value="${reportDetail.report_no}"> <br> <br> <input
 					type="submit" value="철회" class="delBtn" />
 			</form>
 		</div>

@@ -100,7 +100,7 @@
 
 				<form action="memberDelete">
 					<input type="hidden" name="member_no" value="${mentee.member_no }">
-					<br> <br> <input type="submit" value="탈퇴" class="delBtn" />
+					<br> <br> <input type="submit" value="탈퇴" class="delBtn" onClick="return check()"/>
 				</form>
 			</c:forEach>
 		</div>
@@ -108,6 +108,12 @@
 
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
+	
+	<script>
+		function check(){
+			return confirm ("정말 탈퇴시키겠습니까?");
+		}
+	</script>
 
 </body>
 </html>
