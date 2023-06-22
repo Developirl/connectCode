@@ -29,6 +29,7 @@ public class FindMentorInfoDTO {
 	//service table
 	private String mentoring_kind; // 리뷰에서도 사용
 	private int mentoring_fee;
+	private int service_no;
 	
 	//review table + mentoring table
 	private String name;

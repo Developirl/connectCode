@@ -1,12 +1,15 @@
 package connectCode.controller;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,58 +25,80 @@ import com.siot.IamportRestClient.response.Payment;
 
 import connectCode.model.MentoringDTO;
 import connectCode.model.PaymentDTO;
+import connectCode.service.FindMentorService;
 import connectCode.service.PaymentService;
 
 @Controller
 @RequestMapping("/payment/*")
 public class MentoringPayment {
-	
-	
+
 	@Value("${iamport_rest_api_key}")
 	private String imaport_key;
-	
+
 	@Value("${iamport_api_secret}")
 	private String iamport_secret;
-	
-	
-	private IamportClient client = new IamportClient("2186618541054470","x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF");
+
+	private IamportClient client = new IamportClient("2186618541054470",
+			"x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF");
 
 	@Autowired
 	private PaymentService payService;
 	
-	//결제하는 창으로 이동한다.
+	@Autowired
+	private FindMentorService fmservice;
+
+	
+	
+	/*
+	// 결제하는 창으로 이동한다.
 	@GetMapping("kakaopay")
 	public String KakaopayForm() {
 		return "findMentor/kakaopay2";
 	}
-	
-	
+	*/
+
 	// 결제 검증
 	@ResponseBody
-	@PostMapping(value="/order/verify_iamport/{imp_uid}")
-	public IamportResponse<Payment> verifyIamportPost(@PathVariable(value="imp_uid") String imp_uid) throws IamportResponseException, IOException{
+	@PostMapping(value = "/order/verify_iamport/{imp_uid}")
+	public IamportResponse<Payment> verifyIamportPost(@PathVariable(value = "imp_uid") String imp_uid)
+			throws IamportResponseException, IOException {
 		System.out.println("verify_iamport 까지 도달");
+
+		System.out.println("key:" + imaport_key);
+		System.out.println("secret:" + iamport_secret);
+
 		return client.paymentByImpUid(imp_uid);
 	}
-	
-	// 결제 정보 DB에 저장하기 위해 값을 받는다. 
+
+	// 결제 정보 DB에 저장하기 위해 값을 받는다.
 	/*
 	 * @PostMapping("/order/complete") public void paymentComplete(String
 	 * imp_uid,String orderDate) { System.out.println("imp_uid : "+imp_uid);
 	 * System.out.println("orderDate : "+orderDate); }
 	 */
-	
-	// 진짜 결제 
-	@RequestMapping(value ="order/complete", consumes = "application/json")
+
+	// 진짜 결제
+	// @RequestMapping(value ="order/complete", consumes = "application/json")
 	@ResponseBody
-	public int paymentComplete(@RequestBody MentoringDTO mentoringDTO, @RequestBody String reserve_dat, @RequestBody String reserve_time) throws Exception {
-		    
-		    System.out.println("여기 도달");
-			System.out.println("imp_uid:"+mentoringDTO.getIamport_order_no());
-			System.out.println("merchant_uid:"+mentoringDTO.getOrder_no());
-			System.out.println("orderDTO 객체 출력:"+mentoringDTO);
+	@RequestMapping(value = "/order/complete", method = RequestMethod.POST)
+	public int paymentComplete(@RequestBody MentoringDTO mentoringDTO) throws Exception {
+
+		System.out.println("여기 도달");
 		
-		    String token = payService.getToken();
+		 System.out.println("imp_uid:"+mentoringDTO.getIamport_order_no());
+		 System.out.println("merchant_uid:"+mentoringDTO.getOrder_no());
+		 System.out.println("orderDTO 객체 출력:"+mentoringDTO);
+		 
+		 System.out.println();
+		
+		 Timestamp time = fmservice.getReserveDate(mentoringDTO.getReserve_day(), mentoringDTO.getReserve_time());
+		 
+		 mentoringDTO.setReserve_date(time);
+		 
+		 // 여기서 mentoring table 값 셋팅해준다. 
+		 
+
+		 String token = payService.getToken();
 		    
 		    // 결제 완료된 금액
 		    String amount = payService.paymentInfo(mentoringDTO.getIamport_order_no(), token);
@@ -91,8 +116,38 @@ public class MentoringPayment {
 		    
 		    System.out.println("DB에 저장하는 내용들 : "+mentoringDTO);
 			//orderService.insert_pay(orderDTO); // 이게 DB에 저장하는 내용
-			return res;
-		 
+		    
+		    
+			payService.insertMentoringAndPayment(mentoringDTO);
+		    
+		    
+		    return mentoringDTO.getPayment_no();
+
 	}
 	
+	
+	
+	@GetMapping("refund")
+	public void refund(int payment_no) {
+		
+		try {
+			payService.orderCancle(payment_no);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }

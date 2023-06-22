@@ -19,6 +19,7 @@ import connectCode.mapper.FindMentorDAO;
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
+import connectCode.model.MentoringDTO;
 
 @Service
 public class FindMentorServiceImpl implements FindMentorService {
@@ -216,8 +217,10 @@ public class FindMentorServiceImpl implements FindMentorService {
 	}
 	
 	
-	
-	
+	@Override
+	public MentoringDTO getMentoringInfo(int payment_no) {
+		return dao.getMentoringInfo(payment_no);
+	}
 	
 	
 

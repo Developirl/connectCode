@@ -6,6 +6,7 @@ import java.util.List;
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
+import connectCode.model.MentoringDTO;
 
 public interface FindMentorService {
 
@@ -48,5 +49,7 @@ public interface FindMentorService {
 	int getCheckedBookmark(int member_no, int mentor_no);
 
 	int getFileMaxNo();
+
+	MentoringDTO getMentoringInfo(int payment_no);
 
 }

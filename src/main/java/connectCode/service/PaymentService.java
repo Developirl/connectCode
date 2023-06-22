@@ -1,31 +1,37 @@
 package connectCode.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.net.URL;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONObject;
+import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import connectCode.mapper.PaymentDAO;
+import connectCode.model.MentoringDTO;
+import connectCode.model.PaymentDTO;
+
 @Service
 public class PaymentService {
+	
+	@Autowired
+	private PaymentDAO dao;
 
 	
-	//@Value("impKey")
 	private String impKey="2186618541054470";
 
-	//@Value("impSecretKey")
 	private String impSecret="x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF";
 
 	public String getToken() throws Exception {
@@ -121,8 +127,63 @@ public class PaymentService {
 		bw.close();
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));			
-		
+		String temp = "";
+		int i = 0;
+		while((i = br.read()) != -1 ) {
+			temp += (char)i;
+		}
+		System.out.println(temp);
 	}
+	
+	
+	
+	// mentoring table insert
+	public void insertMentoringAndPayment(MentoringDTO dto) {
+		dao.insertMentoring(dto);
+		dao.insertPayment(dto);
+	}
+	
+	
+	
+	public int orderCancle(int payment_no) throws Exception {
+		PaymentDTO paydto = dao.getPaymentInfo(payment_no);
+		
+		if(!paydto.getIamport_order_no().equals("")) {
+			String token = getToken(); 
+			int price = paydto.getPay_amount();
+			int refundPrice = price ;
+			payMentCancle(token, paydto.getIamport_order_no(), refundPrice+"", "환불");
+		}
+		
+		return dao.orderCancle(payment_no);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

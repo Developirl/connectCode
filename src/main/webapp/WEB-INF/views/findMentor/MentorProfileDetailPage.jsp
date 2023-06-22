@@ -147,7 +147,7 @@
 }
 
 .js-backgroundcolor{
-	background: #F2F7F7;
+	background: #F2F5F5;
 }
 
 .js-leftLine{
