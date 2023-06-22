@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
 		정확한 정보를 직접 입력한 후, [재직증명서] 등 증빙자료를 첨부해 주시기 바랍니다.<br>
@@ -15,7 +16,9 @@
 		</div>
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">재직기간</div>
-			<div class="mentor_info infoInp">2022년 12월 ~ [재직중]</div>
+			<div class="mentor_info infoInp">
+				<fmt:formatDate value="${car_sel.e_date}" pattern="yyyy년 MM월 dd일"/> ~ <fmt:formatDate value="${car_sel.d_date}" pattern="yyyy년 MM월 dd일"/>
+			</div>
 		</div>
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">직무</div>

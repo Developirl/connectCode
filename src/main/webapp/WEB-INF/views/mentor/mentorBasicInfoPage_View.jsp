@@ -6,7 +6,12 @@
 	<div class="infoTitle">프로필 사진</div>
 	<div class="mentor_info" style="padding: 0px 50px;">
 		<div class="mentoProfileBox uplode_pro" style="margin-top: 20px; margin-bottom: 20px;">
-			<img class="mentoProfile" src="/public/img/profile_img.png">
+			<c:if test="${empty msel.profile_img_no}">
+				<img class="mentoProfile" src="/public/img/profile_img.png">
+			</c:if>
+			<c:if test="${!empty msel.profile_img_no}">
+				<img src="${msel.file_url}">
+			</c:if>
 		</div>
 	</div>
 </div>

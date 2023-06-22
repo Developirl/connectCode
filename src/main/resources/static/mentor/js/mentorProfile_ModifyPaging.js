@@ -60,7 +60,6 @@ function selectFile(element) {
 
     // 3. 파일명 지정
 //    filename.value = file.name;
-    console.log(file);
 }
 
 
@@ -68,9 +67,9 @@ function selectFile(element) {
 function addFile() {
     const fileDiv = document.createElement('div');
     fileDiv.innerHTML =`
-        <div class="file_input">
+        <div class="file_input" style="margin-bottom: 10px;">
            <input type="file" name="files" onchange="selectFile(this);" />
-	       <button type="button" onclick="removeFile(this);" class="small_jh btn_jh add_btn"><span>삭제</span></button>
+	       <button type="button" class="small_jh btn_jh add_btn" style="margin: 0px;" onclick="removeFile(this);"><span>삭제</span></button>
         </div>
     `;
     document.querySelector('.file_list').appendChild(fileDiv);
@@ -302,7 +301,48 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 					// 설정한 값으로 hidden 생성
 					$('#myform').append(unable_date_hidden,mentoring_time_hidden);
 					
-					// form 통해서 전송할 데이터 직렬화
+					var form = $('#myform')[0];
+					var formdata = new FormData(form);
+					
+					$.ajax({
+						url : $(this).attr('action'),
+						type : 'POST',
+						data : formdata,
+						processData : false,
+						contentType : false,
+						enctype : 'multipart/form-data',
+						success: function(){
+							// 입력 완료 후 페이지 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+							basicInfo_load(intro, mentor_no, unable_date, mentoring_time);
+							
+							// [상담 불가능한 요일] & [상담 가능한 시간] 버튼 처리하는 부분 !!!!!!
+							actived_btn();
+							$('.unable_date').css({'cursor' : 'auto'});
+							$('.mentoring_time').css({'cursor' : 'auto'});
+							
+							// [수정하기] 버튼 클릭 이벤트
+							$('#edit_btn').click(function() {
+							      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+							      
+							      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+							      basicInfo_load(clicked, mentor_no, unable_date, mentoring_time);	
+							      
+							});  // [수정하기] 클릭 이벤트 end
+							
+							if(check == '' || check == null) {
+								// progress 올리기
+								var currentValue = parseInt($('#progress').val());
+								var updatedValue = currentValue + 25;
+								$('#progress').val(updatedValue);
+							}
+							
+						},
+						error : function(){
+							alert("서버 오류");
+						}
+					});
+					
+					/*// form 통해서 전송할 데이터 직렬화
 					$.post($(this).attr('action'), $(this).serialize(), function(response) {
 						
 						// 입력 완료 후 페이지 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
@@ -322,9 +362,6 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 						      
 						});  // [수정하기] 클릭 이벤트 end
 						
-						/*// update 했으니, 게이지바 value 증가시키기
-						$('#progress').val(25);*/
-						
 						if(check == '' || check == null) {
 							// progress 올리기
 							var currentValue = parseInt($('#progress').val());
@@ -332,7 +369,7 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 							$('#progress').val(updatedValue);
 						}
 						
-					});
+					});*/
 					
 				}); // submit end
 				
@@ -662,7 +699,7 @@ function eduInfo_load(check,mentor_no) {
 	
 	console.log(check);
 	
-	if(check == 0 || check == true) {
+	if(check === 0 || check == true) {
 		
 		$.ajax({
 			url: 'mentorEduInfoPage',  // JSP 파일의 URL
@@ -799,23 +836,7 @@ function eduInfo_load(check,mentor_no) {
 							$('#myform').append('<input type="hidden" name="minor" value="'+minor+'">');
 						}
 						
-						
-					// form 통해서 전송할 데이터 직렬화
-					/*$.post($(this).attr('action'), $(this).serialize(), function(response) {
-						
-						// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
-						eduInfo_load(school,mentor_no);
-						
-						console.log("바보멍청이똥개해삼말미잘");
-					
-						if(check == '' || check == null) {
-							// progress 올리기
-							var currentValue = parseInt($('#progress').val());
-							var updatedValue = currentValue + 25;
-							$('#progress').val(updatedValue);
-						}
-						
-					});*/
+						// form으로 데이터 전송 start
 						var form = $('#myform')[0];
 						var formdata = new FormData(form);
 						
@@ -830,9 +851,7 @@ function eduInfo_load(check,mentor_no) {
 								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
 								eduInfo_load(school,mentor_no);
 								
-								console.log("바보멍청이똥개해삼말미잘");
-							
-								if(check == '' || check == null) {
+								if(check == 0) {
 									// progress 올리기
 									var currentValue = parseInt($('#progress').val());
 									var updatedValue = currentValue + 25;
@@ -840,6 +859,7 @@ function eduInfo_load(check,mentor_no) {
 								}
 							},
 							error : function(){
+								alert("서버 오류");
 							}
 						});
 						
@@ -881,17 +901,18 @@ function eduInfo_load(check,mentor_no) {
 // ******************************************[경력사항 start]**********************************************
 
 // 경력사항 page 불러오기
-function expInfo_load(check) {
+function expInfo_load(check,mentor_no) {
 	
 	var task = ['','프론트엔드','백엔드'];
 	
 	console.log(check);
 	
-	if(check == 0 || check == 'true') {
+	if(check === 0 || check == true) {
 		
 		$.ajax({
 			url: 'mentorExpInfoPage',  // JSP 파일의 URL
 			method: 'GET',
+			data: {mentor_no : mentor_no},
 			success: function(data) {
 				$('#load_location').empty().append(data);
 				$('#load_location, .nav_items').removeAttr('style');
@@ -949,6 +970,61 @@ function expInfo_load(check) {
 					$(".datepicker-here").datepicker({maxDate : currentDate}); 
 				});
 				
+				$('#myform').submit(function(){
+					event.preventDefault(); // form 기본 동작 막기
+					
+				 // 유효성 검사 start
+						// 회사명
+						var company = $('#company').val();
+						if (company.trim() === '') {
+							alert('회사명을 입력하세요.');
+							$('#company').focus();
+							return;
+						}
+						// 입사일자
+						var entering_date = $('#entering_date').val();
+						if (entering_date.trim() === '') {
+							alert('입사일자를 선택하세요.');
+							$('#entering_date').focus();
+							return;
+						}
+						/*// 직무
+						var task_checked = $('#task').is(':selected');
+						if(!task_checked) {
+							alert('직무를 선택하세요.');
+							return;
+						}*/
+				// 유효성 검사 end
+
+						// form으로 데이터 전송 start
+						var form = $('#myform')[0];
+						var formdata = new FormData(form);
+						
+						$.ajax({
+							url : $(this).attr('action'),
+							type : 'POST',
+							data : formdata,
+							processData : false,
+							contentType : false,
+							enctype : 'multipart/form-data',
+							success: function(){
+								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
+								expInfo_load(company,mentor_no);
+								
+								if(check == 0) {
+									// progress 올리기
+									var currentValue = parseInt($('#progress').val());
+									var updatedValue = currentValue + 25;
+									$('#progress').val(updatedValue);
+								}
+							},
+							error : function(){
+								alert("서버 오류");
+							}
+						});
+						
+				}); // submit end
+				
 			} // expInfo_load() ajax-success end
 		}); // expInfo_load() ajax end
 	
@@ -957,6 +1033,7 @@ function expInfo_load(check) {
 		$.ajax({
 			url: 'mentorExpInfoPage_View',  // JSP 파일의 URL
 			method: 'GET',
+			data: {mentor_no : mentor_no},
 			success: function(data) {
 				$('#load_location').empty().append(data);
 				$('#load_location, .nav_items').removeAttr('style');
@@ -967,7 +1044,7 @@ function expInfo_load(check) {
 			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 			      
 			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-			      expInfo_load(clicked);	
+			      expInfo_load(clicked,mentor_no);	
 			      
 			    }); // [수정하기] 클릭 이벤트 end
 			    

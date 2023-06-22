@@ -43,5 +43,7 @@ public interface MentorService {
 
 	public int serviceTBL_update(MentorDTO mentor);
 
+	public int career_insert(MentorDTO mentor);
+
 	
 }
