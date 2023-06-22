@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import connectCode.mapper.HomeMapper;
 import connectCode.model.FindMentorDTO;
+import connectCode.model.HomeReviewListDTO;
 import lombok.Setter;
 
 @Service
@@ -18,6 +19,11 @@ public class HomeServiceImpl implements HomeService {
 	@Override
 	public List<FindMentorDTO> getPopularMentorList() {
 		return homeMapper.getPopularMentorList();
+	}
+
+	@Override
+	public List<HomeReviewListDTO> getRecentReviewList() {
+		return homeMapper.getRecentReviewList();
 	}
 
 }
