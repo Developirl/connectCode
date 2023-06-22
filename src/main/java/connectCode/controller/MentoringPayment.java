@@ -36,7 +36,7 @@ public class MentoringPayment {
 	private String iamport_secret;
 	
 	
-	private IamportClient client = new IamportClient(imaport_key,iamport_secret);
+	private IamportClient client = new IamportClient("2186618541054470","x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF");
 
 	@Autowired
 	private PaymentService payService;
@@ -66,32 +66,30 @@ public class MentoringPayment {
 	// 진짜 결제 
 	@RequestMapping(value ="order/complete", consumes = "application/json")
 	@ResponseBody
-	public int paymentComplete(PaymentDTO paymentDTO,
-			MentoringDTO mentoringDTO
-			) throws Exception {
+	public int paymentComplete(@RequestBody MentoringDTO mentoringDTO, @RequestBody String reserve_dat, @RequestBody String reserve_time) throws Exception {
 		    
 		    System.out.println("여기 도달");
-			System.out.println("imp_uid:"+paymentDTO.getIamport_order_no());
-			System.out.println("merchant_uid:"+paymentDTO.getOrder_no());
-			System.out.println("orderDTO 객체 출력:"+paymentDTO);
+			System.out.println("imp_uid:"+mentoringDTO.getIamport_order_no());
+			System.out.println("merchant_uid:"+mentoringDTO.getOrder_no());
+			System.out.println("orderDTO 객체 출력:"+mentoringDTO);
 		
 		    String token = payService.getToken();
 		    
 		    // 결제 완료된 금액
-		    String amount = payService.paymentInfo(paymentDTO.getIamport_order_no(), token);
+		    String amount = payService.paymentInfo(mentoringDTO.getIamport_order_no(), token);
 		    
 		    int res = 1;
 		    
 		    
 		    // 결제 금액 오류시 해당 메소드를 빠져나간다. 
-		    if (paymentDTO.getPay_amount() != Long.parseLong(amount)) {
+		    if (mentoringDTO.getPay_amount() != Long.parseLong(amount)) {
 				res = 0;
 				// 결제 취소
-				payService.payMentCancle(token, paymentDTO.getIamport_order_no(), amount,"결제 금액 오류");
+				payService.payMentCancle(token, mentoringDTO.getIamport_order_no(), amount,"결제 금액 오류");
 				return res;
 			}
 		    
-		    System.out.println("DB에 저장하는 내용들 : "+paymentDTO);
+		    System.out.println("DB에 저장하는 내용들 : "+mentoringDTO);
 			//orderService.insert_pay(orderDTO); // 이게 DB에 저장하는 내용
 			return res;
 		 
