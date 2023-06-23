@@ -21,4 +21,9 @@ public class HomeController {
 		return "home";
 	}
 	
+	@GetMapping("/academy")
+	public String getAcademyBoard() {
+		return "academy/academyList";
+	}
+	
 }

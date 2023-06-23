@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="connectCode.mapper.freeMentoringMapper">
+
+<select id="getMentee" resultType="freeMentoringBoardDTO">
+SELECT * FROM mentee WHERE member_no = #{member_no}
+</select>
+
+<select id="getFreeBoardCount" resultType="int">
+select count(*) from free_mentoring_board
+</select>
+
+<select id="getList" resultType="freeMentoringBoardDTO">
+
+  select * from 
+  (select * from free_mentoring_board
+  ORDER BY free_regdate DESC, free_no DESC) As subquery
+  Limit #{param2}, #{param1}
+
+</select>
+
+<insert id="freeInsert">
+INSERT INTO free_mentoring_board 
+(name, mentee_no, free_title, free_content, free_regdate, readcount, free_comment_count)
+SELECT DISTINCT mentee.name, mentee.mentee_no, , '안녕안녕하세요', sysdate(), 10, 10
+FROM mentee
+LEFT JOIN free_mentoring_board ON mentee.mentee_no = free_mentoring_board.mentee_no
+</insert>
+
+</mapper>
