@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="connectCode.mapper.MenteeMapper">
+
+	<!-- 멘티 테이블 정보 -->
+	<select id="getMenteeInfo" resultType="MenteeDTO">
+		SELECT * FROM mentee WHERE mentee_no = #{mentee_no}
+	</select>
+	
+	<!-- 즐겨찾기 추가한 멘토 수 -->
+	<select id="getLikedMentorCnt" resultType="int">
+		SELECT COUNT(*) FROM bookmark WHERE mentee_no = #{mentee_no} 
+	</select>
+	
+	<!-- 작성한 후기 수 -->
+	<select id="getReviewCnt" resultType="int">
+		SELECT COUNT(*) FROM review WHERE mentoring_no IN (SELECT mentoring_no FROM mentoring WHERE mentee_no = #{mentee_no})
+	</select>
+	
+	<!-- 멘토링 방법별 멘토링 수 1.20분전화상담 2.30분대면상담 -->
+	<select id="getMentoringCnt" resultType="int">
+		SELECT COUNT(service_no), mentoring_kind
+		FROM( SELECT service.service_no, service.mentoring_kind 
+			  FROM mentoring INNER JOIN service ON (mentoring.service_no = service.service_no)
+			  WHERE mentoring.mentee_no = #{mentee_no}) a
+		GROUP BY mentoring_kind
+		ORDER BY mentoring_kind
+	</select>
+
+</mapper>

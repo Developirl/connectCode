@@ -33,9 +33,11 @@ public class SecurityConfig {
         http
             .authorizeRequests()
             	.antMatchers("/").permitAll()
+            	.antMatchers("/academy").permitAll()
 	            .antMatchers("/public/**").permitAll() 
 	            .antMatchers("/member/**").permitAll() 
-	            .antMatchers("/findMentor/**").permitAll() 
+	            .antMatchers("/findMentor/**").permitAll()
+	            .antMatchers("/freeMentoring/**").permitAll()
 	            .antMatchers("/master/**").hasAuthority("ROLE_11")
 	            .antMatchers("/mentee/**").hasAuthority("ROLE_12") 
 	            .antMatchers("/mentor/**").hasAuthority("ROLE_13")

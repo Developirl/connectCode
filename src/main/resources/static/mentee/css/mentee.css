@@ -1,0 +1,52 @@
+.mino-menteeMypageNavBox{
+    margin-top: 70px;
+}
+.mino-menteeMypageNavTable{
+    margin: 0 auto;
+}
+.mino-menteeMypageNavTable a{
+    text-decoration: none;
+    color: black;
+}
+.mino-space{
+    border-bottom: 10px solid white;
+}
+.mino-profileImg{
+    width: 130px;
+    height: 130px;
+    border-radius: 70%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.mino-profileImg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.mino-profileName{
+    text-align: center;
+    padding-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.mino-mypageSubTable{
+    width: 80%;
+    text-align: center;
+    margin-top: 40px;
+}
+.mino-mypageSubTable th{
+    font-size: 20px;
+}
+.mino-mypageSubTable{
+    font-size: 25px;
+    font-weight: bold;
+}
+.mino-mypageMentoringTable{
+    width: 100%;
+}
+.mino-mypageMentoringTable td{
+    font-size: 20px; font-weight: bold; padding-top: 15px;
+}
+.mino-mypageMentoringTable th{
+    text-align: center; border-bottom: 1px solid black; padding-bottom: 20px; font-size: 25px;
+}

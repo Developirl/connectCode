@@ -57,15 +57,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/findMentor/mentorlistpage">멘토찾기</a>
                             </li>
-                            <!-- <li class="nav-item">
-                                <a class="nav-link" href="#">무료멘토링</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/freeMentoring/freeMentoringList.do">무료멘토링</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">취업정보</a>
+                                <a class="nav-link" href="/academy">학원정보</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">학원정보</a>
-                            </li> -->
                         </ul>
                     </nav>
                     <div class="col-2">
@@ -76,13 +73,13 @@
                             	</sec:authorize>
                             	<sec:authorize access="isAuthenticated()">
                             		<sec:authorize access="hasRole('ROLE_12')">
-                            			<a href="#">멘티마이페이지</a>
+                            			<a href="/mentee/main">멘티마이페이지</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_13')">
-                            			<a href="#">멘토마이페이지</a>
+                            			<a href="/mentor/mentorPage">멘토마이페이지</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_11')">
-                            			<a href="#">관리자 대쉬보드</a>
+                            			<a href="/master/masterMainPage">관리자 대쉬보드</a>
                             		</sec:authorize>
                             		<form action="/member/logout" method="post">
                             			<input type="submit" value="로그아웃" />
