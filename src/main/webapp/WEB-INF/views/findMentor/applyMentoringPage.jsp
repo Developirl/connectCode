@@ -190,13 +190,13 @@
 }
 
 .js-disabled-button {
-    pointer-events: none;
-    opacity: 0.5; /* 선택적으로 투명도 설정 */
+    pointer-events: none!important;
+    opacity: 0.5!important; /* 선택적으로 투명도 설정 */
   }
 
 .js-time-disabled{
-    pointer-events: none;
-    opacity: 0.5; /* 선택적으로 투명도 설정 */
+    pointer-events: none!important;
+    opacity: 0.5!important; /* 선택적으로 투명도 설정 */
 }
 
 .js-date-css:hover,.js-time-css:hover{
@@ -440,15 +440,29 @@ input[type=file]::file-selector-button {
 
 
 
-
+// 30000 > 30,000 원
 function addCommasToPrice(number) {
-	  // 숫자를 문자열로 변환하여 쉼표를 추가합니다.
+	  // 숫자를 문자열로 변환하여 쉼표를 추가한다.
 	  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 
+// 현재 시간을 구해오는 함수
+function getCurrentTime() {
+	  var currentDate = new Date();
+	  var currentTime = currentDate.toLocaleTimeString();
+	  return currentTime;
+	}
 
 $(document).ready(function(){
+	
+	
+	// 시큐리티용 변수 
+	var csrf = "${_csrf.headerName}";
+	var csrfToken = "${_csrf.token}";
+	
+	
+	
 	
 
 	/* --------------------------  깃허브 , 블로그 주소 ------------------------ */
@@ -484,33 +498,51 @@ $(document).ready(function(){
 	});
 	
 	
+	
+	/* --------------------------  멘토링 종류 선택시  ------------------------ */
+	
 	$('.js-sel-radio').change(function() {
-		  if ($(this).is(':checked')) {
+		  
+		if ($(this).is(':checked')) {
 		    $("#js-pay-print").text($(this).data('pay')+' 원');
 		    $("#js-final-price").text($(this).data('pay')+' 원');
 		  }
-		});
-
+		  
+		  // 30분 대면 멘토링이면 당일 예약을 막는다. 
+		  var kind = $(this).data('value');
+		  var kind_num = parseInt(kind.substring(0,1));  //2 or 3
+				  
+			if(kind_num == 3){
+			  //당일 버튼을 막는다. 
+			  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){
+			  	  alert("30분 대면 멘토링 선택 > disabled 안 돼 있어서 막습니다. ");
+			  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
+			  }
+			}	
+		  
+		  
+	});
 	
 	
-	
-	// 시큐리티용 변수 
-	var csrf = "${_csrf.headerName}";
-	var csrfToken = "${_csrf.token}";
-	
-	
-	
-	var hour = ['12','13','14','15','16','17','18'];
-	var min = ['00','30'];
-	
-	
-
-	
-	// 처음 로드될 때 가격으로 예약하기로 들어온 경우 해당 멘토링 kind 체크
+	/* -------------------  멘토링 종류 선택 후 들어온 경우 ---------------------- */
 	if('${kind}'!=null && '${kind}'!=''){
+		
+		
 		$('.js-sel-radio[data-value="${kind}"]').prop('checked', true);
-		//$("#js-pay-print").text($('.js-sel-radio[data-value="${kind}"]').data('pay')); // ------------------- 여기 변경해야함
-		$("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원'); // ------------------- 여기 변경해야함
+		// 맨 아래 가격 설정
+		$("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원');
+		
+		var kind = '${kind}'; 
+		var kind_num = parseInt(kind.substring(0,1));//2 or 3
+																		  
+		if(kind_num == 3){
+		  //당일 버튼을 막는다. 
+		  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){ 						//-----------------------여기 변경해야함ㅏㅓㅓ
+		  	  alert("30분 대면 멘토링이 선택 돼 있음. disabled 날짜가 아니기 때문에 오늘 날짜는 disabled한다. ");
+		  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
+			  alert("됨");
+		  }
+		}		
 		
 	}
 	
@@ -609,17 +641,12 @@ $(document).ready(function(){
               },
 			  success: function(rsp) {
 				  
+				  
+				  console.log("rsp:"+rsp);
 				  if(rsp!=null){
 					  for(var i=0;i<rsp.length;i++){
-							  
-						  
 						  $('.js-time-css[value="'+rsp[i]+'"]').addClass('js-time-disabled');
-						  
-						  /* if($(".js-time-css").val()==rsp[i]){
-							  $(".js-time-css").addClass('js-time-disabled');
-							  alert("클래스 추가 성공 ㅋㅋㅋㅋㅋ");
-						  }  */
-						  
+						  console.log("rsp[i]: "+rsp[i]);
 					  }
 				  }
 				  
@@ -628,43 +655,60 @@ $(document).ready(function(){
 			    console.log('날짜 클릭시 보내는 ajax 요청 실패');
 			    console.log(error); 
 			  }
-			});
+		});
+		
+		//  **********   만약 당일 예약을 클릭하면 5시간 이내는 선택 못하게 disabled 한다. 
+		 /*  var kind = $('input[type="radio"][name="mentoring_kind"]:checked').data('value'); //2 or 3
+		  var kind_num = parseInt(kind.substring(0,1));
+	      var currentT = getCurrentTime();
+		  console.log("kind_num:"+kind_num);
+		  console.log("currentT:"+currentT);
+	      
+		  // 여기서 전화 멘토링 5시간 전 js-time-css 버튼을 disabled 한다. 
+		  if(kind_num == 2 && $('.js-date-css:first[checked:"checked"]').length() >= 1){
+			alert("일단 여기는 들어오니? 시바새캬");
+			// 현재 시간 가져오기
+			  var currentTime = new Date();
 
-		
-		
+			  // 현재 시간에서 5시간 후의 시간 계산
+			  var fiveHoursLater = new Date();
+			  fiveHoursLater.setHours(currentTime.getHours() + 5);
+
+			  // 모든 해당 태그 선택
+			  var tags = document.querySelectorAll('.js-time-css');
+
+			  // 각 태그의 value 값 확인하여 조건에 따라 disabled 설정
+			  tags.forEach(function(tag) {
+			    var value = tag.value;
+			    
+			    // 시간 값 추출 (예: "12:30"에서 "12"와 "30" 추출)
+			    var parts = value.split(':');
+			    var tagTime = new Date();
+			    tagTime.setHours(parts[0]);
+			    tagTime.setMinutes(parts[1]);
+			    
+			    // 현재 시간과 5시간 이내의 시간 비교하여 disabled 설정
+			    if (tagTime <= fiveHoursLater) {
+			    	alert("20분 대면 멘토링 선택함");
+					if(!tag.hasClass('js-time-disabled')){
+						  tag.addClass('js-time-disabled');
+					  }
+			    	//tag.disabled = true;
+			   }
+			  })    
+			  
+		  }			
+
+		 */
+		//  **********   끝 
 	});
 	
 	
 
 
-// [상담 가능한 시간] 버튼 출력
-setTimeList();
-     /*  for (var i = 0; i < hour.length; i++) {
-         for(var j = 0; j < min.length; j++){
-            if(hour[i]+':'+min[j] != '18:30'){
-            	
-            	
-            	if(m_time.includes(hour[i]+':'+min[j])){
-	               var input = $('<input>').attr({
-	                  type : 'button',
-	                  class : 'js-time-css',
-	                  name : 'mentoring_time',
-	                  value : hour[i]+':'+min[j],
-	               });
-            	}else{
-	               var input = $('<input>').attr({
-	                  type : 'button',
-	                  class : 'js-time-css js-time-disabled',
-	                  name : 'mentoring_time',
-	                  value : hour[i]+':'+min[j],
-	               });
-            	}
-            }
-            	
-            $('#js-time').append(input);
-         }
-      }
-       */
+
+	setTimeList();
+
 
 	
 	$("#js-mentoring-comment").keyup(function(){
@@ -678,7 +722,9 @@ setTimeList();
 		
 	});
 	
-	
+   	
+   	var hour = ['12','13','14','15','16','17','18'];
+   	var min = ['00','30'];
 	
 	function setTimeList(){
 		for (var i = 0; i < hour.length; i++) {
@@ -872,12 +918,7 @@ function createOrderNum(){
 
 //--------------------결제를 위한 영역
 function requestPay() {
-	/*
- 	var git_yn = $('input[type="radio"][class="js-gitview"]:checked').val();
-	var blog_yn = $('input[type="radio"][class="js-blogview"]:checked').val();
-	alert("git_yn null인가? "+  $('input[type="radio"][class="js-blogview"]:checked').val()==null);
-	alert("blog_yn = "+ typeof blog_yn);
-	*/
+
 	// 시큐리티용 변수 
 	var csrf = "${_csrf.headerName}";
 	var csrfToken = "${_csrf.token}";
@@ -908,27 +949,6 @@ function requestPay() {
 	    });
 	
 	console.log("파일까지 저장함");
-	
-	
-
-   /*  $.ajax({
-      url: form.action,
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      enctype : 'multipart/form-data',
-      beforeSend: function(xhr){
-      	xhr.setRequestHeader(csrf,csrfToken);
-      },
-      success: function(response) {
-    	  console.log("멘토링 신청시 실행하는 파일 업로드 성공");
-      },
-      error: function(xhr, status, error) {
-    	  console.log("멘토링 신청시 첨부한 파일 저장 실패");
-      }
-    }); */
-	
 	
 	
 	
@@ -981,6 +1001,17 @@ function requestPay() {
                 	alert("git_yn null인가? "+git_yn==null);
                 	alert("blog_yn = "+blog_yn==null);
        */         	
+       
+       			var gityn = $('input[type="radio"][class="js-gitview"]:checked').val();
+       			var blogyn = $('input[type="radio"][class="js-blogview"]:checked').val();
+       			
+       				if(gityn != 'N' && gityn != 'Y'){
+       					gityn = null;
+       				}	
+       				if(blogyn != 'N' && blogyn != 'Y'){
+       					blogyn = null;
+       				}	
+       
                 	
                     // jQuery로 HTTP 요청
                     // 주문정보 생성 및 테이블에 저장 
@@ -1004,8 +1035,8 @@ function requestPay() {
                             "reserve_day" : $("#reserve_day").val(),
                             "reserve_time" : $("#reserve_time").val(),
                             "service_no" : $('input[type="radio"][name="mentoring_kind"]:checked').val(),
-                            "git_yn" : $('input[type="radio"][class="js-gitview"]:checked').val(),
-                            "blog_yn" : $('input[type="radio"][class="js-blogview"]:checked').val()
+                            "git_yn" : gityn,
+                            "blog_yn" : blogyn
                             	
                         });
                     
@@ -1024,9 +1055,11 @@ function requestPay() {
                         	
                         	
                             if (res > 0) {
-                                alert('주문정보 저장 성공');
+                                alert('결제가 완료되었습니다. ');
                                 console.log(res);
-                                location.href="/findMentor/paymentCompletePage?payment_no="+res;
+                                var mentor_no = ${mentor_no};
+                                
+                                location.href="/findMentor/mentoringApplyMsg?payment_no="+res+"&mentor_no="+mentor_no;
                                 $("#paySuccess").append("<a href='/payment/refund?payment_no="+res+"'>결제취소</a>");             
                                 //createPayInfo(uid);
                             }

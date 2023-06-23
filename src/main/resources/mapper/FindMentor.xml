@@ -245,7 +245,7 @@
 	
 	<!-- 멘토의 nuable_date와 mentoring_time을 가져온다.  -->
 	<select id="getDayAndTime" parameterType="int" resultType="String">
-		select concat(unable_date,';',mentoring_time) from mentor where mentor_no = #{mentor_no}
+		select concat(COALESCE(unable_date,''),';',mentoring_time) from mentor where mentor_no = #{mentor_no}
 	</select>
 	
 	
@@ -256,9 +256,7 @@
 		FROM mentoring m 
 			JOIN service USING (service_no)
 				WHERE service_no = (SELECT service_no FROM mentor WHERE mentor_no = #{mentor_no})
-					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date} AND m.classification != 32 
-					AND m.classification != 33 
-					AND m.classification != 34;
+					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date} AND m.classification = 32;
 	</select>
 	
 	<select id="getMentorInfo" parameterType="int" resultType="FindMentorDTO">
@@ -302,8 +300,15 @@
 	
 	<!-- 결제 완료 페이지에서 보여줄 내역을 출력한다. -->
 	<select id="getMentoringInfo" resultType="MentoringDTO">
-		SELECT * FROM payment JOIN mentoring USING(mentoring_no) WHERE payment_no = #{payment_no};
+		SELECT * FROM 
+		(SELECT * FROM payment 
+			JOIN mentoring USING(mentoring_no)) a  
+			JOIN service s USING(service_no) WHERE payment_no = #{payment_no};
 	</select>
 	
+	<!-- 멘토에게 멘토링 신청이 들어왔다는 문자 보내기  위한 핸폰 번호 구해오기 -->
+	<select id="getPhone" resultType="String">
+		SELECT phone from mentor where mentor_no = #{mentor_no}
+	</select>
 
 </mapper>
