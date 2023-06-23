@@ -514,9 +514,9 @@ $(document).ready(function(){
 				  
 			if(kind_num == 3){
 			  //당일 버튼을 막는다. 
-			  if(!$('.js-date-css:first').hasClass('js-disabled-button')){
+			  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){
 			  	  alert("30분 대면 멘토링 선택 > disabled 안 돼 있어서 막습니다. ");
-				  $('.js-date-css:first').addClass('js-disabled-button');
+			  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
 			  }
 			}	
 		  
@@ -537,9 +537,9 @@ $(document).ready(function(){
 																		  
 		if(kind_num == 3){
 		  //당일 버튼을 막는다. 
-		  if(!$('.js-date-css:first').hasClass('js-disabled-button')){ 						//-----------------------여기 변경해야함ㅏㅓㅓ
+		  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){ 						//-----------------------여기 변경해야함ㅏㅓㅓ
 		  	  alert("30분 대면 멘토링이 선택 돼 있음. disabled 날짜가 아니기 때문에 오늘 날짜는 disabled한다. ");
-			  $('.js-date-css:first').addClass('js-disabled-button');
+		  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
 			  alert("됨");
 		  }
 		}		
