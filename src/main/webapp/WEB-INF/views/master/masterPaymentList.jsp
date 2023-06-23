@@ -62,8 +62,7 @@
 					<td>${pay.payment_method }</td>
 					<td>${pay.pay_state }</td>
 					<td>
-					<fmt:formatDate value="${pay.pay_time }" pattern="yy.MM.dd, HH:mm:ss"/>
-					
+						${pay.pay_time }
 					</td>
 				</tr>
 			</c:forEach>

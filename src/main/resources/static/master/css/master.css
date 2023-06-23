@@ -233,3 +233,7 @@
 .mail_box{
 	margin-top:40px;
 }
+.chartbox3{
+	display: flex;
+	padding: 40px;
+}

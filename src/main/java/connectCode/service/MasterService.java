@@ -62,6 +62,12 @@ public interface MasterService {
 	// 멘토 승인거부 업데이트
 	int mentorlRefuseUpdate(MentorDTO mentor);
 
+	// 멘토 승인 알람 보내기
+	int mentorApplyAlarm(MentorDTO mentor);
+
+	// 멘토 승인 거부 알림 보내기
+	int mentorApplyRefuse(MentorDTO mentor);
+
 	// 멘티 리스트
 	List<MenteeDTO> menteelist(MenteeDTO mentee);
 
@@ -158,14 +164,35 @@ public interface MasterService {
 	// 새로운 문의 요청
 	int newinquire();
 	
+	// 새로운 신고
+	int newReport();
 	
+	// 새로운 멘토 요청
+	int newMentor();
+
+	// 오늘 발생한 신고
+	int newPay();
 	
+	// 통계
+	// 멘토 성비
+	int getMale();
+	int getFemale();
 	
+	// 멘티 성비
+	int geteemale();
+	int geteefemale();
 	
-	
-	
-	
-	
+	// 전체 성비
+	int getTmale();
+	int getTfemale();
+
+	// 이용자 현황
+	int getsign_up();
+	int getlastsign_up();
+	int getTsign_up();
+	int getquit();
+	int getlastquit();
+	int getTquit();
 	
 	
 	
@@ -189,8 +216,9 @@ public interface MasterService {
 
 
 
+
 	
-//*****************************병걸 작성***************************************
+	//*****************************병걸 작성***************************************
 
 
 

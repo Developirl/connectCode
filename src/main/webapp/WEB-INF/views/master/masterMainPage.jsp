@@ -38,19 +38,20 @@
 		<div class="totalbox1">
 			<div class="large_jh">
 				<div class="totalbox2" align="center">TOTAL</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 멘토 승인 요청 &nbsp; ${newinquire}
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="masterMentorApplyList" style="color: gray">멘토 승인 요청 &nbsp;${newMentor }</a>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				오늘 발생한 결제 건수 <br> <br> <br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 새로운 문의 요청
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				신고 건수
+				<a href="masterPaymentList" style="color: gray">오늘 발생한 결제 건수 &nbsp;${newPay }</a> <br> <br> <br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="masterInquireList" style="color: gray">새로운 문의 요청&nbsp; ${newinquire}</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<%-- <a href="masterReportList" style="color: gray">신고 건수&nbsp; ${newReport }</a>  --%>
 			</div>
 		</div>
 
 <div class="statisticsbox1">
 		<div class="large_jh" align="center">
 			<div class="statisticsbox2" align="center">통계</div>
-			이용자 현황 <br> <br> 전체 정보 <br> <br> 신고 분석
+			<a href=masterStatistics1 style="color: gray"><br>이용자 성비 <br></a>
+			<a href=masterStatistics2 style="color: gray"><br>이용자 현황 <br></a> 
 		</div>
 
 	</div>

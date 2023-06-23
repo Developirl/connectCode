@@ -52,9 +52,15 @@ public class MasterController {
 	@RequestMapping("masterMainPage")
 	public String masterMainPage(Model model) {
 
+		int newMentor = ms.newMentor();
 		int newinquire = ms.newinquire();
+		int newReport = ms.newReport();
+		int newPay = ms.newPay();
 		
+		model.addAttribute("newMentor", newMentor);
 		model.addAttribute("newinquire", newinquire);
+		model.addAttribute("newReport", newReport);
+		model.addAttribute("newPay", newPay);
 		
 		model.addAttribute("totalVisitors", ms.getTotalVisitors());
 		model.addAttribute("todayVisitors", ms.getTodayVisitors());
@@ -141,7 +147,6 @@ public class MasterController {
 
 	// 승인_상세_승인
 	@RequestMapping("mentorDetailApply")
-	@ResponseBody
 	public String mentorDetailApply(int mentor_no) {
 
 		MentorDTO mentor = ms.mentorDetail(mentor_no);
@@ -152,13 +157,13 @@ public class MasterController {
 		/* System.out.println(phone); */
 		ms.mentorDetailApply(phone);
 		ms.mentorlApplyUpdate(mentor);
+		ms.mentorApplyAlarm(mentor);
 
-		return "redirect:masterMentorList";
+		return "redirect:/master/masterMentorApplyList";
 	}
 
 	// 승인_상세_미승인
 	@RequestMapping("mentorDetailRefuse")
-	@ResponseBody
 	public String mentorDetailRefuse(int mentor_no) {
 
 		MentorDTO mentor = ms.mentorDetail(mentor_no);
@@ -168,8 +173,9 @@ public class MasterController {
 
 		ms.mentorDetailRefuse(phone);
 		ms.mentorlRefuseUpdate(mentor);
+		ms.mentorApplyRefuse(mentor);
 
-		return "redirect:masterMentorList";
+		return "redirect:/master/masterMentorApplyList";
 	}
 
 	// 문의_리스트
@@ -201,6 +207,8 @@ public class MasterController {
 //		System.out.println(post);
 
 		model.addAttribute("postlist", postlist);
+		model.addAttribute("search", post.getSearch());
+		model.addAttribute("keyword", post.getKeyword());
 		model.addAttribute("p", p);
 
 		return "master/masterInquireList";
@@ -268,6 +276,8 @@ public class MasterController {
 		model.addAttribute("memberlist", memberlist);
 		model.addAttribute("mentorTotal", mentorTotal);
 		model.addAttribute("menteeTotal", menteeTotal);
+		model.addAttribute("search", mentor.getSearch());
+		model.addAttribute("keyword", mentor.getKeyword());
 		model.addAttribute("p", p);
 
 		return "master/masterMemberList";
@@ -498,5 +508,39 @@ public class MasterController {
 		}
 		
 	}
+	
+	// 이용자 성비 통계
+	@RequestMapping("masterStatistics1")
+	public String masterStatistics1(Model model) {
+		
+		// 멘토 성비
+		model.addAttribute("male", ms.getMale());
+		model.addAttribute("female", ms.getFemale());
+		
+		// 멘티 성비
+		model.addAttribute("eemale", ms.geteemale());
+		model.addAttribute("eefemale", ms.geteefemale());
+		
+		//전체 성비
+		model.addAttribute("tmale", ms.getTmale());
+		model.addAttribute("tfemale", ms.getTfemale());
+		
+		return "master/masterStatistics1";
+	}
 
+	// 이용자 현황 통계
+	@RequestMapping("masterStatistics2")
+	public String masterStatistics2(Model model) {
+		
+		model.addAttribute("sign_up", ms.getsign_up());
+		model.addAttribute("lastsign_up", ms.getlastsign_up());
+		model.addAttribute("Tsign_up", ms.getTsign_up());
+
+		model.addAttribute("quit", ms.getquit());
+		model.addAttribute("lastquit", ms.getlastquit());
+		model.addAttribute("Tquit", ms.getTquit());
+		
+		return "master/masterStatistics2";
+	}
+	
 }

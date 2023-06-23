@@ -75,8 +75,29 @@
 			</c:forEach>
 		</table>
 
-		<!-- 전체 목록 페이징 처리 -->
+	<!-- 목록 페이징 처리 -->
 		<ul class="pagination justify-content-center">
+		<!-- 검색 했을 때 페이징 처리 -->
+			<c:if test="${not empty keyword}">
+			<c:if test="${p.startPage > p.pageBlk}">
+				<li class="page-item"><a class="page-link"
+					href="masterInquireList?pageNum=${p.startPage-1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">이전</a></li>
+			</c:if>
+			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
+				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
+					<a class="page-link" href="masterInquireList?pageNum=${i}&keyword=${keyword}&search=${search}"
+					style="color: black;">${i}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${p.endPage < p.totalPage }">
+				<li class="page-item"><a class="page-link"
+					href="masterInquireList?pageNum=${p.endPage-1 }"
+					style="color: black;">다음</a></li>
+			</c:if>
+		</c:if>
+		<!-- 전체 목록의 페이징 처리 -->
+		<c:if test="${empty keyword }">
 			<c:if test="${p.startPage > p.pageBlk}">
 				<li class="page-item"><a class="page-link"
 					href="masterInquireList?pageNum=${p.startPage-1 }"
@@ -88,11 +109,11 @@
 					style="color: black;">${i}</a>
 				</li>
 			</c:forEach>
-
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterInquireList?pageNum=${p.endPage-1 }"
+					href="masterInquireList?pageNum=${p.endPage-1 }&keyword=${keyword}&search=${search}"
 					style="color: black;">다음</a></li>
+			</c:if>
 			</c:if>
 		</ul>
 	</div>
@@ -100,34 +121,6 @@
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
 	
-	<!-- 글 정렬 script(답변대기, 답변완료) -->
-<script>
-    $(document).ready(function() {
-        $("#search").change(function() {
-            var selectedValue = $(this).val();
-            var replyStatusElements = $(".reply-status");
-
-            replyStatusElements.each(function() {
-                var replyStatus = $(this).text().trim();
-                var postRow = $(this).closest("tr");
-
-                if (selectedValue === "all") {
-                    postRow.show();
-                } else if (selectedValue === "apply" && replyStatus === "처리") {
-                    postRow.show();
-                } else if (selectedValue === "refuse" && replyStatus === "미처리") {
-                    postRow.show();
-                } else {
-                    postRow.hide();
-                }
-            });
-        });
-
-        $("#search").change();
-    });
-</script>
-
-	</script>
 
 </body>
 </html>

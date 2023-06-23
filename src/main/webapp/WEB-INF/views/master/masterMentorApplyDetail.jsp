@@ -70,7 +70,7 @@
 					<td>${career.task }</td>
 					<td><fmt:formatDate value="${career.e_date }"
 							pattern="yy.MM.dd" /></td>
-					<td><fmt:formatDate value="${career.departure_date }"
+					<td><fmt:formatDate value="${career.d_date }"
 							pattern="yy.MM.dd" /></td>
 				</tr>
 			</c:forEach>

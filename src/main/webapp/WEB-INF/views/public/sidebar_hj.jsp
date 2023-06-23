@@ -44,7 +44,7 @@
 		<a href="masterInquireList" class="w3-bar-item w3-button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;문의요청</a>
 		<a href="masterMemberList" class="w3-bar-item w3-button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;회원관리</a>
 		<a href="masterPaymentList" class="w3-bar-item w3-button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;결제관리</a>
-		<a href="masterReportList" class="w3-bar-item w3-button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;신고관리</a>
+<!-- 		<a href="masterReportList" class="w3-bar-item w3-button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;신고관리</a> -->
 		</div>
 
 	</div>

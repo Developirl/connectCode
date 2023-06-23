@@ -7,8 +7,8 @@
 			datasets : [ {
 				label : '이용자수',
 				data : [ totalVisitors, todayVisitors ],
-				backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
-						'rgba(54, 162, 235, 0.2)' ]
+				backgroundColor : [ 'rgba(153, 102, 255, 0.2)',
+						'rgba(153, 102, 255, 0.2)' ]
 
 			} ]
 		},
@@ -46,7 +46,7 @@
 				label : '이용현황',
 				data : [ unreadyMentors, readyMentors],
 				backgroundColor : [ 'rgba(54, 162, 235, 0.2)',
-						'rgba(255, 99, 132, 0.2)']
+						'rgba(72, 192, 192, 0.2)']
 
 			} ]
 		},

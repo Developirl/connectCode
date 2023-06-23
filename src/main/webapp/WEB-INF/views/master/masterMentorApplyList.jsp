@@ -51,7 +51,6 @@
 					<th>나이</th>
 					<th>분야</th>
 					<th>경력</th>
-					<th>신청일</th>
 					<th>승인여부</th>
 				</tr>
 			</thead>
@@ -64,7 +63,6 @@
 						<td>${mentor.age }세</td>
 						<td>${mentor.task }</td>
 						<td>${mentor.years }년</td>
-						<td>${mentor.apply_date }</td>
 						<td>
 						<c:choose>
 								<c:when test="${mentor.classification == '22'}">대기</c:when>
