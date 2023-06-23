@@ -16,21 +16,21 @@
 <body>
 <br><br>
   <div class="container">
-    <span class="headline">connect</span><span class="headline2"> Code</span>
-  </div><br><br>
+    <span class="headline">connect</span><span class="headline2" style="color: #004EA2;"> Code</span>
+  </div><br><br><br><br><br><br>
 
   <div class="button-container">
     <div class="button mentee">
       <a class="menteea" href="/member/normalmenteejoin">
-        <img class="menteeimg" src="/member/images/mentee.jpg">
+        <img class="menteeimg" src="/member/images/mentee.png"><br>
         <h2>멘티 회원가입</h2>
       </a>
     </div>
 
     <div class="button mentor">
       <a class="mentora" href="/member/mentorjoin">
-        <img class="mentorimg" src="/member/images/mentor.jpg">
-        <h2>멘토회원가입</h2>
+        <img class="mentorimg" src="/member/images/mentor.png"><br>
+        <h2>멘토 회원가입</h2>
       </a>
     </div>
   </div>

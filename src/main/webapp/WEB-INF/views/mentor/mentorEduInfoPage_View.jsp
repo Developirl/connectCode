@@ -37,6 +37,10 @@
 			${edu_sel.origin_name}
 		</div>
 	</c:forEach>
+	<div style="display: flex;">
+		<div class="mentor_info infoCtg">첨부파일</div>
+		<div class="mentor_info infoInp"></div>
+	</div>
 </div>
 
 <hr class="title_hr">

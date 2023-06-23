@@ -4,13 +4,6 @@
 
 <mapper namespace="connectCode.mapper.MentorMapper">
 
-<!-- Mentor 테이블 mentor_no으로 member_no 조회 -->
-<select id="select_member_no" resultType="int">
-	SELECT member_no
-	FROM mentor
-	WHERE mentor_no=#{mentor_no}
-</select>
-
 <!-- Mentor 테이블 mentor_no으로 조회 [mentor 테이블 전체 & 재직중인 회사 & 알람수 조회] -->
 <select id="mentorProfile" resultType="MentorDTO">
 	SELECT
@@ -30,20 +23,8 @@
 	LEFT JOIN file f 
 	ON m.profile_img_no = f.file_no
 	WHERE mentor_no=#{mentor_no}
-</select>
-
-<select id="education_select" resultType="MentorDTO">
-	SELECT 
-	  *, entering_date e_date, graduation_date g_date
-	FROM education 
-	WHERE mentor_no = #{mentor_no}
-</select>
-
-<select id="career_select" resultType="MentorDTO">
-	SELECT 
-	  *, entering_date e_date, departure_date d_date
-	FROM career
-	WHERE mentor_no = #{mentor_no}
+	ORDER BY entering_date
+	LIMIT 1
 </select>
 
 <!-- <select id="file_select" resultType="">
@@ -102,8 +83,11 @@
 	WHERE mentor_no = #{mentor_no}
 </update>
 
+
+<!-- ************************************* [서비스 요금] start ************************************* -->
+
 <!-- service 테이블 insert -->
-<insert id="serviceTBL_insert" parameterType="MentorDTO">
+<insert id="service_insert" parameterType="MentorDTO">
 	INSERT INTO service (
 	 mentoring_kind, mentoring_fee, mentor_no, available_NY
 	) VALUES (
@@ -115,7 +99,7 @@
 </insert>
 
 <!-- service 테이블 select -->
-<select id="serviceTBL_select" resultType="MentorDTO">
+<select id="service_select" resultType="MentorDTO">
 	SELECT
 	  * 
 	FROM service 
@@ -123,14 +107,19 @@
 </select>
 
 <!-- service 테이블 update -->
-<update id="serviceTBL_update" parameterType="MentorDTO">
+<update id="service_update" parameterType="MentorDTO">
 	UPDATE service 
 	SET
 	   mentoring_fee = #{mentoring_fee}
 	 , available_NY = #{available_NY}
-	WHERE mentor_no = #{mentor_no} and mentoring_kind = #{mentoring_kind}
+	WHERE mentor_no = #{mentor_no} 
+	AND mentoring_kind = #{mentoring_kind}
 </update>
 
+<!-- ************************************* [서비스 요금] end ************************************* -->
+<!-- ************************************* [학력사항] start ************************************* -->
+
+<!-- education 테이블 insert -->
 <insert id="education_insert" parameterType="MentorDTO">
 	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
 		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
@@ -138,12 +127,53 @@
 	</selectKey>
 
 	INSERT INTO education (
-		school, entering_date, graduation_date, degree, major, minor, file_no, mentor_no
+		  school
+		, entering_date
+		, graduation_date
+		, degree
+		, major
+		, minor
+		, file_no
+		, mentor_no
 	) VALUES (
-		#{school},concat(#{entering_date},'-01'),concat(#{graduation_date},'-01'),#{degree},#{major},#{minor},#{file_no},#{mentor_no}
+		  #{school}
+		, CONCAT(#{entering_date},'-01')
+		, CONCAT(#{graduation_date},'-01')
+		, #{degree}
+		, #{major}
+		, #{minor}
+		, #{file_no}
+		, #{mentor_no}
 	)
 </insert>
 
+<!-- education 테이블 select -->
+<select id="education_select" resultType="MentorDTO">
+	SELECT 
+	  *
+	  , entering_date e_date
+	  , graduation_date g_date
+	FROM education 
+	WHERE mentor_no = #{mentor_no}
+</select>
+
+<!-- education 테이블 update -->
+<update id="education_update" parameterType="MentorDTO">
+	UPDATE education 
+	SET   school = #{school}
+		, entering_date = CONCAT(#{entering_date},'-01')
+		, graduation_date = CONCAT(#{graduation_date},'-01')
+		, degree = #{degree}
+		, major = #{major}
+		, minor = #{minor}
+		, file_no = #{file_no}
+	WHERE mentor_no = #{mentor_no}
+</update>
+
+<!-- ************************************* [학력사항] end ************************************* -->
+<!-- ************************************* [경력사항] start ************************************* -->
+
+<!-- career 테이블 insert -->
 <insert id="career_insert" parameterType="MentorDTO">
 	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
 		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
@@ -151,10 +181,40 @@
 	</selectKey>
 	
 	INSERT INTO career (
-		company, entering_date, departure_date, task, years, file_no, mentor_no
+		  company
+		, entering_date
+		, departure_date
+		, task
+		, years
+		, file_no
+		, mentor_no
 	) VALUES (
-		#{company}, #{entering_date}, #{departure_date}, #{task}, #{years}, #{file_no}, #{mentor_no}
+		  #{company}
+		, #{entering_date}
+		, #{departure_date}
+		, #{task}
+		, #{years}
+		, #{file_no}
+		, #{mentor_no}
 	)
 </insert>
+
+<!-- career 테이블 select -->
+<select id="career_select" resultType="MentorDTO">
+	SELECT 
+	  *
+	  , entering_date e_date
+	  , departure_date d_date
+	FROM career
+	WHERE mentor_no = #{mentor_no}
+</select>
+
+<!-- career 테이블 update -->
+
+<!-- ************************************* [경력사항] end ************************************* -->
+<!-- ************************************* [기술및분야] start ************************************* -->
+
+
+<!-- ************************************* [기술및분야] end ************************************* -->
 
 </mapper>

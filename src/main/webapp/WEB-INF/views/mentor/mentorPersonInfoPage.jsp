@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
-<form method="post" action="mentorPersonInfo_UP?mentor_no=${mentor_no}" id="myform">
+<form method="post" action="mentorPersonInfo_UP" id="myform">
 
 	<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
 		<span style="color: #004EA2;">[회원가입]</span>
@@ -52,6 +52,7 @@
 	
 	<hr class="title_hr">
 	
+	<input type="hidden" name="mentor_no" value="${msel.mentor_no}">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
 	<!-- 수정/저장 btn -->

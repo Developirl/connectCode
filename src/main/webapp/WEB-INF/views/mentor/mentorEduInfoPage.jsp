@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<form method="post" action="mentorEduInfo_UP?mentor_no=${mentor_no}" id="myform" enctype="multipart/form-data">
+<form method="post" <c:if test="${empty edu_sel}">action="mentorEduInfo_Up_first"</c:if><c:if test="${!empty edu_sel}">action="mentorEduInfo_Up"</c:if> id="myform" enctype="multipart/form-data">
 
 	<!-- 승인 전,후 각각 div로 감싸서 show/hide로 하기? -->
 	<!-- 승인 전 화면 start -->
@@ -30,14 +31,15 @@
 								<div class="mentor_info infoCtg">입학일자</div>
 								<div class="mentor_info infoInp">
 									<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.entering_date}" readonly="readonly">
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" 
+							       			value="<fmt:formatDate value='${edu_sel.e_date}' pattern='yyyy-MM'/>" readonly="readonly">
 								</div>
 							</div>
 							<div style="display: flex;">
 								<div class="mentor_info infoCtg">졸업일자</div>
 								<div class="mentor_info infoInp">
 									<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.graduation_date}" readonly="readonly">
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.g_date}" readonly="readonly">
 								</div>
 							</div>
 						</div>
@@ -59,7 +61,7 @@
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" id="minor0" style="width: 100%;" value="${edu_sel.minor}" placeholder="부전공명을 입력하세요.">
+							<input type="text" id="minor" name="minor" style="width: 100%;" <c:if test="${!empty edu_sel.minor}">value="${edu_sel.minor}"</c:if><c:if test="${empty edu_sel.minor}">value=" "</c:if> placeholder="부전공명을 입력하세요.">
 						</div>
 					</div>
 				</div>
@@ -112,7 +114,7 @@
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" id="minor0" style="width: 100%;" placeholder="부전공명을 입력하세요.">
+							<input type="text" id="minor" name="minor" style="width: 100%;" value=" " placeholder="부전공명을 입력하세요.">
 						</div>
 					</div>
 				</div>
@@ -135,6 +137,7 @@
 	
 	<hr class="title_hr">
 	
+	<input type="hidden" name="mentor_no" value="${msel.mentor_no}">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
 	<!-- 저장 btn -->

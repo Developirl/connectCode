@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<form method="post" action="mentorBasicInfo_Up?mentor_no=${mentor_no}" id="myform" enctype="multipart/form-data">
+<form method="post" action="mentorBasicInfo_Up" id="myform" enctype="multipart/form-data">
 
 	<div class="cont_mar">
 		<div class="infoTitle">프로필 사진  <span class="small_jh">[선택]</span></div>
@@ -48,6 +48,7 @@
 	</div>
 	<hr class="title_hr">
 	
+	<input type="hidden" name="mentor_no" value="${msel.mentor_no}">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
 	<!-- 저장 btn -->

@@ -79,7 +79,7 @@
                             			<a href="#">멘티마이페이지</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_13')">
-                            			<a href="#">멘토마이페이지</a>
+                            			<a href="/mentor/mentorPage">멘토마이페이지</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_11')">
                             			<a href="#">관리자 대쉬보드</a>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<form method="post" action="mentorExpInfoPage_Up?mentor_no=${mentor_no}" id="myform" autocomplete="off" enctype="multipart/form-data">
+<form method="post" action="mentorExpInfoPage_Up" id="myform" autocomplete="off" enctype="multipart/form-data">
 
 	<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
 			정확한 정보를 직접 입력한 후, [재직증명서] 등 증빙자료를 첨부해 주시기 바랍니다.<br>
@@ -31,7 +31,7 @@
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">퇴사일자</div>
 						<div class="mentor_info infoInp">
-						   <input type="text" class="datepicker-here width100" id="departure_date" name="departure_date" value="" readonly="readonly">
+						   <input type="text" class="datepicker-here width100" id="departure_date" name="departure_date" value=" " readonly="readonly">
 							<!-- <input type="text" class="PastDateDemo" name="departure_date" readonly="readonly"> -->
 						</div>
 					</div>
@@ -63,12 +63,14 @@
 	
 	<hr class="title_hr">
 	
+	<input type="hidden" name="mentor_no" value="${msel.mentor_no}">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
 	<!-- 저장 btn -->
 	<div align="center" class="cont_mar">
 		<input class="custom_btn submit" type="submit" value="저장하기" style="width: 200px;">
 	</div>
+	
 </form>
 
 <script src="/mentor/datepicker/jquery-3.1.1.min.js"></script> <!-- 값 제어를 위해 jquery -->

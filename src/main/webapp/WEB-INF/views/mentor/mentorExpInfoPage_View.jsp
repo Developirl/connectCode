@@ -17,7 +17,10 @@
 		<div style="display: flex;">
 			<div class="mentor_info infoCtg">재직기간</div>
 			<div class="mentor_info infoInp">
-				<fmt:formatDate value="${car_sel.e_date}" pattern="yyyy년 MM월 dd일"/> ~ <fmt:formatDate value="${car_sel.d_date}" pattern="yyyy년 MM월 dd일"/>
+				<fmt:formatDate value="${car_sel.e_date}" pattern="yyyy년 MM월 dd일"/>
+				 ~ 
+				<c:if test="${empty car_sel.d_date}">[재직중]</c:if>
+				<c:if test="${!empty car_sel.d_date}"><fmt:formatDate value="${car_sel.d_date}" pattern="yyyy년 MM월 dd일"/></c:if>
 			</div>
 		</div>
 		<div style="display: flex;">
@@ -28,7 +31,10 @@
 			${edu_sel.origin_name}
 		</div>
 	</c:forEach>
-
+	<div style="display: flex;">
+		<div class="mentor_info infoCtg">첨부파일</div>
+		<div class="mentor_info infoInp"></div>
+	</div>
 </div>
 
 <hr class="title_hr">

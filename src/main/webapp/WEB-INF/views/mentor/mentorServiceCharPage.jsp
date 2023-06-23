@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<form method="post" <c:if test="${empty msel.account}">action="mentorServiceChar_Up_first?mentor_no=${mentor_no}"</c:if><c:if test="${!empty msel.account}">action="mentorServiceChar_Up?mentor_no=${mentor_no}"</c:if> id="myform">
+<form method="post" <c:if test="${service_select_check == 'N'}">action="mentorServiceChar_Up_first"</c:if><c:if test="${service_select_check != 'N'}">action="mentorServiceChar_Up"</c:if> id="myform">
 
 <!-- 승인 전,후 각각 div로 감싸서 show/hide로 하기? -->
 <!-- 승인 전 화면 start -->
@@ -68,6 +68,7 @@
 	</div>
 	<hr class="title_hr">
 	
+	<input type="hidden" name="mentor_no" value="${msel.mentor_no}">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 	
 	<!-- 저장 btn -->

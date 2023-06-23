@@ -8,17 +8,18 @@
 		<!-- CONTENT -->
 
 		<div align="center" class="large_jh cont_mar">
-			필수정보를 입력하세요.<br>
+			<div id="request_up">필수정보를 입력하세요.</div>
 			<progress id="progress" style="margin-top: 20px; width: 100%; height: 30px;" value="0" min="0" max="100"></progress>
+			
 		</div>
 		<hr class="title_hr">
 		<div class="cont_mar profileEditNav_div">
-			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}','${mentor_no}','${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
-			<div class="personInfo nav_items medium_jh" onclick="personInfo_load('${mentor_no}','${msel.phone}','${msel.email}')">인적사항</div>
-			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load('${msel.account}','${mentor_no}')">서비스 요금</div>
-			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load(${edu_list_size},'${mentor_no}')">학력사항</div>
-			<div class="expInfo nav_items medium_jh" onclick="expInfo_load(${car_list_size},'${mentor_no}')">경력사항</div>
-			<div class="techInfo nav_items medium_jh" onclick="techInfo_load()">기술 및 분야</div>
+			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}',${msel.mentor_no},'${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
+			<div class="personInfo nav_items medium_jh" onclick="personInfo_load(${msel.mentor_no},'${msel.phone}','${msel.email}')">인적사항</div>
+			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load('${service_select_check}',${msel.mentor_no},'${msel.bank}')">서비스 요금</div>
+			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load('${education_select_check}',${msel.mentor_no})">학력사항</div>
+			<div class="expInfo nav_items medium_jh" onclick="expInfo_load('${career_select_check}',${msel.mentor_no})">경력사항</div>
+			<div class="techInfo nav_items medium_jh" onclick="techInfo_load(${msel.mentor_no})">기술 및 분야</div>
 		</div>
 			
 		<!-- <iframe id="iframe1" name="iframe1" style="display:none"></iframe> sumit 후 페이지 전환 안되게 막기  target="iframe1"  -->
@@ -54,7 +55,7 @@
 						  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
 						</svg>&nbsp;
 						프로필을 모두 입력한 후, 마지막 페이지인 '기술 및 분야' 탭에서
-						<span style="color: #004EA2;">[승인 요청]</span> 
+						<span style="color: #004EA2;">[승인요청]</span> 
 						버튼을 클릭해야 입력하신 자료가 운영팀에게 전달됩니다.
 					</div>
 					<!-- 설명3 -->
@@ -63,9 +64,9 @@
 						  <path d="M7.918 8.414h-.879V7.342h.838c.78 0 1.348-.522 1.342-1.237 0-.709-.563-1.195-1.348-1.195-.79 0-1.312.498-1.348 1.055H5.275c.036-1.137.95-2.115 2.625-2.121 1.594-.012 2.608.885 2.637 2.062.023 1.137-.885 1.776-1.482 1.875v.07c.703.07 1.71.64 1.734 1.917.024 1.459-1.277 2.396-2.93 2.396-1.705 0-2.707-.967-2.754-2.144H6.33c.059.597.68 1.06 1.541 1.066.973.006 1.6-.563 1.588-1.354-.006-.779-.621-1.318-1.541-1.318Z"/>
 						  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
 						</svg>&nbsp;
-						<span style="color: #004EA2;">[승인 요청]</span>
+						<span style="color: #004EA2;">[승인요청]</span>
 						 시, 운영팀에서 멘토님의 자료를 검토하여
-						 <span style="color: #004EA2;">[승인 완료]</span>
+						 <span style="color: #004EA2;">[승인완료]</span>
 						  처리를 해야 멘토링 활동이 가능합니다.
 					</div>
 					<!-- 설명4 -->
@@ -74,7 +75,7 @@
 						  <path d="M7.519 5.057c.22-.352.439-.703.657-1.055h1.933v5.332h1.008v1.107H10.11V12H8.85v-1.559H4.978V9.322c.77-1.427 1.656-2.847 2.542-4.265ZM6.225 9.281v.053H8.85V5.063h-.065c-.867 1.33-1.787 2.806-2.56 4.218Z"/>
 						  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
 						</svg>&nbsp;
-						<span style="color: #004EA2;">[승인 완료]</span>까지 최대 7일이 소요됩니다.
+						<span style="color: #004EA2;">[승인완료]</span>까지 최대 7일이 소요됩니다.
 					</div>
 					<!-- 설명5 -->
 					<div>
@@ -111,44 +112,32 @@
 	
 	$(document).ready(function(){
 	
-		console.log('${msel.intro}'+'/'+'${msel.account}'+'/'+'${edu_list_size}'+'/'+'${car_list_size}');
+		console.log('mentor_no::'+'${msel.mentor_no}');
+		console.log('${msel.intro}'+'/'+'${service_select_check}'+'/'+'${education_select_check}'+'/'+'${career_select_check}');
 		
-		if (('${msel.intro}' && '${msel.account}' && '${edu_list_size}' && '${car_list_size}') != 0) {
+		if ('${msel.intro}' != '' && '${service_select_check}' != 'N' && '${education_select_check}' != 'N' && '${career_select_check}' != 'N') {
 		    $('#progress').val(100);
 		    
-		} else if (('${msel.intro}' && '${msel.account}' && '${edu_list_size}') != 0 || ('${msel.intro}' && '${msel.account}' && '${car_list_size}') != 0
-		  		|| ('${msel.intro}' && '${edu_list_size}' && '${car_list_size}') != 0 || ('${msel.account}'&& '${edu_list_size}' && '${car_list_size}') != 0) {
+		} else if ('${msel.intro}' != '' && '${service_select_check}' != 'N' && '${education_select_check}' != 'N' || '${msel.intro}' != '' && '${service_select_check}' != 'N' && '${career_select_check}' != 'N'
+		  		|| '${msel.intro}' != '' && '${education_select_check}' != 'N' && '${career_select_check}' != 'N' || '${service_select_check}' != 'N' && '${education_select_check}' != 'N' && '${career_select_check}' != 'N') {
 		  $('#progress').val(75);
 		  
-		} else if (('${msel.intro}' && '${msel.account}') != 0 || ('${msel.intro}' && '${edu_list_size}') != 0 || ('${msel.intro}' && '${car_list_size}') != 0
-		  		|| ('${msel.account}' && '${edu_list_size}') != 0 || ('${msel.account}' && '${car_list_size}') != 0 || ('${edu_list_size}' && '${car_list_size}') != 0) {
+		} else if ('${msel.intro}' != '' && '${service_select_check}' != 'N' || '${msel.intro}' != '' && '${education_select_check}' != 'N' || '${msel.intro}' != '' && '${career_select_check}' != 'N'
+		  		|| '${service_select_check}' != 'N' && '${education_select_check}' != 'N' || '${service_select_check}' != 'N' && '${career_select_check}' != 'N' || '${education_select_check}' != 'N' && '${career_select_check}' != 'N') {
 		  $('#progress').val(50);
 		  
-		} else if (('${msel.intro}' || '${msel.account}' || '${edu_list_size}' || '${car_list_size}') != 0) {
+		} else if ('${msel.intro}' != '' || '${service_select_check}' != 'N' || '${education_select_check}' != 'N' || '${career_select_check}' != 'N') {
 		  $('#progress').val(25);
 		  
 		} else {
 		  $('#progress').val(0);
 		}
-
-		/* 		if ('${msel.intro}' != '' && '${msel.account}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
-		    $('#progress').val(100);
-		    
-		} else if ('${msel.intro}' != '' && '${msel.account}' != '' && '${edu_list_size}' != 0 || '${msel.intro}' != '' && '${msel.account}' != '' && '${car_list_size}' != 0
-		  		|| '${msel.intro}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0 || '${msel.account}' != '' && '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
-		  $('#progress').val(75);
-		  
-		} else if ('${msel.intro}' != '' && '${msel.account}' != '' || '${msel.intro}' != '' && '${edu_list_size}' != 0 || '${msel.intro}' != '' && '${car_list_size}' != 0
-		  		|| '${msel.account}' != '' && '${edu_list_size}' || '${msel.account}' != '' && '${car_list_size}' != 0 || '${edu_list_size}' != 0 && '${car_list_size}' != 0) {
-		  $('#progress').val(50);
-		  
-		} else if ('${msel.intro}' != '' || '${msel.account}' != '' || '${edu_list_size}' != 0 || '${car_list_size}' != 0) {
-		  $('#progress').val(25);
-		  
-		} else {
-		  $('#progress').val(0);
-		} */
 	
+		// 게이지바 100% 되면 문구 변경
+		if($('#progress').val() == 100) {
+			$('#request_up').html("<div style='color: #004EA2;'>필수 정보 입력 완료 !</div><div class='small_jh'>'기술 및 분야' 탭에서 [승인요청] 버튼을 눌러주세요.<div>");
+		}
+		
 	});
 	
 	</script>
