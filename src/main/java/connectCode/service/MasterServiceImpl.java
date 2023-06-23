@@ -33,7 +33,7 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 public class MasterServiceImpl implements MasterService {
 	@Autowired
 	MasterDAO md;
-	
+
 	@Value("${phone_hj_1}")
 	private String phonekey1;
 
@@ -42,9 +42,9 @@ public class MasterServiceImpl implements MasterService {
 
 	@Value("${hjphone}")
 	private String myphone;
-	
+
 	@Autowired
-    private JavaMailSender emailSender;
+	private JavaMailSender emailSender;
 //    private static final String FROM_ADDRESS = "이메일에 보낼 주소";
 
 	// 멘토 전체 데이터
@@ -77,13 +77,13 @@ public class MasterServiceImpl implements MasterService {
 	public List<MentorDTO> mentorCareer(int mentor_no) {
 		return md.mentorCareer(mentor_no);
 	}
-	
+
 	// 멘토 학벌
 	@Override
 	public List<MentorDTO> mentorEducation(int mentor_no) {
 		return md.mentorEducation(mentor_no);
 	}
-	
+
 	// 멘토 자격증
 	@Override
 	public List<MentorDTO> mentorLicense(int mentor_no) {
@@ -95,19 +95,19 @@ public class MasterServiceImpl implements MasterService {
 	public List<MentorDTO> mentorService(int mentor_no) {
 		return md.mentorService(mentor_no);
 	}
-	
+
 	// 멘토 경력 파일
 	@Override
 	public List<MentorDTO> mentorCareerFile(int mentor_no) {
 		return md.mentorCareerFile(mentor_no);
 	}
-	
+
 	// 멘토 학벌 파일
 	@Override
 	public List<MentorDTO> mentorEducationFile(int mentor_no) {
 		return md.mentorEducationFile(mentor_no);
 	}
-	
+
 	// 멘토 자격증 파일
 	@Override
 	public List<MentorDTO> mentorLicenseFile(int mentor_no) {
@@ -137,7 +137,7 @@ public class MasterServiceImpl implements MasterService {
 			System.out.println(e.getCode());
 		}
 	}
-	
+
 	// 멘토 승인요청_미승인
 	@Override
 	public void mentorDetailRefuse(String phone) {
@@ -162,19 +162,30 @@ public class MasterServiceImpl implements MasterService {
 		}
 	}
 
-
 	// 멘토 승인완료 업데이트
 	@Override
 	public int mentorlApplyUpdate(MentorDTO mentor) {
-		
+
 		return md.mentorlApplyUpdate(mentor);
 	}
-	
+
 	// 멘토 승인거부 업데이트
 	@Override
 	public int mentorlRefuseUpdate(MentorDTO mentor) {
-		
+
 		return md.mentorlRefuseUpdate(mentor);
+	}
+
+	// 멘토 승인 알람 보내기
+	@Override
+	public int mentorApplyAlarm(MentorDTO mentor) {
+		return md.mentorApplyAlarm(mentor);
+	}
+	
+	// 승인 거부 알림
+	@Override
+	public int mentorApplyRefuse(MentorDTO mentor) {
+		return md.mentorApplyRefuse(mentor);
 	}
 
 	// 멘티 리스트
@@ -232,7 +243,7 @@ public class MasterServiceImpl implements MasterService {
 
 	@Override
 	public int UpdateBoard(PostDTO dbpost) {
-		
+
 		return md.UpdateBoard(dbpost);
 	}
 
@@ -272,14 +283,14 @@ public class MasterServiceImpl implements MasterService {
 
 	// 메일 전송
 	@Override
-	public void mailSend(MailDTO mail) throws UnsupportedEncodingException, MessagingException{
+	public void mailSend(MailDTO mail) throws UnsupportedEncodingException, MessagingException {
 //		SimpleMailMessage message = new SimpleMailMessage();
 		MimeMessage message = emailSender.createMimeMessage();
 		message.addRecipients(javax.mail.Message.RecipientType.TO, mail.getEmailAddress());
 		message.setFrom(new InternetAddress("gpwl9929@naver.com", "ConnectCode"));
 //		message.setTo(mail.getEmailAddress());
 		message.setSubject(mail.getTitle());
-		message.setText(mail.getContent(),"utf-8","html");
+		message.setText(mail.getContent(), "utf-8", "html");
 		System.out.println(message);
 		emailSender.send(message);
 	}
@@ -287,17 +298,16 @@ public class MasterServiceImpl implements MasterService {
 	// 파일 다운로드
 	@Override
 	public Map<String, Object> selectFile(Map<String, Object> map) {
-		
+
 		return md.selectFile(map);
 	}
 
 	// 멘토 신고
 	@Override
 	public int mentorReport(int mentor_no) {
-		
+
 		return md.mentorReport(mentor_no);
 	}
-
 
 	// 멘티 멘토링
 	@Override
@@ -351,38 +361,38 @@ public class MasterServiceImpl implements MasterService {
 	// 신고 목록
 	@Override
 	public List<ReportDTO> reportList(ReportDTO report) {
-		
+
 		return md.reportList(report);
 	}
-	
+
 	// 신고 상세 내역
 	@Override
 	public ReportDTO reportDetail(int report_no) {
-		
+
 		return md.reportDetail(report_no);
 	}
-	
-	// 파일 
+
+	// 파일
 	@Override
 	public FileDTO file(FileDTO fileDTO) {
-		
+
 		return md.file(fileDTO);
 	}
 
-	// 학벌  파일
+	// 학벌 파일
 	@Override
 	public List<MentorDTO> efile(int file_no) {
 
 		return md.efile(file_no);
 	}
-	
+
 	// 결제 리스트
 	@Override
 	public int getPay(PaymentDTO pay) {
 
 		return md.getPay(pay);
 	}
-	
+
 	// 결제 리스트
 	@Override
 	public List<PaymentDTO> paylist(PaymentDTO pay) {
@@ -396,31 +406,108 @@ public class MasterServiceImpl implements MasterService {
 
 		return md.reportCancle(report_no);
 	}
-	
+
 	// 새로운 문의 요청
 	@Override
 	public int newinquire() {
-		
+
 		return md.newinquire();
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	// 새로운 신고
+	@Override
+	public int newReport() {
+
+		return md.newReport();
+	}
+
+	// 새로운 멘토 요청
+	@Override
+	public int newMentor() {
+
+		return md.newMentor();
+	}
+
+	// 오늘 발생한 신고
+	@Override
+	public int newPay() {
+
+		return md.newPay();
+	}
+
+	// 통계
+	// 멘토 성비
+	@Override
+	public int getMale() {
+		return md.getMale();
+	}
+
+	@Override
+	public int getFemale() {
+		return md.getFemale();
+	}
+
+	// 멘티 성비
+	@Override
+	public int geteemale() {
+		return md.geteemale();
+	}
+
+	@Override
+	public int geteefemale() {
+		return md.geteefemale();
+	}
+
+	// 전체 성비
+	@Override
+	public int getTmale() {
+		return md.getTmale();
+	}
+
+	@Override
+	public int getTfemale() {
+		return md.getTfemale();
+	}
+
+	// 이용자 현황
+	@Override
+	public int getsign_up() {
+		return md.getsign_up();
+	}
+
+	@Override
+	public int getlastsign_up() {
+		return md.getlastsign_up();
+	}
+
+	@Override
+	public int getTsign_up() {
+		return md.getTsign_up();
+	}
+
+	@Override
+	public int getquit() {
+		return md.getquit();
+	}
+
+	@Override
+	public int getlastquit() {
+		return md.getlastquit();
+	}
+
+	@Override
+	public int getTquit() {
+		return md.getTquit();
+	}
+
 //*****************************병걸 작성***************************************
 
 	@Override
 	public void insertVisitorInfo(VisitDTO visitor) {
-		
+
 		md.insertVisitorInfo(visitor);
 	}
-	
+
 	@Override
 	public void updateExitTime(int visit_id) {
 		md.updateExitTime(visit_id);
@@ -430,22 +517,27 @@ public class MasterServiceImpl implements MasterService {
 	public int getTotalVisitors() {
 		return md.getTotalVisitors();
 	}
+
 	@Override
 	public int getTodayVisitors() {
 		return md.getTodayVisitors();
 	}
+
 	@Override
 	public int getMentors() {
 		return md.getMentors();
 	}
+
 	@Override
 	public int getMentees() {
 		return md.getMentees();
 	}
+
 	@Override
 	public int getUnreadyMentors() {
 		return md.getUnreadyMentors();
 	}
+
 	@Override
 	public int getReadyMentors() {
 		return md.getReadyMentors();
@@ -453,15 +545,6 @@ public class MasterServiceImpl implements MasterService {
 
 
 
-
-
 //*****************************병걸 작성***************************************
-
-
-
-
-
-
-
 
 }

@@ -61,6 +61,12 @@ public interface MasterDAO {
 	// 멘토 승인거부 업데이트
 	int mentorlRefuseUpdate(MentorDTO mentor);
 
+	// 멘토 승인 알림
+	int mentorApplyAlarm(MentorDTO mentor);
+
+	// 멘토 승인 거부 알림 
+	int mentorApplyRefuse(MentorDTO mentor);
+
 	// 문의 전체 데이터
 	int getPostTotal(PostDTO post);
 
@@ -142,14 +148,36 @@ public interface MasterDAO {
 
 	// 새로운 문의요청
 	int newinquire();
+
+	// 새로운 신고건수
+	int newReport();
+
+	// 새로운 멘토요청
+	int newMentor();
+
+	// 오늘 발생한 신고
+	int newPay();
+
+	// 통계
+	// 멘토 성비
+	int getMale();
+	int getFemale();
 	
+	// 멘티 성비
+	int geteemale();
+	int geteefemale();
+
+	// 전체 성비
+	int getTmale();
+	int getTfemale();
 	
-	
-	
-	
-	
-	
-	
+	// 이용자 현황
+	int getsign_up();
+	int getlastsign_up();
+	int getTsign_up();
+	int getquit();
+	int getlastquit();
+	int getTquit();
 	
 	
 	
@@ -166,8 +194,6 @@ public interface MasterDAO {
 	public int getMentees();
 	public int getUnreadyMentors();
 	public int getReadyMentors();
-
-
 
 
 

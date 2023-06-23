@@ -14,7 +14,7 @@
 
 	<div class="m_box">
 		<!-- 검색 -->
-		<form action="masterMemberList" method="post">
+		<form action="masterMemberList">
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->

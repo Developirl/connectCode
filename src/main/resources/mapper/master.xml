@@ -109,7 +109,8 @@
 	<!-- 멘토 경력 -->
 	<select id="mentorCareer" parameterType="int"
 		resultType="MentorDTO">
-		select *, entering_date as e_date from career where
+		select *, entering_date as e_date, departure_date as d_date
+		from career where
 		mentor_no=#{mentor_no} order by
 		e_date
 	</select>
@@ -139,8 +140,10 @@
 	<!-- 멘토 학벌 파일 -->
 	<select id="mentorEducationFile" parameterType="int"
 		resultType="MentorDTO">
-		select Distinct e.education_no,f.file_no, f.origin_name, f.size from education as e left join file as f on
-		e.file_no=f.file_no where mentor_no=${mentor_no}
+		select Distinct e.education_no,f.file_no, f.origin_name,
+		f.size from education as e left join file as f on
+		e.file_no=f.file_no
+		where mentor_no=${mentor_no}
 	</select>
 
 	<!-- 멘토 자격증 파일 -->
@@ -167,6 +170,18 @@
 		update mentor set
 		classification=24 where mentor_no=#{mentor_no}
 	</update>
+	
+	<!-- 멘토 요청 승인 알림 -->
+	<insert id="mentorApplyAlarm" parameterType="MentorDTO">
+		insert into alarm(title, content, happen_time, read_yn, receiver_mem_no) 
+		values('멘토 요청이 승인되었습니다.', '멘토 요청이 승인되었습니다. 활발한 멘토 활동을 기대하겠습니다.', sysdate(), 'N', #{member_no})
+	</insert>
+
+	<!-- 멘토 요청 거부 알림 -->
+	<insert id="mentorApplyRefuse" parameterType="MentorDTO">
+		insert into alarm(title, content, happen_time, read_yn, receiver_mem_no) 
+		values('멘토 요청이 거부되었습니다.', '멘토 요청이 거부되었습니다. 프로필을 다시 작성해 주세요.', sysdate(), 'N', #{member_no})
+	</insert>
 
 	<!-- 멘티 리스트 -->
 	<select id="menteelist" resultType="MentorDTO">
@@ -183,6 +198,22 @@
 		member.member_no=mentor.member_no
 		left join mentee on
 		member.member_no=mentee.member_no
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					and mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+				<when test="keyword != null and search == 'mentor'">
+					member.classification=13 and (mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+				<when test="keyword != null and search == 'mentee'">
+					member.classification=12 and (mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+			</choose>
+		</where>
 		order by member.member_no desc
 		limit
 		#{startRow},#{endRow}
@@ -215,8 +246,34 @@
 		from mentee
 		) t on p.member_no =
 		t.member_no
-		where ref_step=0 and
-		board_no=1
+		where ref_step=0 and board_no=1
+		<where>
+			<choose> 
+				<when test="keyword != null and search == 'all'">
+					and (t.name LIKE CONCAT('%', #{keyword}, '%')
+					or
+					p.title LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+<!-- 				<when test="keyword != null and search == 'apply'">
+					(ref_step=0 and board_no=1) and(
+					subquery.name LIKE
+					CONCAT('%', #{keyword}, '%')
+					or subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					or subquery.years LIKE CONCAT('%', #{keyword},
+					'%'))
+				</when> -->
+<!-- 				<when test="keyword != null and search == 'refuse'">
+					subquery.classification = 24 and(
+					subquery.name LIKE
+					CONCAT('%', #{keyword}, '%')
+					or subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					or subquery.years LIKE CONCAT('%', #{keyword},
+					'%'))
+				</when> -->
+			</choose>
+		</where>
 		order by p.reg_date desc
 		limit ${startRow}, #{endRow}
 	</select>
@@ -399,15 +456,17 @@
 		file_url, extension, size from education
 		as e
 		left join file as f on
-		e.file_no=f.file_no where e.file_no=#{file_no} and file_serial_number=#{file_serial_number}
+		e.file_no=f.file_no where e.file_no=#{file_no} and
+		file_serial_number=#{file_serial_number}
 	</select>
 
 	<select id="efile" resultType="MentorDTO">
-		select * from file as f left join education as e on
+		select * from file as f left join
+		education as e on
 		e.file_no=f.file_no where f.file_no=#{file_no}
 	</select>
-	
-	
+
+
 	<!-- 결제 총 데이터 -->
 	<select id="getPay" resultType="int">
 		select count(*) from payment
@@ -415,27 +474,119 @@
 
 	<!-- 결제 리스트 -->
 	<select id="paylist" resultType="PaymentDTO">
-		select * from payment order by pay_time desc limit #{startRow}, #{endRow} 
+		select * from payment order by
+		pay_time desc limit #{startRow}, #{endRow}
 	</select>
-	
+
 	<!-- 신고 철회 -->
 	<update id="reportCancle" parameterType="int">
-		update report set classification=41 where report_no=#{report_no}
+		update report set
+		classification=41 where report_no=#{report_no}
 	</update>
-
 
 	<!-- 새로운 문의요청 -->
 	<select id="newinquire" resultType="int">
-		select count(*) from post where reply_yn='N'
+		select count(*) from post
+		where reply_yn='N'
 	</select>
 
+	<!-- 새로운 신고건수 -->
+	<select id="newReport" resultType="int">
+		select count(*) from report
+		where classification in(42,43)
+	</select>
 
+	<!-- 새로운 멘토요청 -->
+	<select id="newMentor" resultType="int">
+		select count(*) from mentor
+		where classification = 22
+	</select>
 
+	<!-- 오늘 발생한 신고 -->
+	<select id="newPay" resultType="int">
+		select count(*) from payment
+		where date(pay_time) = curdate();
+	</select>
 
+	<!-- 통계  -->
+	<select id="getMale" resultType="int">
+		select count(gender) from mentor
+		where gender='male'
+	</select>
 
+	<select id="getFemale" resultType="int">
+		select count(gender) from
+		mentor where gender='female'
+	</select>
 
+	<select id="geteemale" resultType="int">
+		select count(gender) from
+		mentee where gender='male'
+	</select>
 
+	<select id="geteefemale" resultType="int">
+		select count(gender) from
+		mentee where gender='female'
+	</select>
 
+	<select id="getTmale" resultType="int">
+		select count(gender) as
+		total_male
+		from(
+		select gender from mentor
+		where gender='male'
+		union all
+		select gender from mentee
+		where gender='male') as m_total
+	</select>
+
+	<select id="getTfemale" resultType="int">
+		select count(gender) as
+		total_female
+		from(
+		select gender from mentor
+		where gender='female'
+		union
+		all
+		select gender from mentee
+		where gender='female') as m_total
+	</select>
+
+	<select id="getsign_up" resultType="int">
+		select count(*) from member
+		where year(reg_date)=year(current_date()) and
+		month(reg_date)=month(current_date())
+	</select>
+
+	<select id="getlastsign_up" resultType="int">
+		SELECT COUNT(*) FROM
+		member
+		WHERE YEAR(reg_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)
+		AND MONTH(reg_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH)
+	</select>
+
+	<select id="getTsign_up" resultType="int">
+		select count(*) from member
+		where year(reg_date)=year(current_date()) 
+	</select>
+
+	<select id="getquit" resultType="int">
+		select count(*) from quit_member
+		where year(quit_date)=year(current_date()) and
+		month(quit_date)=month(current_date())
+	</select>
+
+	<select id="getlastquit" resultType="int">
+		SELECT COUNT(*) FROM quit_member
+		WHERE YEAR(quit_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)
+		AND MONTH(quit_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH)
+	</select>
+
+	<select id="getTquit" resultType="int">
+		select count(*) from
+		quit_member
+		where year(quit_date)=year(current_date())
+	</select>
 
 
 

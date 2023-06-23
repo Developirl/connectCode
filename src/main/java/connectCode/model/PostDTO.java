@@ -18,6 +18,9 @@ public class PostDTO {
 	private int startRow;
 	private int endRow;
 	
+	private String search;
+	private String keyword;
+	
 	private String name;
 	private String reply_status;
 

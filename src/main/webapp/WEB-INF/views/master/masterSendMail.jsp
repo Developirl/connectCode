@@ -15,10 +15,11 @@
 	</nav>
 
 	<form action="emailSend" method="post" onsubmit="return check()">
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
   	<input type="hidden" name="allEmail" value="${allEmail }">
 		<div class="m_box" align="center">
 			<div class="mail_box" align="center">
-			<table width=1200 align="center">
+			<table width=1004 align="center">
 				<tr align="center">
 					<td><input id="title" name="title" placeholder="제목을 입력해주세요."
 						style="width: 1000px; height: 35px;">
@@ -47,24 +48,14 @@ function check(){
 		return false;	
 	}
 	
-	if($.trim($("#title").val()).length > 30){
-		alert("제목은 30자 이하로 입력하세요.");
-		$("#title").focus;
-		return false;	
-	}
-
-/* 	var content = document.getElementById("content").value;
-	$('#content').val(content);
-	if (content == '<p>&nbsp;</p>') { //비어있는 경우
+ 	var content = document.getElementById("content").value;
+ 	$('#content').val(content);
+ 	if (content == '<p>&nbsp;</p>') { //비어있는 경우
 		alert("내용을 입력해주세요.")
 		oEditors.getById["content"].exec("FOCUS")
 		return false;
 	}
- 	if (content.length > 1500) { //비어있는 경우
-		alert("내용은 1500자 이하로 작성해주세요.")
-		oEditors.getById["content"].exec("FOCUS")
-		return false;
-	}  */
+ 
 }
 </script> 
 </body>
