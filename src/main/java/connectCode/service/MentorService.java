@@ -31,19 +31,20 @@ public interface MentorService {
 	
 	
 	// ****************************** 추가 ******************************
-	public int serviceTBL_insert(MentorDTO mentor);
 
 	public List<MentorDTO> education_select(MentorDTO mentor);
 
 	public int select_member_no(MentorDTO mentor);
 
-	public List<MentorDTO> serviceTBL_select(MentorDTO mentor);
+	public List<MentorDTO> service_select(MentorDTO mentor);
 
 	public List<MentorDTO> career_select(MentorDTO mentor);
 
-	public int serviceTBL_update(MentorDTO mentor);
+	public int service_update(MentorDTO mentor);
 
 	public int career_insert(MentorDTO mentor);
+
+	public int education_update(MentorDTO mentor);
 
 	
 }

@@ -24,7 +24,7 @@ var min = ['00','30'];
 var domain = ['직접입력','naver.com','gmail.com','daum.net','nate.com'];
 
 // [서비스 요금]
-var bank = ['','신한은행','국민은행','기업은행','농협은행','산업은행','수협은행','신협은행','우리은행','하나은행','한국씨티은행','카카오뱅크','케이뱅크','토스뱅크',
+var bank = ['신한은행','국민은행','기업은행','농협은행','산업은행','수협은행','신협은행','우리은행','하나은행','한국씨티은행','카카오뱅크','케이뱅크','토스뱅크',
 	'경남은행','광주은행','대구은행','부산은행','전북은행','제주은행','새마을은행','우체국','저축은행'];
 
 
@@ -204,7 +204,8 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 	
 // 지금부터 ajax로 페이지 전환 간드아아아아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
-	console.log(check);
+	console.log('check'+check);
+	console.log('mentor_no'+mentor_no);
 	
 // msel.intro 가 빈문자열 혹은 [수정하기] 버튼을 클릭한 경우
 	if(check == '' || check == null || check == true) {
@@ -238,10 +239,7 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 					
 				});
 				
-				// 파일 처리
-				//selectFile(element);
-				
-				// [상담 불가능한 요일] & [상담 가능한 시간] 버튼 처리하는 부분 !!!!!!
+			// [상담 불가능한 요일] & [상담 가능한 시간] 버튼 처리하는 부분 !!!!!!
 				
 				basicInfo_btn(); 		// 버튼 출력하는 함수 호출
 				basicInfo_btn_css();	// 버튼에 active 클래스 있으면 css 주고 set 객체에 저장
@@ -276,13 +274,6 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 						return;
 					}
 				// 유효성 검사 end
-					
-					/*// hidden value에 mentor_no 정의
-					var mentor_no_hidden = $('<input>').attr({
-						type : 'hidden',
-						name : 'mentor_no',
-						value : mentor_no
-					});*/
 					
 					// hidden value에 var unable_date_values [배열] 정의
 					var unable_date_hidden = $('<input>').attr({
@@ -339,6 +330,7 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 						},
 						error : function(){
 							alert("서버 오류");
+							console.log('mentor_no'+mentor_no);
 						}
 					});
 					
@@ -416,6 +408,8 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 
 // 내비바의 [인적사항] 클릭 시
 function personInfo_load(mentor_no, old_phone, old_email) {
+	
+	console.log('mentor_no'+mentor_no);
 	
 	$.ajax({
 		url: 'mentorPersonInfoPage_View',  // 입력 완료 페이지
@@ -514,14 +508,15 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 
 // ******************************************* 추가 start *******************************************
 // 서비스요금 page 불러오기
-function serviceChar_load(check,mentor_no) {
+function serviceChar_load(check,mentor_no,input_bank) {
 	
 // 지금부터 ajax로 페이지 전환 간드아아아아!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	
-	console.log(check);
+	console.log('check'+check);
+	console.log('mentor_no'+mentor_no);
 	
 // msel.account 가 빈문자열 혹은 [수정하기] 버튼을 클릭한 경우
-	if(check == '' || check == null || check == true) {
+	if(check === 'N' || check == true) {
 	
 		$.ajax({
 			url: 'mentorServiceCharPage',  // JSP 파일의 URL
@@ -536,17 +531,14 @@ function serviceChar_load(check,mentor_no) {
 				
 				// [은행명] select option
 				for (var i = 0; i < bank.length; i++) {
-					if(bank[i] == ''){
-						var option = $('<option>').attr({
-							value : ''
-						}).text('선택'); // 값 설정
-					}else {
-						var option = $('<option>').attr({
-							value : bank[i]
-						}).text(bank[i]); // 값 설정
-					}
+					var option = $('<option>').attr({
+						value : bank[i]
+					}).text(bank[i]); // 값 설정
 					$('#bank').append(option);
 				}
+				
+				// 사용자 입력 값 가져와서 selected 옵션 걸기
+				$('#bank').val(input_bank).prop("selected",true);
 				
 				// [상담 종류 :: 전화상담] 체크박스 체크되면 value='Y'로 하고, [전화 상담 요금] input text 활성
 				$('#call_mentoring').change(function() {
@@ -633,14 +625,14 @@ function serviceChar_load(check,mentor_no) {
 					$.post($(this).attr('action'), $(this).serialize(), function(response) {
 					
 						// 입력 완료 후 페이지 전환 (serviceChar_load()에 매개변수 새로 넣어서 재호출)
-						serviceChar_load(account);
+						serviceChar_load('Y',mentor_no,input_bank);
 						
 						// [수정하기] 버튼 클릭 이벤트
 						$('#edit_btn').click(function() {
 						      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 						      
 						      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-						      serviceChar_load(clicked,mentor_no);	
+						      serviceChar_load(clicked,mentor_no,input_bank);	
 						      
 						});  // [수정하기] 클릭 이벤트 end
 						
@@ -699,7 +691,7 @@ function eduInfo_load(check,mentor_no) {
 	
 	console.log(check);
 	
-	if(check === 0 || check == true) {
+	if(check === 'N' || check == true) {
 		
 		$.ajax({
 			url: 'mentorEduInfoPage',  // JSP 파일의 URL
@@ -755,7 +747,7 @@ function eduInfo_load(check,mentor_no) {
 										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
 									);
 					
-					// id 값이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
+					/*// id 값이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
 					var new_id = 'minor' + del_cnt;
 					$('#minor0').attr('id', new_id);
 					
@@ -775,7 +767,7 @@ function eduInfo_load(check,mentor_no) {
 						}else {
 							$('#myform').append('<input type="hidden" name="minor" value="'+$('#minor'+i).val()+'">');
 						}
-					}
+					}*/
 					
 					del_cnt++;
 					
@@ -826,7 +818,7 @@ function eduInfo_load(check,mentor_no) {
 						}
 				// 유효성 검사 end
 						
-				        // minor0 value 값 전달
+				        /*// minor0 value 값 전달
 						// click 이벤트 밖에 정의해야함
 						var minor = $('#minor0').val();
 						
@@ -834,7 +826,7 @@ function eduInfo_load(check,mentor_no) {
 							$('#myform').append('<input type="hidden" name="minor" value="N">');
 						}else {
 							$('#myform').append('<input type="hidden" name="minor" value="'+minor+'">');
-						}
+						}*/
 						
 						// form으로 데이터 전송 start
 						var form = $('#myform')[0];
@@ -851,7 +843,7 @@ function eduInfo_load(check,mentor_no) {
 								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
 								eduInfo_load(school,mentor_no);
 								
-								if(check == 0) {
+								if(check === 'N') {
 									// progress 올리기
 									var currentValue = parseInt($('#progress').val());
 									var updatedValue = currentValue + 25;
@@ -907,7 +899,7 @@ function expInfo_load(check,mentor_no) {
 	
 	console.log(check);
 	
-	if(check === 0 || check == true) {
+	if(check === 'N' || check == true) {
 		
 		$.ajax({
 			url: 'mentorExpInfoPage',  // JSP 파일의 URL
@@ -934,8 +926,8 @@ function expInfo_load(check,mentor_no) {
 					$('#task').append(option);
 				}
 				
-				// Air-datePicker 호출
-				$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				/*// Air-datePicker 호출
+				$(".datepicker-here").datepicker({maxDate : currentDate}); */
 				
 				
 				// 추가,삭제 버튼 구현 start
@@ -968,7 +960,11 @@ function expInfo_load(check,mentor_no) {
 					
 					// Air-datePicker 호출 따로 또 해줘야함..
 					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+					
 				});
+
+				// Air-datePicker 호출 따로 또 해줘야함..
+				$(".datepicker-here").datepicker({maxDate : currentDate}); 
 				
 				$('#myform').submit(function(){
 					event.preventDefault(); // form 기본 동작 막기
@@ -1011,7 +1007,7 @@ function expInfo_load(check,mentor_no) {
 								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
 								expInfo_load(company,mentor_no);
 								
-								if(check == 0) {
+								if(check === 'N') {
 									// progress 올리기
 									var currentValue = parseInt($('#progress').val());
 									var updatedValue = currentValue + 25;

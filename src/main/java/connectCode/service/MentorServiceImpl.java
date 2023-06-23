@@ -73,11 +73,6 @@ public class MentorServiceImpl implements MentorService{
 	
 	
 	// ****************************** 추가 ******************************
-	@Override
-	public int serviceTBL_insert(MentorDTO mentor) {
-		// TODO Auto-generated method stub
-		return mm.serviceTBL_insert(mentor);
-	}
 
 	@Override
 	public List<MentorDTO> education_select(MentorDTO mentor) {
@@ -90,8 +85,8 @@ public class MentorServiceImpl implements MentorService{
 	}
 
 	@Override
-	public List<MentorDTO> serviceTBL_select(MentorDTO mentor) {
-		return mm.serviceTBL_select(mentor);
+	public List<MentorDTO> service_select(MentorDTO mentor) {
+		return mm.service_select(mentor);
 	}
 
 	@Override
@@ -100,13 +95,18 @@ public class MentorServiceImpl implements MentorService{
 	}
 
 	@Override
-	public int serviceTBL_update(MentorDTO mentor) {
-		return mm.serviceTBL_update(mentor);
+	public int service_update(MentorDTO mentor) {
+		return mm.service_update(mentor);
 	}
 
 	@Override
 	public int career_insert(MentorDTO mentor) {
 		return mm.career_insert(mentor);
+	}
+
+	@Override
+	public int education_update(MentorDTO mentor) {
+		return mm.education_update(mentor);
 	}
 
 	

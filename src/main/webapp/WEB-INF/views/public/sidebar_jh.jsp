@@ -45,7 +45,7 @@
 				${msel.company}
 			</c:if>
 			<br>
-			<button class="profileEdit_btn" onclick="location.href='mentorProfileModifyPage?mentor_no=${msel.mentor_no}'">내 프로필 관리</button>
+			<button class="profileEdit_btn" onclick="location.href='mentorProfileModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}'">내 프로필 관리</button>
 		</div>
 
 		<hr class="division_hr">

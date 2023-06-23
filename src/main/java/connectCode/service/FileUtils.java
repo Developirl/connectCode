@@ -133,5 +133,11 @@ public class FileUtils {
     	
     }
     
-	
+    public boolean deleteFile(FileDTO file) {
+    	File old_file = new File(file.getFile_url());
+    	boolean result = old_file.delete();
+		
+		return result;
+    }
+    
 }

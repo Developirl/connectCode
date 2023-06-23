@@ -103,11 +103,11 @@
   <!-- 멘토 테이블 insert -->
    <insert id="insertNormalMentor">
   INSERT INTO MENTOR (name, phone, gender, birthday, email, intro, account, bank, account_name,
-  profile_img_no, technology, mentoring_location, unable_date, mentoring_time, profile_completed_yn,
+  profile_img_no, technology, mentoring_location, unable_date, mentoring_time, classification,
   member_no)	 
   VALUES(#{param1.name}, #{param1.phone}, #{param1.gender}, #{param1.birthday}, #{param1.email},
    #{param1.intro},  #{param1.account}, #{param1.bank},  #{param1.account_name}, null,
-   null, #{param1.mentoring_location}, null, null, null, #{param2}) 
+   null, #{param1.mentoring_location}, null, null, 21, #{param2}) 
   </insert>  
   
   <!--멘토테이블 member_no찾기 폰번호로(null값일때는 0이 리턴됨) -->
