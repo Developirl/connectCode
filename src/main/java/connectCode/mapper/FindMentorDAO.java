@@ -49,4 +49,6 @@ public interface FindMentorDAO {
 
 	MentoringDTO getMentoringInfo(int payment_no);
 
+	String getPhone(int mentor_no);
+
 }

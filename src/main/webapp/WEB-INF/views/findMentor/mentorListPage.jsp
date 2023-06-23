@@ -779,20 +779,24 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 									<tr>
 									
 									<c:if test="${! empty i.mentoring_payment[0]}">
-										<c:set var="payment" value="${fn:split(i.mentoring_payment[0], ';')}"/>
-											<td class="js-fontsize-11"><b>${payment[0]}</b><br>
-											<span class="js-priceColor">
-											<fmt:formatNumber value="${payment[1]}" type="number" var="numberType" />${numberType }
-											</span></td>
+											<c:set var="payment" value="${fn:split(i.mentoring_payment[0], ';')}"/>
+											<c:if test="${payment[1]+'1' != '01' }">
+												<td class="js-fontsize-11"><b>${payment[0]}</b><br>
+												<span class="js-priceColor">
+												<fmt:formatNumber value="${payment[1]}" type="number" var="numberType" />${numberType }
+												</span></td>
+											</c:if>
 									</c:if>
 
 
 									<c:if test="${! empty i.mentoring_payment[1]}">
 										<c:set var="payment" value="${fn:split(i.mentoring_payment[1], ';')}"/>
+										<c:if test="${payment[1]+'1' != '01' }">
 											<td class="js-fontsize-11"><b>${payment[0]}</b><br>
 											<span class="js-priceColor">
 											<fmt:formatNumber value="${payment[1]}" type="number" var="numberType" />${numberType }
 											</span></td>
+										</c:if>
 									</c:if>
 									
 									<c:if test="${empty i.mentoring_payment[0] && empty i.mentoring_payment[1] }">

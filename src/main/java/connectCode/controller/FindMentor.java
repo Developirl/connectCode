@@ -11,10 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import connectCode.model.AuthUser;
 import connectCode.model.FileDTO;
@@ -22,11 +29,14 @@ import connectCode.model.FindMentorBeanFactory;
 import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
+import connectCode.model.MentorDTO;
 import connectCode.model.MentoringDTO;
 import connectCode.model.PaymentDTO;
 import connectCode.service.FileService;
 import connectCode.service.FileUtils;
 import connectCode.service.FindMentorService;
+import connectCode.service.MasterService;
+import connectCode.service.MasterServiceImpl;
 
 @Controller
 @RequestMapping("/findMentor/*")
@@ -290,21 +300,44 @@ public class FindMentor {
 	@ResponseBody
 	public int insertMentoring_file(MentoringDTO dto,Model model) {
 		List<FileDTO> files = fileUtils.uploadFiles(dto.getFiles()); 
-		  System.out.println("form태그로 넘긴 파일 리스트 : "+files);
 		
 		int fileMaxNo = service.getFileMaxNo();  
 		fileService.saveFiles(fileMaxNo, files);
 		
-		System.out.println("인설트됨 ㅋ");
 		return fileMaxNo;
 	}
 	
 	
+	
+	// 멘토링 신청이 왔다는 문자 메세지 전송
+		@RequestMapping("mentoringApplyMsg")
+		public String mentoringApplyMsg(int mentor_no,
+				int payment_no,
+				RedirectAttributes rdattr) throws JsonProcessingException {
+
+			// 예약 정보를 보낸다. 
+			MentoringDTO mentoring = service.getMentoringInfo(payment_no);
+			// 문자 메세지를 전송할 번호를 구한다. 
+			String phone = service.getPhone(mentor_no);
+			service.sendMentoringApply(mentoring,phone);
+			
+			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("redirect:/findMentor/paymentCompletePage")
+		            .queryParam("order_no", mentoring.getOrder_no())
+		            .queryParam("mentoring_kind", mentoring.getMentoring_kind())
+		            .queryParam("reserve_date", mentoring.getReserve_date())
+		            .queryParam("pay_time", mentoring.getPay_time());
+
+		    // 리다이렉트
+		    return builder.toUriString();
+		}
+
+	
+	
+	// 결제 완료 페이지로 이동
 	@GetMapping("paymentCompletePage")
-	public String paymentCompletePage(int payment_no,Model model) {
+	public String paymentCompletePage(@ModelAttribute MentoringDTO mentoring,Model model) {
 		
-		MentoringDTO mentoring = service.getMentoringInfo(payment_no);
-		model.addAttribute(mentoring);
+		model.addAttribute("mentoring",mentoring);
 		
 		return "findMentor/paymentComplete";
 	}

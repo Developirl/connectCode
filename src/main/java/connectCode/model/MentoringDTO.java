@@ -45,4 +45,7 @@ public class MentoringDTO {
 	private String buyer_email;
 	private String buyer_phone;
 	
+	//결제 완료 후 필요한 데이터를 사용하기 위해 추가 
+	private String mentoring_kind;
+	
 }

@@ -52,4 +52,8 @@ public interface FindMentorService {
 
 	MentoringDTO getMentoringInfo(int payment_no);
 
+	String getPhone(int mentor_no);
+
+	void sendMentoringApply(MentoringDTO mentoring, String phone);
+
 }
