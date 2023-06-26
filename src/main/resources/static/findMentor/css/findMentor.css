@@ -1,0 +1,313 @@
+
+/* 내가 사용하는 개인 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+
+.js-allcontentbox {
+	margin-top: 40px;
+}
+
+
+.js-profileCard {
+	float:left;
+	border: 1px solid white;
+	border-radius:10px;
+	padding: 10px 15px;
+	padding-top:50px;
+	padding-right:30px;
+	width: 45%;
+	margin-bottom: 30px;
+	text-align:left;
+	box-shadow: 6px 6px 15px 1px #EDF2F2;
+	position:relative;
+}
+
+@media(max-width:1400px){
+   .js-profileCard{
+      width:100%;
+      margin-left: 0!important;
+      margin-right: 0!important;
+   }   
+   .js-allcontentbox {
+}
+  
+}
+
+.js-profileCard:hover{
+	box-shadow: 8px 8px 28px 4px #E1E6E6;
+}
+
+.js-circular-image {
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
+}
+
+.js-allcontentbox:nth-child(odd) .js-profileCard {
+	margin-right: 50px;
+	margin-left:3%;
+}
+
+.js-profileCardtable td:nth-child(even){
+    padding-left:30px;
+}
+
+
+.js-profileCardtable .js-profileimgtd{
+    text-align: center;
+}
+
+.js-profileimgtd{
+    width:180px!important;
+}
+
+.js-profileCardtable td{
+    padding-bottom:30px;
+    padding-left:20px;
+}
+
+.js-mentorlistwrapper{
+	border: 1px solid white;	
+    overflow: auto;
+    padding-rigth:0;
+}
+
+.js-technotag{
+    display:inline-block;
+    margin-right:10px;
+    border:1px solid #004EA2;
+    color:#004EA2;
+    /*background:#FAF7F5;*/
+    border-radius: 10px;
+    padding:3px 15px;
+    margin-bottom:10px;
+    font-size:11pt!important;
+    
+}
+
+.js-profileCardtable *{
+    font-family: 'Noto Sans KR', sans-serif!important;
+}
+
+
+.js-profileCardName{
+    font-weight: bold;
+    font-size:14pt;
+    margin-bottom:10px;
+    display:block;
+}
+.js-profileCardIntro{
+    font-weight:400;
+    font-size:12pt;
+    display: block;
+    margin-bottom:10px;
+}
+
+.js-priceColor{
+    color:#A6A6A6;
+}
+.js-reservationbutton{
+   border:1px solid #004EA2;
+   background:#004EA2;
+   color:white;
+   padding:15px 30px;
+   text-align: center;
+   border-radius: 10px;
+   cursor: pointer;
+   margin-left:20px;
+   font-size:11pt;
+}
+
+.js-reservationbutton-close{
+   font-size:11pt;
+   border:1px solid #ccc;
+   background: #ccc;
+   color:white;
+   padding:15px 30px;
+   text-align: center;
+   border-radius: 10px;
+}
+
+.js-reservationbutton:hover{
+   border:1px solid #004EA2;
+   background:white;
+   color:#004EA2;
+}
+
+.js-reviewcountstyle{
+  font-size:11pt;
+  color:#A6A6A6;
+}
+
+
+.js-mentoringPrice td{
+   padding-right:10px;
+   padding-left:0;
+}
+
+.js-career,.js-company{
+   color:#A6A6A6;
+}
+.js-career-mini,.js-company-mini{
+   color:#A6A6A6;
+   font-size:11pt;   
+}
+
+.bi-bookmark,.bi-bookmark-fill{
+    cursor: pointer;
+    color:#F2B661;
+}
+
+.js-tech-tabletd{
+    height: 180px;
+}
+
+.js-fontsize-11{
+    font-size:11pt;
+}
+
+
+/*여기부터는 필터 영역 */
+.js-mentorListfilterbox{
+	margin:50px 50px 40px 30px;
+	text-align:left;
+}
+
+.js-mentorListfilterbox * {
+	font-family: 'Noto Sans KR', sans-serif!important;
+	font-size:11pt!important;
+}
+
+
+/*드롭다운*/
+.dropdown{
+  position : relative;
+  display : inline-block;
+  margin-right: 12px;
+}
+
+.dropbtn{
+  border : 3px solid #B2CCFF;
+  border-radius : 30px;
+  background:white;
+  font-weight: 400;
+  color : #2570BA;
+  padding : 5px 5px;
+  width :120px;
+  text-align: center;
+  cursor : pointer;
+  font-size : 12pt!important;
+  margin-top:10px;
+  
+}
+
+.filterreset{
+	background: #E6EBEB;
+}
+
+.dropdown-content{
+  display : none;
+  position : absolute;
+  z-index : 1; /*다른 요소들보다 앞에 배치*/
+  font-weight: 400;
+  background-color: white;
+  border:2px solid #004EA2;
+  min-width : 200px;
+  overflow: scroll;
+  font-size:12pt!important;
+  border-radius: 9px;
+}
+
+.dropdown-content a{
+	  display : block;
+	  text-decoration : none;
+	  color : #004EA2;
+	  font-size: 12pt;
+	  padding : 12px 20px;
+}
+
+.dropdown-content a:hover{
+	  background-color : #ececec
+}
+
+.dropdown:hover .dropdown-content {
+  	display: block;	
+}
+
+#js-choicefilter, #js-choicefilter-etc1,#js-choicefilter-etc2,#js-choicefilter-etc3{
+	  margin-top:50px;
+	  margin-left:10px;
+	  color:#A6A6A6;
+	  font-size:12pt!important;
+}
+#js-choicefilter-etc1,#js-choicefilter-etc2,#js-choicefilter-etc3{
+	  margin-top:10px;
+	  margin-right: 10px;
+}
+/*
+#js-choicefilter-etc1,#js-choicefilter-etc2{
+     display: inline-block;
+     margin-right:15px;
+}
+*/
+/* .js-mentorListfilterbox .bi-arrow-clockwise{
+	color:#9E9E9E;
+	margin-top:20px;
+	cursor: pointer;
+}                           ------------------------------------------------
+ */
+
+.js-arrowbox *{
+    display: flex;
+}
+
+.dropdown .dropbtn_icon,.js-techStack{
+	font-size:12pt!important;
+}
+
+#js-arrow-clockwise-font{
+    font-size:10pt!important;
+    display:inline;
+    color:#8C8C8C;
+}
+
+.js-techStack,.js-gender,.js-region,.js-career{
+    font-size:12pt!important;
+}
+
+
+.js-searchbutton{
+	display:block;
+	margin-top:10px;
+	margin-left:10px;
+	border:1px solid #8C8C8C;
+	color:#8C8C8C;
+	background:white;
+	border-radius: 8px;
+	padding:3px 10px; 
+	font-size:11pt!important;
+}
+
+.js-keywordsearch td:nth-child(2){
+    text-align:right!important;
+}
+
+.bi-arrow-clockwise{
+    width:120px;
+}
+
+#afterfilter{
+    display: block;
+    text-align:center;
+    color:#006B99;
+    margin-top:20px;
+}
+
+
+/* ------ 페이징 처리 안하는 경우 상단으로 가기 화살표 --- */
+
+.js-toparrow{
+  position: fixed;
+  top: 80%;
+  width: 99%; /* 좌우 배치 비율 조정 */
+   
+}

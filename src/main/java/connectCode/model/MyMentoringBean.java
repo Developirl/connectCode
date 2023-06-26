@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 import org.apache.ibatis.type.Alias;
+
 import lombok.Data;
 
 @Data

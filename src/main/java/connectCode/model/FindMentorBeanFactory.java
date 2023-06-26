@@ -1,7 +1,5 @@
 package connectCode.model;
 
-import lombok.Data;
-
 public class FindMentorBeanFactory {
 
 	public String[] techStacks() {

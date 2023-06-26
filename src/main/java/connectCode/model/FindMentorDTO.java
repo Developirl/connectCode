@@ -1,12 +1,5 @@
 package connectCode.model;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
-import org.springframework.stereotype.Service;
-
-import connectCode.service.FindMentorPageMaker;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

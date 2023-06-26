@@ -28,5 +28,111 @@
 		GROUP BY mentoring_kind
 		ORDER BY mentoring_kind
 	</select>
+	
+	<!-- 즐겨찾기한 멘토 리스트 뽑는 SQL -->
+	<select id="getLikedMentorList" resultType="FindMentorDTO">
+		SELECT *
+		FROM mentor LEFT JOIN (SELECT career.mentor_no, company, years, task, entering_date
+							   FROM career INNER JOIN (SELECT mentor_no, MAX(entering_date) max_entering_date FROM career GROUP BY mentor_no) a
+							   			   ON career.mentor_no = a.mentor_no
+							   WHERE career.entering_date = a.max_entering_date) c
+					ON mentor.mentor_no = c.mentor_no
+					LEFT JOIN file
+					ON mentor.profile_img_no = file.file_no
+		WHERE mentor.mentor_no IN (SELECT mentor_no FROM bookmark WHERE mentee_no = #{mentee_no})
+	</select>
+	
+	<!-- 멘티 정보 수정 -->
+	<update id="modifyMenteeInfo">
+		UPDATE mentee
+		SET email = #{email}, desired_job = #{desired_job}, technology_stack = #{technology_stack}, git = #{git}, blog = #{blog}
+		WHERE mentee_no = #{mentee_no}
+	</update>
+	
+	<!-- 1대1 문의 게시판 SQL START -->
+	<select id="getInquireList" resultType="PostBoardDTO">
+		SELECT * 
+		FROM post 
+		WHERE board_no = 1 AND member_no = #{member_no}
+		ORDER BY reg_date DESC
+		LIMIT #{firstLow}, 10
+	</select>
+	
+	<select id="getInquireListTotal" resultType="int">
+		SELECT COUNT(*) FROM post WHERE board_no = 1 AND member_no = #{menber_no}
+	</select>
+	
+	<insert id="insertInquire">
+		INSERT INTO post (ref_step, title, content, reg_date, reply_yn, member_no, board_no) VALUES (0, #{title}, #{content}, SYSDATE(), 'N', #{member_no}, 1)
+	</insert>
+	
+	<select id="getInquire" resultType="PostBoardDTO">
+		SELECT * FROM post WHERE post_no = #{post_no}
+	</select>
+	
+	<select id="getInquireReply" resultType="String">
+		SELECT content FORM post WHERE ref_post_no = #{getInquireReply} AND ref_step = 1
+	</select>
+	
+	<delete id="deleteInquire">
+		DELETE FROM post WHERE post_no = #{post_no}
+	</delete>
+	<!-- 1대1 문의 게시판 SQL END -->
+	
+	<!-- ***************************** 혜지 작성 ************************** -->
+	<select	id="menteeDetail" resultType="MenteeDTO">
+		select * from mentee left join member on mentee.member_no=member.member_no
+		where mentee_no=#{mentee_no}
+	</select>
+
+	<insert id="insertquittbl" parameterType="MenteeDTO">
+		insert into quit_member values(sysdate(),#{quit_reason},#{member_no})
+	</insert>
+	
+	<update id="quit_mentee" parameterType="MenteeDTO">
+		update member set classification = 14 where member_no=#{member_no}
+	</update>
+	
+	<update id="menteeNewPwd" parameterType="MenteeDTO">
+		update member set password=#{password} where member_no=#{member_no}
+	</update>
+	<!-- ***************************** 혜지 작성 ************************** -->
+
+<!--  지수 작업 영역  -->
+	<select id="getMentoringHistory" parameterType="int" resultType="MenteeMentoringDTO">
+		select * from review right join
+			(select p.pay_amount,p.payment_no,p.iamport_order_no,p.order_no, b.*,p.pay_state from payment p right join(
+					SELECT menClassification,name,mentoring_kind,reserve_date,mentee_no,mentor_no,mentoring_no FROM member 
+					JOIN(  
+						(SELECT reserve_date,m.classification as menClassification,mentoring_kind,mentoring_no,service_no,mentor_no,mentee_no 
+						FROM mentoring m 
+						JOIN service USING(service_no)
+						WHERE mentee_no = #{mentee_no} 
+						AND classification IN (31,32,35)
+					) a 
+					JOIN mentor USING(mentor_no)) USING(member_no)    
+					) b using(mentoring_no) ) sub using(mentoring_no) where pay_state != 'cancel'
+       
+	</select>
+	
+	<!--  review insert -->
+	<insert id="insertReview" parameterType="ReviewDTO">
+		<selectKey resultType="int" keyProperty="member_no" order="BEFORE">
+			select member_no from mentor where mentor_no =
+				 (select mentor_no from mentoring m join service s using(service_no) where mentoring_no = #{mentoring_no}) 
+		</selectKey>
+			INSERT INTO review(rating,content,reg_date,mentoring_no) values(#{rating},#{content},sysdate(),#{mentoring_no})
+	</insert>
+	
+	
+	<!--  리뷰 insert 시 멘토에게 리뷰가 달렸다는 알림 보내기  -->
+	<insert id="sendReviewAlarm">
+		INSERT INTO ALARM(title,content,happen_time,read_yn,receiver_mem_no,sender_mem_no) 
+			VALUES('새로운 후기가 있습니다. ','멘토링에 대한 후기를 확인해보세요. ',sysdate(),'N',#{member_no},
+					(SELECT member_no FROM mentee WHERE mentee_no = #{mentee_no}))
+	</insert>
+		
+		
+	
 
 </mapper>
