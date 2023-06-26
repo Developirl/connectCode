@@ -2,35 +2,31 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
-		정확한 정보를 직접 입력한 후, [재직증명서] 등 증빙자료를 첨부해 주시기 바랍니다.<br>
-		제출하신 자료는 운영팀에서 진위여부 확인 및 프로필 반영 후 즉시 삭제됩니다.
-</div>	
-
 <div class="cont_mar">
 
 	<c:forEach var="car_sel" items="${car_sel}">
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">회사명</div>
-			<div class="mentor_info infoInp">${car_sel.company}</div>
-		</div>
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">재직기간</div>
-			<div class="mentor_info infoInp">
-				<fmt:formatDate value="${car_sel.e_date}" pattern="yyyy년 MM월 dd일"/>
-				 ~ 
-				<c:if test="${empty car_sel.d_date}">[재직중]</c:if>
-				<c:if test="${!empty car_sel.d_date}"><fmt:formatDate value="${car_sel.d_date}" pattern="yyyy년 MM월 dd일"/></c:if>
+		<div class="infoTitle">
+			<div style="display: flex;">
+				<div class="mentor_info infoCtg">회사명</div>
+				<div class="mentor_info infoInp">${car_sel.company}</div>
+			</div>
+			<div style="display: flex;">
+				<div class="mentor_info infoCtg">재직기간</div>
+				<div class="mentor_info infoInp">
+					<fmt:formatDate value="${car_sel.e_date}" pattern="yyyy년 MM월 dd일"/>
+					 ~ 
+					<c:if test="${empty car_sel.d_date}">[재직중]</c:if>
+					<c:if test="${!empty car_sel.d_date}"><fmt:formatDate value="${car_sel.d_date}" pattern="yyyy년 MM월 dd일"/></c:if>
+				</div>
+			</div>
+			<div style="display: flex;">
+				<div class="mentor_info infoCtg">직무</div>
+				<div class="mentor_info infoInp">${car_sel.task}</div>
 			</div>
 		</div>
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">직무</div>
-			<div class="mentor_info infoInp">${car_sel.task}</div>
-		</div>
-		<div style="width: 70%; padding: 20px 0px;">
-			${edu_sel.origin_name}
-		</div>
 	</c:forEach>
+	
+	
 	<div style="display: flex;">
 		<div class="mentor_info infoCtg">첨부파일</div>
 		<div class="mentor_info infoInp"></div>
@@ -41,7 +37,9 @@
 
 <!-- 수정 btn -->
 <div align="center" class="cont_mar">
-	<button class="custom_btn submit" id="edit_btn" type="button" style="width: 200px;">수정하기</button>
+	<c:if test="${msel.classification != 22}">
+		<button class="custom_btn submit" id="edit_btn" type="button" style="width: 200px;">수정하기</button>
+	</c:if>
 </div>
  
 <script src="/mentor/datepicker/jquery-3.1.1.min.js"></script> <!-- 값 제어를 위해 jquery -->

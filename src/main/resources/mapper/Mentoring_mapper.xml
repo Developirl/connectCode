@@ -2,95 +2,105 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="connectCode.mapper.MentorMapper">
+<mapper namespace="connectCode.mapper.MentorDao">
 
 	<!-- 멘토링 신청(apply) 게시판 목록 -->
 	<select id="list" parameterType="my_mentoring" resultType="my_mentoring">
 	  SELECT *
-	  FROM mentee m JOIN mentoring mt USING (mentee_no)
-	  JOIN service ser USING (service_no)
-	  <where>
-	  	mentor_no = #{mentor_no}
+	  FROM mentee m 
+	  JOIN mentoring mt using (mentee_no)
+	  JOIN service s USING (service_no)
+	  where classification = 31 and mentor_no = #{mentor_no}	  
+	<!--   <where> -->
 	    <if test="search == null and keyword != null">
-	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
 	    </if>
-	  </where>
+	<!--   </where> -->
 		  <choose>
 			    <when test="search == null">
-			      ORDER BY mt.apply_time DESC
+			      ORDER BY apply_time DESC
 			    </when>
 			    <when test="search == 'new'">
-			      ORDER BY mt.apply_time DESC
+			      ORDER BY apply_time DESC
 			    </when>
 			    <when test="search == 'old'">
-			      ORDER BY mt.apply_time ASC
+			      ORDER BY apply_time ASC
 			    </when>
 		  </choose>
 	  LIMIT #{startRow}, 10
 	</select>
-
-	<!-- 게시판 목록 
-	<select id="list" parameterType="my_mentoring" resultType="my_mentoring">
-      SELECT * from mentee m join mentoring mt 
-	  on(mt.mentee_no = m.mentee_no)
-	  
-	  order by mt.apply_time desc  
-	 
-	 검색  
-	  <where>
-	  	<if test="search == null and keyword != null ">	  		
-	  		m.name like '%'||#{keyword}||'%'  order by mt.apply_time desc limit #{startRow}, 10 
-		정렬 
-		<choose>
-		  	<when test="search == null ">	  		
-		  		order by mt.apply_time desc  limit #{startRow}, 10 
-		  	</when>
-		  	<when test="search == 'new' ">	  		
-		  		order by mt.apply_time desc  limit #{startRow}, 10
-		  	</when>
-		  	<when test="search == 'old' ">
-		  		order by mt.apply_time asc  limit #{startRow}, 10
-		  	</when>
-	  	</choose>
-	  	</if>
-	  	</where>    
-	  	 limit #{startRow}, 10
-	</select> -->
 	
 	<!-- 멘토링 신청(apply) 게시판 총게시물 수 -->
-	<select id="getListCount" parameterType="my_mentoring" resultType="int">
-		select count(*) from mentee m
-		JOIN mentoring mt USING(mentee_no) 
-		JOIN service ser USING (service_no)
-		<where>
-		mentor_no = #{mentor_no}
+	<select id="getListCount" parameterType="my_mentoring" resultType="int"> 
+	  select count(*)
+	  FROM mentee m 
+	  JOIN mentoring mt using (mentee_no)
+	  JOIN service s USING (service_no)
+	  where classification = 31 and mentor_no = #{mentor_no}
+		<!-- <where> -->
 	    <if test="search == null and keyword != null">
-	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
 	    </if>
-	  </where>
+	    <choose>
+			    <when test="search == null">
+			      ORDER BY apply_time DESC
+			    </when>
+			    <when test="search == 'new'">
+			      ORDER BY apply_time DESC
+			    </when>
+			    <when test="search == 'old'">
+			      ORDER BY apply_time ASC
+			    </when>
+		  </choose>
+	<!--   </where> -->
 	</select>
-	<!--          신청 게시판 끝                    -->
+	
+	<!-- **************** 추가 **************** -->
+	<select id="apply_detail" resultType="my_mentoring">
+		SELECT *
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s USING (service_no)
+		LEFT JOIN file f USING (file_no)
+		where classification = 31 and mentoring_no = #{mentoring_no}	
+	</select>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 추가 **************** -->
+	<update id="update_apply_ok" parameterType="int">
+		update mentoring set classification = 32 where mentoring_no = #{mentoring_no}
+	</update>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 추가 **************** -->
+	<update id="update_apply_no" parameterType="int">
+		update mentoring set classification = 33 where mentoring_no = #{mentoring_no}
+	</update>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 신청 멘토링 게시판 끝 **************** -->
 	
 	<!-- 멘토링 예약(Accepted) 게시판 목록 -->
 	<select id="acceptedList" parameterType="my_mentoring" resultType="my_mentoring">
 	  SELECT *
-	  FROM mentee m JOIN mentoring mt ON (mt.mentee_no = m.mentee_no)
-	  JOIN service s ON mt.service_no = s.service_no
-	  where mt.classification in (31,32)
-	 <!--  <where> -->
+	  FROM mentee m 
+	  JOIN mentoring mt using (mentee_no)
+	  JOIN service s using (service_no)
+	  where mentor_no = #{mentor_no} and classification IN(32,34)
+		<!-- <where> -->
 	    <if test="search == null and keyword != null">
-	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
 	    </if>
 	 <!--  </where> -->
 		  <choose>
-			    <when test="search == 'all'">
-			      ORDER BY mt.apply_time DESC
+			    <when test="search == 'no'">
+			     ORDER BY reserve_date DESC
 			    </when>
 			    <when test="search == 'accept'">
-			      and mt.classification='31' ORDER BY mt.apply_time DESC
+			      and classification='32' ORDER BY reserve_date DESC
 			    </when>
 			    <when test="search == 'cancel'">
-			      and mt.classification='32' ORDER BY mt.apply_time DESC
+			      and classification='34' ORDER BY reserve_date DESC
 			    </when>
 		  </choose>
 	  LIMIT #{startRow}, 10
@@ -98,24 +108,233 @@
 	
 	<!-- 멘토링 예약(Accepted) 게시판 총게시물 수 -->
 	<select id="getAcceptedListCount" parameterType="my_mentoring" resultType="int">
-		select count(*) from mentee m join mentoring mt 
-		on(mt.mentee_no = m.mentee_no) JOIN service s ON mt.service_no = s.service_no 
-		where mt.classification in (31,32)
-		<!--  <where> -->
+		SELECT count(*)
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s using (service_no)
+		where mentor_no = #{mentor_no} and classification IN(32,34)
+		
+		<!-- <where>  -->
 	    <if test="search == null and keyword != null">
-	      AND m.name LIKE CONCAT('%', #{keyword}, '%')
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
 	    </if>
-	 <!--  </where> -->
+	 	<!-- </where> -->
 	  	<choose>
-			    <when test="search == 'all'">
-			      ORDER BY mt.apply_time DESC
+			    <when test="search == 'no'">
+			      ORDER BY reserve_date DESC
 			    </when>
 			    <when test="search == 'accept'">
-			      and mt.classification='31' ORDER BY mt.apply_time DESC
+			      and classification='32' ORDER BY reserve_date DESC
 			    </when>
 			    <when test="search == 'cancel'">
-			      and mt.classification='32' ORDER BY mt.apply_time DESC
+			      and classification='34' ORDER BY reserve_date DESC
 			    </when>
 		  </choose>
 	</select>
+	
+	<!-- **************** 추가 **************** -->
+	<select id="accepted_detail" resultType="my_mentoring">
+		SELECT *
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s USING (service_no)
+		where classification IN(32,34) and mentoring_no = #{mentoring_no}	
+	</select>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 추가 **************** -->
+	<update id="update_accepted_no" parameterType="my_mentoring">
+		update mentoring 
+		set classification = 34, cancel_reason = #{cancel_reason} 
+		where mentoring_no = #{mentoring_no} 
+	</update>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 추가 **************** -->
+	<update id="update_accepted_ok" parameterType="int">
+		update mentoring set classification = 35 where mentoring_no = #{mentoring_no}
+	</update>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- 예약(멘토링)취소사유  -->
+	<select id="acceptedCancel_reason" parameterType="int" resultType="my_mentoring">
+		SELECT *
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s USING (service_no)
+		where classification = 34 and mentoring_no = #{mentoring_no}	
+	</select>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 예약 멘토링 게시판 끝 **************** -->
+	<!-- <select id="ref_post_no_max" resultType="int">
+		SELECT COALESCE(max(post_no),0)+1 AS ref_post_no FROM post
+	</select> -->
+	
+	<!-- 일대일 게시판 작성 -->
+	<insert id="inqueryBoard" parameterType="my_mentoring">
+		<selectKey keyProperty="post_no" order="BEFORE" resultType="int">
+		    SELECT COALESCE(max(post_no),0)+1 FROM post
+		</selectKey>	
+	  insert into post (post_no, ref_post_no, ref_step, title, content, reg_date, reply_yn, member_no, board_no)
+	  values (#{post_no}, #{post_no}, 0, #{title}, #{content}, sysdate(), 'N', #{member_no} , 1)
+	</insert>
+		
+	<!-- 일대일 게시판 목록 --> 
+	<select id="inqueryList" parameterType="my_mentoring" resultType="my_mentoring">
+	  SELECT *
+	  FROM board b JOIN post p using(board_no)
+	  JOIN mentor m using (member_no)
+	  where mentor_no = #{mentor_no}
+	  
+		  <choose>
+			    <when test="search == null">
+			     	order by reg_date DESC
+			    </when> 
+			    <when test="search == 'start'">
+			      	and reply_yn='N'  order by reg_date DESC
+			    </when>
+			    <when test="search == 'end'">
+			      	and reply_yn='Y' order by reg_date DESC
+			    </when>
+		  </choose>
+		  
+	  LIMIT #{startRow}, 10
+	</select>
+
+	<!-- 일대일 게시판 총게시물 수 -->
+	<select id="getInqueryListCount" parameterType="my_mentoring" resultType="int">
+		select count(*) 
+		from board b join post p using(board_no)
+		join mentor m using (member_no) where mentor_no = #{mentor_no}
+		
+		<choose>
+			    <when test="search == null">
+			     	order by reg_date DESC
+			    </when>
+			    <when test="search == 'start'">
+			      	and reply_yn='N'  order by reg_date DESC
+			    </when>
+			    <when test="search == 'end'">
+			      	and reply_yn='Y' order by reg_date DESC
+			    </when>
+		  </choose>
+	</select>
+	
+	<!-- 일대일 상세페이지  -->
+	<select id="getDetail" parameterType="int" resultType="my_mentoring">
+		select *
+		from board b join post p using(board_no)
+		join mentor m using (member_no) where post_no = #{post_no}
+	</select>
+	
+	<!-- 일대일 답변글  -->
+	<select id="inqueryReply" parameterType="int" resultType="my_mentoring">
+		SELECT *
+		FROM board b JOIN post p using(board_no)
+		JOIN mentor m using (member_no) WHERE ref_post_no = #{ref_post_no} and ref_step = 1
+	</select>
+	
+	<!-- 일대일 수정 -->
+	<update id="inqueryUpdate_ok" parameterType="my_mentoring">
+		update post set content = #{content} where post_no = #{post_no} and reply_yn = 'N'
+	</update>
+	
+	<!-- 일대일 삭제 -->
+	<delete id="delete_ok" parameterType="int">
+		delete from post where post_no = #{post_no} and ref_step = 0
+	</delete>
+	<!-- **************** 일대일 멘토링 게시판 끝 **************** -->
+	
+	<!-- 지난 멘토링 (finished) 게시판 목록 -->
+	<select id="finishedList" parameterType="my_mentoring" resultType="my_mentoring">
+	  SELECT *
+	  FROM mentee m 
+	  JOIN mentoring mt using (mentee_no)
+	  JOIN service s USING (service_no)
+	  where classification IN(33, 34, 35, 36) and mentor_no = #{mentor_no}
+	<!--   <where> -->
+	    <if test="search == null and keyword != null">
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	<!--   </where> -->
+		  <choose>
+			    <when test="search == 'last'">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last1'">
+			      and classification = '33' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last2'">
+			      and classification = '34' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last3'">
+			      and classification = '35' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last4'">
+			      and classification = '36' ORDER BY mt.apply_time DESC
+			    </when>
+		  </choose>
+	  LIMIT #{startRow}, 10
+	</select>
+	
+	<!-- 지난 멘토링 (finished) 게시판 총게시물 수 -->
+	<select id="getFinishedListCount" parameterType="my_mentoring" resultType="int"> 
+	  select count(*)
+	  FROM mentee m 
+	  JOIN mentoring mt using (mentee_no)
+	  JOIN service s USING (service_no)
+	  where classification IN(33, 34, 35, 36) and mentor_no = #{mentor_no}
+		<!-- <where> -->
+	    <if test="search == null and keyword != null">
+	      AND name LIKE CONCAT('%', #{keyword}, '%')
+	    </if>
+	    <choose>
+			    <when test="search == 'last'">
+			      ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last1'">
+			      and classification = '33' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last2'">
+			      and classification = '34' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last3'">
+			      and classification = '35' ORDER BY mt.apply_time DESC
+			    </when>
+			    <when test="search == 'last4'">
+			      and classification = '36' ORDER BY mt.apply_time DESC
+			    </when>
+		  </choose>
+	<!--   </where> -->
+	</select>
+	
+	<!-- **************** 추가 **************** -->
+	<select id="finished_detail" resultType="my_mentoring">
+		SELECT *
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s USING (service_no)
+		where classification IN(33,34,35,36) and mentoring_no = #{mentoring_no}	
+	</select>
+	<!-- **************** 추가 끝 **************** -->
+	
+	<!-- **************** 추가 **************** -->
+	<!-- 상담(멘토링)완료 후기  -->
+	<select id="mentoringReview" parameterType="int" resultType="my_mentoring">
+		SELECT *
+		FROM mentee m 
+		JOIN mentoring mt using (mentee_no)
+		JOIN service s USING (service_no)
+		JOIN review r USING (mentoring_no)
+		where classification = 35 and mentoring_no = #{mentoring_no}	
+	</select>
+	<!-- **************** 추가 끝 **************** -->
+	<!-- **************** 지난 멘토링 게시판 끝 **************** -->
+	
+	<!-- 멘토 프로필 정보 불러오기 (mentor_no에 해당하는 mentor = member)-->
+	<select id="mentorProfile" parameterType="my_mentoring" resultType="my_mentoring">
+		select * from mentor where mentor_no = #{mentor_no}
+	</select>
+	
 </mapper>

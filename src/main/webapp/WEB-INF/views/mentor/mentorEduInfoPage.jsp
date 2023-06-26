@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<form method="post" <c:if test="${empty edu_sel}">action="mentorEduInfo_Up_first"</c:if><c:if test="${!empty edu_sel}">action="mentorEduInfo_Up"</c:if> id="myform" enctype="multipart/form-data">
+<form method="post" action="mentorEduInfo_Up" id="myform" enctype="multipart/form-data">
 
 	<!-- 승인 전,후 각각 div로 감싸서 show/hide로 하기? -->
 	<!-- 승인 전 화면 start -->
@@ -12,9 +12,10 @@
 	</div>	
 	
 	<div class="cont_mar" id="plus_content" style="margin-bottom: 10px;">
+	
 		<c:if test="${!empty edu_sel}">
-			<c:forEach var="edu_sel" items="${edu_sel}">
-				<div style="margin-bottom: 50px;">
+			<c:forEach var="edu_sel" items="${edu_sel}" varStatus="status">
+				<div class="input_content" id="forDelete_content${status.index}" style="margin-bottom: 50px;">
 				
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
@@ -30,16 +31,15 @@
 							<div style="display: flex;">
 								<div class="mentor_info infoCtg">입학일자</div>
 								<div class="mentor_info infoInp">
-									<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" 
-							       			value="<fmt:formatDate value='${edu_sel.e_date}' pattern='yyyy-MM'/>" readonly="readonly">
+									<input type="text" class="datepicker-here entering_date${status.index} width100" id="entering_date" name="entering_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
 								</div>
 							</div>
 							<div style="display: flex;">
 								<div class="mentor_info infoCtg">졸업일자</div>
 								<div class="mentor_info infoInp">
-									<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" value="${edu_sel.g_date}" readonly="readonly">
+									<input type="text" class="datepicker-here graduation_date${status.index} width100" id="graduation_date" name="graduation_date"
+							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
 								</div>
 							</div>
 						</div>
@@ -48,7 +48,12 @@
 						<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
 						<div class="mentor_info infoInp">
 							<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
-							<select id="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;"></select>
+							<select class="degree${status.index}" name="degree" style="width: 50%; height: 50%; margin-top: 5px;">
+								<option value="N">선택</option>
+								<option value="학사">학사</option>
+								<option value="석사">석사</option>
+								<option value="박사">박사</option>
+							</select>
 						</div>
 					</div>
 					<div style="display: flex;">
@@ -61,63 +66,86 @@
 					<div style="display: flex;">
 						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" id="minor" name="minor" style="width: 100%;" <c:if test="${!empty edu_sel.minor}">value="${edu_sel.minor}"</c:if><c:if test="${empty edu_sel.minor}">value=" "</c:if> placeholder="부전공명을 입력하세요.">
+							<input type="text" class="minor" id="minor" name="minor" style="width: 100%;" <c:if test="${!empty edu_sel.minor}">value="${edu_sel.minor}"</c:if> placeholder="부전공명을 입력하세요.">
 						</div>
 					</div>
+					<div align="right" style="margin-top: 10px;">
+						<button type="button" class="small_jh btn_jh" id="delBtn" style="background-color: red; color: #fff;" onClick="delete_btn2(${status.index});">삭제하기</button>
+					</div>
 				</div>
+				
+				<script>
+
+					$(document).ready(function(){
+						
+						// 사용자 입력 값 가져와서 selected 옵션 걸기
+						$('.degree${status.index}').val('${edu_sel.degree}').prop("selected",true);
+					
+						// 사용자 입력 값 가져와서 입학일자/졸업일자 출력
+						$('.entering_date${status.index}').val( "<fmt:formatDate value='${edu_sel.e_date}' pattern='yyyy-MM'/>" );
+						$('.graduation_date${status.index}').val( "<fmt:formatDate value='${edu_sel.g_date}' pattern='yyyy-MM'/>" );
+					});
+					
+				</script>
+				
 			</c:forEach>
 		</c:if>
 		<c:if test="${empty edu_sel}">
-				<div class="plus_div">
-				
-					<div style="display: flex;">
-						<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
-						<div class="mentor_info infoInp">
-							<input type="text" id="school" name="school" style="width: 100%;" placeholder="학교명을 입력하세요.">
-						</div>
+			<div class="plus_div">
+			
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">학교명  <span class="small_jh">[필수]</span></div>
+					<div class="mentor_info infoInp">
+						<input type="text" id="school" name="school" style="width: 100%;" placeholder="학교명을 입력하세요.">
 					</div>
-					<div style="display: flex;">
-						<div class="mentor_info infoCtg">
-							<div style="margin-top: 50px;">재학기간  <span class="small_jh">[필수]</span></div>
-						</div>
-						<div style="width: 60%;">
-							<div style="display: flex;">
-								<div class="mentor_info infoCtg">입학일자</div>
-								<div class="mentor_info infoInp">
-									<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
-								</div>
-							</div>
-							<div style="display: flex;">
-								<div class="mentor_info infoCtg">졸업일자</div>
-								<div class="mentor_info infoInp">
-									<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
-							       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
-								</div>
+				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">
+						<div style="margin-top: 50px;">재학기간  <span class="small_jh">[필수]</span></div>
+					</div>
+					<div style="width: 60%;">
+						<div style="display: flex;">
+							<div class="mentor_info infoCtg">입학일자</div>
+							<div class="mentor_info infoInp">
+								<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date"
+						       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
 							</div>
 						</div>
-					</div>
-					<div style="display: flex;">
-						<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
-						<div class="mentor_info infoInp">
-							<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
-							<select id="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;"></select>
-						</div>
-					</div>
-					<div style="display: flex;">
-						<div class="mentor_info infoCtg" style="padding-top: 30px;">전공명  <span class="small_jh">[필수]</span></div>
-						<div class="mentor_info infoInp">
-							<div class="small_jh" style="color: red;">* 최종 학력이 고등학교 졸업인 경우 '문과/이과' 입력</div>
-							<input type="text" id="major" name="major" style="width: 100%; margin-top: 5px;" placeholder="전공명을 입력하세요.">
-						</div>
-					</div>
-					<div style="display: flex;">
-						<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
-						<div class="mentor_info infoInp">
-							<input type="text" id="minor" name="minor" style="width: 100%;" value=" " placeholder="부전공명을 입력하세요.">
+						<div style="display: flex;">
+							<div class="mentor_info infoCtg">졸업일자</div>
+							<div class="mentor_info infoInp">
+								<input type="text" class="datepicker-here width100" id="graduation_date" name="graduation_date"
+						       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
+							</div>
 						</div>
 					</div>
 				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg" style="padding-top: 30px;">학위  <span class="small_jh">[선택]</span></div>
+					<div class="mentor_info infoInp">
+						<div class="small_jh" style="color: red;">* 대학교 이상의 경우 필수</div>
+						<select class="degree" name="degree" style="width: 50%; height: 50%; margin-top: 5px;">
+							<option value="N">선택</option>
+							<option value="학사">학사</option>
+							<option value="석사">석사</option>
+							<option value="박사">박사</option>
+						</select>
+					</div>
+				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg" style="padding-top: 30px;">전공명  <span class="small_jh">[필수]</span></div>
+					<div class="mentor_info infoInp">
+						<div class="small_jh" style="color: red;">* 최종 학력이 고등학교 졸업인 경우 '문과/이과' 입력</div>
+						<input type="text" id="major" name="major" style="width: 100%; margin-top: 5px;" placeholder="전공명을 입력하세요.">
+					</div>
+				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">부전공명  <span class="small_jh">[선택]</span></div>
+					<div class="mentor_info infoInp">
+						<input type="text" class="minor" id="minor" name="minor" style="width: 100%;" placeholder="부전공명을 입력하세요.">
+					</div>
+				</div>
+			</div>
 		</c:if>
 	</div>
 	
@@ -146,6 +174,7 @@
 	</div>
 
 </form>
+
 
 <script src="/mentor/datepicker/jquery-3.1.1.min.js"></script> <!-- 값 제어를 위해 jquery -->
 <script src="/mentor/datepicker/air-datepicker/dist/js/datepicker.js"></script> <!-- Air datepicker js -->
