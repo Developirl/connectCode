@@ -696,12 +696,16 @@ public class MentorController {
 		
 		List<MentorDTO> license_select = ms.license_select(mentor);
 		
-		String[] technology = mentor_select.getTechnology().split(",");
-		List<String> technologyList = Arrays.asList(technology);
+		if(license_select.size() >= 1) {
+			String[] technology = mentor_select.getTechnology().split(",");
+			List<String> technologyList = Arrays.asList(technology);
+			
+			System.out.println(technologyList);
+			
+			model.addAttribute("technologyList", technologyList);
+		}
 		
-		System.out.println(technologyList);
 		
-		model.addAttribute("technologyList", technologyList);
 		model.addAttribute("lic_sel", license_select);
 		model.addAttribute("msel", mentor_select);
 		

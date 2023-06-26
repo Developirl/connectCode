@@ -69,10 +69,8 @@
 	    	data : {"mentoring_no": mentoring_no,
 	    			 mentor_no : mentor_no},
 			success: function(response) {
-				// alert("response:"+response);
 				$("#jh-content").html(response);
 			     // Request was successful
-			     console.log(response);
 			} // success end
 	    }); // ajax end
 	    
@@ -94,7 +92,6 @@
     
     // select , search 정렬 기능
     function search1(){
-//    	alert("test");
     	location.href="mentoringApplyListPage?search="+$("#search").val()+"&mentor_no="+${msel.mentor_no}
     }   
     
