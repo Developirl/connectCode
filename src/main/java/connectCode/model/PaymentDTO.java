@@ -1,5 +1,7 @@
 package connectCode.model;
 
+import java.sql.Timestamp;
+
 import lombok.Data;
 
 @Data

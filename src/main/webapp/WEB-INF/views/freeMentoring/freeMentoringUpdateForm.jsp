@@ -51,6 +51,7 @@
   <br>
   <div class="container">
     <form action="/freeMentoring/freeMentoringUpdate.do" method="post">
+  	  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
       <div class="form-group">
       	<input type="hidden" name="page" value="${page}">
         <input type="hidden" name="free_no" value="${DTO.free_no}">

@@ -429,7 +429,7 @@
 		insert into
 		post(ref_post_no, ref_step, title, content, reg_date, reply_yn,
 		member_no, board_no)
-		values(#{ref_post_no},1,'답변입니다.',#{content},sysdate(),'Y',#{member_no},1)
+		values(#{post_no},1,'답변입니다.',#{content},sysdate(),'Y',#{member_no},1)
 	</insert>
 
 	<!-- 답변 업데이트 -->

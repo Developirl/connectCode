@@ -46,7 +46,10 @@ public class freeMentoringController{
             
             int currentPage = Integer.parseInt(page);
             
-            int mentee_no = ((AuthUser)(auth.getPrincipal())).getMentee_no();
+            int mentee_no = 0;
+            if(((AuthUser)(auth.getPrincipal())).getMentee_no() != null) {
+         	   mentee_no = ((AuthUser)(auth.getPrincipal())).getMentee_no();
+            }
 
             
 //            int member_no = (int) session.getAttribute("member_no");
@@ -103,14 +106,20 @@ public class freeMentoringController{
        freeMentoringBoardDTO dto = service.freeRead(free_no);
        
        service.updatefreeReadCount(free_no);
-              
-       int mentor_no = ((AuthUser)(auth.getPrincipal())).getMentor_no();
        
+       int mentor_no = 0;
+       if(((AuthUser)(auth.getPrincipal())).getMentor_no() != null) {
+    	   mentor_no = ((AuthUser)(auth.getPrincipal())).getMentor_no();
+       }
 
        MentorDTO mentor = service.getMentor(mentor_no);
 
        
-       int mentee_no = ((AuthUser)(auth.getPrincipal())).getMentee_no();
+       int mentee_no = 0;
+       if(((AuthUser)(auth.getPrincipal())).getMentee_no() != null) {
+    	   mentee_no = ((AuthUser)(auth.getPrincipal())).getMentee_no();
+       }
+
        
        System.out.println("멤버노 디테일: " + mentor_no);
        

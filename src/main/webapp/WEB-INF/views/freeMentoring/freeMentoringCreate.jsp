@@ -54,6 +54,7 @@ margin-left: 730px;
    <div class="container">
    <!-- 토큰 삽입 -->
       <form action='/freeMentoring/freeMentoringCreate.do' method="post">
+      	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
         <div class="form-group">
         	
         	<input type="hidden" name="mentee_no" value="${mentee.mentee_no}">
