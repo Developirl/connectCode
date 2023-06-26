@@ -15,6 +15,14 @@ public class freeMentoringBoardDTO {
 	private int readcount;
 	private int free_comment_count;
 	
+	// pageing 처리
+	private int startRow;
+	private int endRow;
+	
+	//검색
+	private String search;
+	private String keyword;
+	
 	public int getFree_no() {
 		return free_no;
 	}
@@ -62,6 +70,30 @@ public class freeMentoringBoardDTO {
 	}
 	public void setFree_comment_count(int free_comment_count) {
 		this.free_comment_count = free_comment_count;
+	}
+	public int getStartRow() {
+		return startRow;
+	}
+	public void setStartRow(int startRow) {
+		this.startRow = startRow;
+	}
+	public int getEndRow() {
+		return endRow;
+	}
+	public void setEndRow(int endRow) {
+		this.endRow = endRow;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 	
 }
