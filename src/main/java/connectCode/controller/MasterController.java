@@ -114,21 +114,27 @@ public class MasterController {
 		List<MentorDTO> license = ms.mentorLicense(mentor_no);
 		List<MentorDTO> service = ms.mentorService(mentor_no);
 
-		List<MentorDTO> careerFile = ms.mentorCareerFile(mentor_no);
+		// List<MentorDTO> careerFile = ms.mentorCareerFile(mentor_no);
 		// System.out.println(careerFile);
-		List<MentorDTO> educationFile = ms.mentorEducationFile(mentor_no);
+		// List<MentorDTO> educationFile = ms.mentorEducationFile(mentor_no);
 		// System.out.println("educationFile:"+educationFile);
-		List<MentorDTO> licenseFile = ms.mentorLicenseFile(mentor_no);
+		// List<MentorDTO> licenseFile = ms.mentorLicenseFile(mentor_no);
+		
+		
+		// file 가져오기 
+		int file_no = education.get(0).getFile_no();
+		List<FileDTO> file_list = ms.getEduFileList(file_no);
+		model.addAttribute("file_list", file_list);
 
 		// System.out.println(mentor);
 		
-		//MentorDTO find_file_no = education.get(0); 	// 인덱스 0번의 MentorDTO 객체 가져오기
-		//int file_no = find_file_no.getFile_no();	// 파일 번호 가져오기
-		//System.out.println("fileNo:::"+file_no);
+		// MentorDTO find_file_no = education.get(0); 	// 인덱스 0번의 MentorDTO 객체 가져오기
+		// int file_no = find_file_no.getFile_no();	// 파일 번호 가져오기
+		// System.out.println("fileNo:::"+file_no);
 	    
 	    // 학벌 파일 구하기
-	    //List<MentorDTO> efile = ms.efile(file_no);
-	    //System.out.println(efile);
+	    // List<MentorDTO> efile = ms.efile(file_no);
+	    // System.out.println(efile);
 
 		model.addAttribute("mentor", mentor);
 		model.addAttribute("career", career);
@@ -138,9 +144,9 @@ public class MasterController {
 
 //		model.addAttribute("efile", efile);
 		
-		model.addAttribute("careerFile", careerFile);
-		model.addAttribute("educationFile", educationFile);
-		model.addAttribute("licenseFile", licenseFile);
+		// model.addAttribute("careerFile", careerFile);
+		// model.addAttribute("educationFile", educationFile);
+		// model.addAttribute("licenseFile", licenseFile);
 
 		return "master/masterMentorApplyDetail";
 	}
@@ -253,9 +259,9 @@ public class MasterController {
 		}
 		int currentPage = Integer.parseInt(pageNum);
 
-		int mentorTotal = ms.getTotal1(mentor);
-		int menteeTotal = ms.getTotal2(mentee);
-		int total = mentorTotal + menteeTotal;
+		// int mentorTotal = ms.getTotalmentor(mentor);
+		// int menteeTotal = ms.getTotal2(mentee);
+		int total = ms.getTotalmember(mentor);
 
 		int startRow = (currentPage - 1) * rowPage;
 		int endRow = rowPage;
@@ -265,17 +271,17 @@ public class MasterController {
 		mentor.setStartRow(startRow);
 		mentor.setEndRow(endRow);
 
-		List<MentorDTO> mentorlist = ms.mentorlist(mentor);
-		List<MenteeDTO> menteelist = ms.menteelist(mentee);
+//		List<MentorDTO> mentorlist = ms.mentorlist(mentor);
+//		List<MenteeDTO> menteelist = ms.menteelist(mentee);
 
 		List<MentorDTO> memberlist = ms.totallist(mentor);
 //		System.out.println(memberlist);
 
-		model.addAttribute("mentorlist", mentorlist);
-		model.addAttribute("menteelist", menteelist);
+//		model.addAttribute("mentorlist", mentorlist);
+//		model.addAttribute("menteelist", menteelist);
 		model.addAttribute("memberlist", memberlist);
-		model.addAttribute("mentorTotal", mentorTotal);
-		model.addAttribute("menteeTotal", menteeTotal);
+//		model.addAttribute("mentorTotal", mentorTotal);
+//		model.addAttribute("menteeTotal", menteeTotal);
 		model.addAttribute("search", mentor.getSearch());
 		model.addAttribute("keyword", mentor.getKeyword());
 		model.addAttribute("p", p);
@@ -408,9 +414,24 @@ public class MasterController {
 		
 		List<PaymentDTO> paylist = ms.paylist(pay);
 		
+		model.addAttribute("p", p);
 		model.addAttribute("paylist", paylist);
+		model.addAttribute("search", pay.getSearch());
+		model.addAttribute("keyword", pay.getKeyword());
 
 		return "master/masterPaymentList";
+	}
+	
+	// 결제 상세
+	@RequestMapping("masterPaymentDetail") 
+	public String masterPaymentDetail(int payment_no, PaymentDTO pay, Model model) {
+	  
+		List<PaymentDTO> paylist = ms.paylist(pay);
+		PaymentDTO payDetail = ms.payDetail(payment_no);
+	  
+		model.addAttribute("paylist", paylist); 
+		model.addAttribute("payDetail", payDetail); 
+		return "master/masterPaymentDetail";
 	}
 
 	// 신고_리스트
@@ -491,7 +512,7 @@ public class MasterController {
 		System.out.println("fileDTO: "+fileDTO);
 		
 		// 첨부파일 상세 정보
-		FileDTO file = ms.file(fileDTO);
+		FileDTO file = fs.file(fileDTO);
 		System.out.println("file;;;;;"+file);
 
 		Resource resource = fu.readFileAsResource(file);
@@ -542,5 +563,7 @@ public class MasterController {
 		
 		return "master/masterStatistics2";
 	}
+	
+
 	
 }

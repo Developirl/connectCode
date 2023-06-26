@@ -47,7 +47,7 @@ public class MasterServiceImpl implements MasterService {
 	private JavaMailSender emailSender;
 //    private static final String FROM_ADDRESS = "이메일에 보낼 주소";
 
-	// 멘토 전체 데이터
+	// 멘토 승인 전체 데이터
 	@Override
 	public int getTotal1(MentorDTO mentor) {
 		return md.getTotal1(mentor);
@@ -57,6 +57,12 @@ public class MasterServiceImpl implements MasterService {
 	@Override
 	public int getTotal2(MenteeDTO mentee) {
 		return md.getTotal2(mentee);
+	}
+	
+	// 멘토 전체 데이터
+	@Override
+	public int getTotalmember(MentorDTO mentor) {
+		return md.getTotalmember(mentor);
 	}
 
 	// 멘토 리스트
@@ -399,6 +405,14 @@ public class MasterServiceImpl implements MasterService {
 
 		return md.paylist(pay);
 	}
+	
+	// 결제 상세
+	@Override
+	public PaymentDTO payDetail(int payment_no) {
+
+		return md.payDetail(payment_no);
+	}
+
 
 	// 신고 철회
 	@Override
@@ -499,6 +513,12 @@ public class MasterServiceImpl implements MasterService {
 	public int getTquit() {
 		return md.getTquit();
 	}
+	
+	
+	@Override
+	public List<FileDTO> getEduFileList(int file_no) {
+		return md.getEduFileList(file_no);
+	}
 
 //*****************************병걸 작성***************************************
 
@@ -542,6 +562,11 @@ public class MasterServiceImpl implements MasterService {
 	public int getReadyMentors() {
 		return md.getReadyMentors();
 	}
+
+
+
+
+	
 
 
 

@@ -27,4 +27,14 @@ public class PaymentDTO {
 	private int startRow;
 	private int endRow;
 	
+	private String search;
+	private String keyword;
+	
+	private String location;
+	private String request_content;
+	private String classification;
+	private Timestamp apply_time;
+	private Timestamp reserve_date;
+	
+	
 }

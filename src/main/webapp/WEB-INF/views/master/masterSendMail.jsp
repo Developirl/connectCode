@@ -31,7 +31,7 @@
 				</tr>
 			</table>
 			<br> <input type="submit" id="writeBtn" value="보내기"
-				class="btn btn-dark"><br>
+				class="btn btn-dark" ><br>
 			<br>
 			</div>
 		</div>
@@ -57,6 +57,7 @@ function check(){
 	}
  
 }
+
 </script> 
 </body>
 </html>

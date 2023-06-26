@@ -17,8 +17,11 @@ import connectCode.model.VisitDTO;
 
 public interface MasterService {
 
-	// 멘토 전체 데이터
+	// 멘토 승인 요청 전체 데이터
 	int getTotal1(MentorDTO mentor);
+	
+	// 멘토 전체 데이터
+	int getTotalmember(MentorDTO mentor);
 
 	// 멘티 전체 데이터
 	int getTotal2(MenteeDTO mentee);
@@ -157,6 +160,9 @@ public interface MasterService {
 	// 결제 리스트
 	List<PaymentDTO> paylist(PaymentDTO pay);
 
+	// 결제 상세
+	PaymentDTO payDetail(int payment_no);
+
 	// 신고 철회
 	int reportCancle(int report_no);
 	
@@ -194,6 +200,8 @@ public interface MasterService {
 	int getlastquit();
 	int getTquit();
 	
+	// 파일 정보 가져오기
+	List<FileDTO> getEduFileList(int file_no);
 	
 	
 	
@@ -213,10 +221,6 @@ public interface MasterService {
 	int getMentees();
 	int getUnreadyMentors();
 	int getReadyMentors();
-
-
-
-
 	
 	//*****************************병걸 작성***************************************
 

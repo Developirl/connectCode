@@ -14,7 +14,11 @@ public interface FileMapper {
 	 
 	 // 추가 코드
 	public int getMaxSerial(int file_no);
-	public void dbSaveFile(FileDTO file); 
+	public void dbSaveFile(FileDTO file);
+
+
+	// 파일 다운로드
+	public FileDTO file(FileDTO fileDTO); 
 	
 	
 

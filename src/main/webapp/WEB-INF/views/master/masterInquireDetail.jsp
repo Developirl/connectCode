@@ -36,7 +36,7 @@
 			<hr>
 			<textarea id="reply" name="reply" cols=125 rows=12
 				placeholder="답변을 작성해주세요."></textarea>
-			<br> <br> <input type="submit" value="답변하기"> <br>
+			<br> <br> <input type="submit" class="btn btn-dark" value="답변하기"> <br>
 			<br>
 
 		</div>

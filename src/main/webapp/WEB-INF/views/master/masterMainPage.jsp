@@ -36,13 +36,11 @@
 		</div>
 
 		<div class="totalbox1">
-			<div class="large_jh">
+			<div class="large_jh" align="center">
 				<div class="totalbox2" align="center">TOTAL</div>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="masterMentorApplyList" style="color: gray">멘토 승인 요청 &nbsp;${newMentor }</a>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="masterPaymentList" style="color: gray">오늘 발생한 결제 건수 &nbsp;${newPay }</a> <br> <br> <br>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="masterInquireList" style="color: gray">새로운 문의 요청&nbsp; ${newinquire}</a>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="masterMentorApplyList" style="color: gray">멘토 승인 요청 &nbsp;${newMentor }</a><br><br>
+				<a href="masterPaymentList" style="color: gray">오늘 발생한 결제 건수 &nbsp;${newPay }</a> <br> <br>
+				<a href="masterInquireList" style="color: gray">새로운 문의 요청&nbsp; ${newinquire}</a>
 				<%-- <a href="masterReportList" style="color: gray">신고 건수&nbsp; ${newReport }</a>  --%>
 			</div>
 		</div>

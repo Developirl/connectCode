@@ -54,4 +54,12 @@
 		</foreach>
 	</insert> -->
 	
+	<!-- 파일 다운로드 -->
+	<select id="file" resultType="FileDTO">
+		select file_no,
+		file_serial_number,file_serial_number, origin_name,
+		file_url,extension, size from file
+		where file_no=#{file_no} and file_serial_number=#{file_serial_number};
+	</select>
+	
 </mapper>
