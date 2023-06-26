@@ -48,4 +48,7 @@ public class MentoringDTO {
 	//결제 완료 후 필요한 데이터를 사용하기 위해 추가 
 	private String mentoring_kind;
 	
+	
+	// 주말에 추가한 필드 0624 토요일
+	private int mentor_no;
 }

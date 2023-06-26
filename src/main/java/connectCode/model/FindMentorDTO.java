@@ -28,6 +28,7 @@ public class FindMentorDTO {
 	
 	// service 테이블 데이터 
 	private String[] mentoring_payment;
+	private String available_NY;
 	
 	//career 경력사항 테이블
 	private String company;
@@ -37,6 +38,9 @@ public class FindMentorDTO {
 	//페이징 처리를 위한 변수 
 	private int startRow;
 	private int endRow;
+	
+	
+	
 	
 	/*
 	public void setStartEndRow(FindMentorPageMaker pmk) {

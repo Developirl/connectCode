@@ -34,6 +34,7 @@
 	position:relative;
 }
 
+
 @media(max-width:1400px){
    .js-profileCard{
       width:100%;
@@ -63,7 +64,14 @@
 .js-profileCardtable td:nth-child(even){
     padding-left:30px;
 }
+.js-profileCardtable{
+	width: 100%;
+	table-layout: fixed;
+}
 
+.js-profileCardtable tr{
+	width: 100%;
+}
 
 .js-profileCardtable .js-profileimgtd{
     text-align: center;
@@ -176,6 +184,10 @@
 
 .js-fontsize-11{
     font-size:11pt;
+}
+.js-fontsize-10{
+    font-size:11pt!important;
+    color:#A6A6A6;
 }
 
 
@@ -325,6 +337,25 @@
    
 }
 
+/* .js-introintro{
+	display:inline-block;
+	max-width:70%!important;
+	font-size:11pt!important;
+	overflow: hidden; 
+ 	white-space: nowrap;
+  	text-overflow: ellipsis; 
+} 
+ */
+
+.js-mino{
+	/* max-width:70%!important; */
+	width: 100%;
+	font-size:11pt!important;
+	overflow: hidden; /* 내용이 너비를 초과하는 경우 숨김 처리 */
+ 	white-space: nowrap; /* 공백을 무시하고 한 줄로 표시 */
+  	text-overflow: ellipsis; /* 너비를 초과하는 경우 ...으로 표시 */
+	
+}
 
 
 </style>
@@ -690,6 +721,7 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 			<c:if test="${ empty list }">
 			<br><br>
 			<div align=center style="font-family:'Noto Sans KR', sans-serif!important;font-weight: bold;">검색한 항목에 해당하는 멘토가 존재하지 않습니다 .</div>
+			<br><br><br><br><br><br><br><br><br><br>
 			</c:if>
 			
 			
@@ -698,7 +730,7 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 			
 			   <c:forEach var="i" items="${list}" varStatus="st">
 					<div class="js-allcontentbox" >
-						<div class="js-profileCard">
+						<div class="js-profileCard" >
 						
 						
 						<input type=hidden class="bookmark_hiddenbox_${st.index}" id="hiddenbox_${i.mentor_no}" value="${i.checkedBookmark}">
@@ -745,13 +777,13 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 										<img alt="profile" src="/public/img/profile_img.png" class="js-circular-image">
 									</c:if>
 								</td>
-								<td>
-								<span class="js-profileCardFont">
+								<td class="js-profile-height">
+								<!-- <span class="js-profileCardFont"> -->
 									<span class="js-profileCardName">${i.name }</span>
-									<span class="js-profileCardIntro">${i.intro }</span>
+									<span class="js-profileCardIntro js-mino">${i.intro }</span>
 									<span class="js-profileCardIntro js-company-mini">${i.company }</span>
 									<span class="js-profileCardIntro js-career-mini">${i.years }년차  &nbsp;${i.task }</span>
-								</span>	
+								<!-- </span> -->	
 								</td>
 								</tr>
 								
@@ -781,8 +813,13 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 									<c:if test="${! empty i.mentoring_payment[0]}">
 											<c:set var="payment" value="${fn:split(i.mentoring_payment[0], ';')}"/>
 											<c:if test="${payment[1]+'1' != '01' }">
-												<td class="js-fontsize-11"><b>${payment[0]}</b><br>
+											    <c:if test="${payment[2]=='Y'}">
+													<td class="js-fontsize-11"><b>${payment[0]}</b><br>
+											    </c:if>
 												<span class="js-priceColor">
+											    <c:if test="${payment[2]=='N'}">
+													<td class="js-fontsize-10"><b>${payment[0]}</b><br>
+											    </c:if>
 												<fmt:formatNumber value="${payment[1]}" type="number" var="numberType" />${numberType }
 												</span></td>
 											</c:if>
@@ -792,8 +829,13 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 									<c:if test="${! empty i.mentoring_payment[1]}">
 										<c:set var="payment" value="${fn:split(i.mentoring_payment[1], ';')}"/>
 										<c:if test="${payment[1]+'1' != '01' }">
-											<td class="js-fontsize-11"><b>${payment[0]}</b><br>
+											<c:if test="${payment[2]=='Y'}">
+												<td class="js-fontsize-11"><b>${payment[0]}</b><br>
+											</c:if>
 											<span class="js-priceColor">
+											<c:if test="${payment[2]=='N'}">
+												<td class="js-fontsize-10"><b>${payment[0]}</b><br>
+											</c:if>
 											<fmt:formatNumber value="${payment[1]}" type="number" var="numberType" />${numberType }
 											</span></td>
 										</c:if>

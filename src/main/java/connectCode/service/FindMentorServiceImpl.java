@@ -24,6 +24,7 @@ import connectCode.model.FindMentorDTO;
 import connectCode.model.FindMentorInfoDTO;
 import connectCode.model.MenteeDTO;
 import connectCode.model.MentoringDTO;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
@@ -73,8 +74,10 @@ public class FindMentorServiceImpl implements FindMentorService {
 			for(int j=0; j<2;j++) {
 				payment = men_payment.get(j);
 				str[j] = payment;// 0과 1밖에 없는데, 2까지 갔다고 에러남
+				System.out.println("str["+j+"] ="+str[j]);
 			}
 			list.get(i).setMentoring_payment(str);   
+			System.out.println("str ="+Arrays.toString(str));
 			
 			if(member_no_ != null && !member_no_.equals("") ) {
 				int member_no = Integer.parseInt(member_no_);
@@ -292,5 +295,10 @@ public class FindMentorServiceImpl implements FindMentorService {
 		}
 	}
 	
+	
+	@Override
+	public void sendMentoringApplyalarm(MentoringDTO mentoringDTO) {
+			dao.sendMentoringApplyalarm(mentoringDTO);
+	}
 
 }
