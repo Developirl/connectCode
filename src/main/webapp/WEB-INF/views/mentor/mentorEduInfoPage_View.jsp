@@ -2,41 +2,39 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="cont_mar mentor_info" style="color:gray; background-color: white; padding: 20px; text-align: center;">
-		정확한 정보를 직접 입력한 후, [졸업증명서] 등 증빙자료를 첨부해 주시기 바랍니다.<br>
-		제출하신 자료는 운영팀에서 진위여부 확인 및 프로필 반영 후 즉시 삭제됩니다.
-</div>	
-
 <div class="cont_mar">
+
 	<c:forEach var="edu_sel" items="${edu_sel}">
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">학교명</div>
-			<div class="mentor_info infoInp">${edu_sel.school}</div>
-		</div>
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">재학기간</div>
-			<div class="mentor_info infoInp" id="entering_date">
-				<fmt:formatDate value="${edu_sel.e_date}" pattern="yyyy년 MM월"/> ~ <fmt:formatDate value="${edu_sel.g_date}" pattern="yyyy년 MM월"/>
-			</div>
-		</div>
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">학위</div>
-			<div class="mentor_info infoInp">${edu_sel.degree}</div>
-		</div>
-		<div style="display: flex;">
-			<div class="mentor_info infoCtg">전공명</div>
-			<div class="mentor_info infoInp">${edu_sel.major}</div>
-		</div>
-		<c:if test="${!empty edu_sel.minor}">
+		<div class="infoTitle">
 			<div style="display: flex;">
-				<div class="mentor_info infoCtg">부전공명</div>
-				<div class="mentor_info infoInp">${edu_sel.minor}</div>
+				<div class="mentor_info infoCtg">학교명</div>
+				<div class="mentor_info infoInp">${edu_sel.school}</div>
 			</div>
-		</c:if>
-		<div style="width: 70%; padding: 20px 0px;">
-			${edu_sel.origin_name}
+			<div style="display: flex;">
+				<div class="mentor_info infoCtg">재학기간</div>
+				<div class="mentor_info infoInp" id="entering_date">
+					<fmt:formatDate value="${edu_sel.e_date}" pattern="yyyy년 MM월"/> ~ <fmt:formatDate value="${edu_sel.g_date}" pattern="yyyy년 MM월"/>
+				</div>
+			</div>
+			<c:if test="${!empty edu_sel.degree}">
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">학위</div>
+					<div class="mentor_info infoInp">${edu_sel.degree}</div>
+				</div>
+			</c:if>
+			<div style="display: flex;">
+				<div class="mentor_info infoCtg">전공명</div>
+				<div class="mentor_info infoInp">${edu_sel.major}</div>
+			</div>
+			<c:if test="${!empty edu_sel.minor}">
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">부전공명</div>
+					<div class="mentor_info infoInp">${edu_sel.minor}</div>
+				</div>
+			</c:if>
 		</div>
 	</c:forEach>
+	
 	<div style="display: flex;">
 		<div class="mentor_info infoCtg">첨부파일</div>
 		<div class="mentor_info infoInp"></div>
@@ -47,7 +45,9 @@
 
 <!-- 수정 btn -->
 <div align="center" class="cont_mar">
-	<button class="custom_btn submit" id="edit_btn" type="button" style="width: 200px;">수정하기</button>
+	<c:if test="${msel.classification != 22}">
+		<button class="custom_btn submit" id="edit_btn" type="button" style="width: 200px;">수정하기</button>
+	</c:if>
 </div>
  
  

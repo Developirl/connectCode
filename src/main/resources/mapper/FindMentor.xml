@@ -185,16 +185,16 @@
 	 SELECT count(*) FROM 
 		( SELECT * FROM review JOIN mentoring USING(mentoring_no) WHERE classification=35 ) a 
 			JOIN mentee m USING(mentee_no)  
-				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no};    
+				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no}    
 	</select>
 
 
 	<!-- 멘토의 요금제를 가져온다. 20분 전화 멘토링;20000 -->
 	<select id="getMentoringPayment" parameterType="int"
 		resultType="java.lang.String">
-		select concat(mentoring_kind,';',mentoring_fee) from
+		select concat(mentoring_kind,';',mentoring_fee,';',available_NY) from
 		mentor
-		join service using(mentor_no) where mentor_no=#{mentor_no};
+		join service using(mentor_no) where mentor_no=#{mentor_no}
 	</select>
 
 	<!-- 세션에 공유된 값이 있다면 해당 세션의 member_no 에서 가져온 mentee_no으로 북마크 체크 유무 비교 -->
@@ -205,14 +205,14 @@
 		join mentee mt using(member_no)) a using(mentee_no)
 		where
 		a.member_no=#{member_no}
-		and b.mentor_no=#{mentor_no};
+		and b.mentor_no=#{mentor_no}
 	</select>
 	
 	<!--  멘토 디테일 페이지에서 멘토 프로필 정보 가져오는 쿼리문 -->
 	<select id="getMentorProfile" parameterType="int" resultType="connectCode.model.FindMentorDTO">
 		select a.mentor_no,f.file_url,a.name,a.company,a.task,a.intro,a.mentoring_location from 
 		( select * from mentor join career using(mentor_no) where mentor_no = #{mentor_no} 
-		order by entering_date desc limit 1) a left join file f ON a.profile_img_no = f.file_no;
+		order by entering_date desc limit 1) a left join file f ON a.profile_img_no = f.file_no
 	</select>
 	
 	<!--  멘토 경력사항 리스트  -->
@@ -240,7 +240,7 @@
 		SELECT a.*,m.name,s.* FROM 
 		( SELECT * FROM review JOIN mentoring USING(mentoring_no) WHERE classification=35 ) a 
 			JOIN mentee m USING(mentee_no)  
-				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no};   
+				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no}   
 	</select>
 	
 	<!-- 멘토의 nuable_date와 mentoring_time을 가져온다.  -->
@@ -256,7 +256,7 @@
 		FROM mentoring m 
 			JOIN service USING (service_no)
 				WHERE service_no = (SELECT service_no FROM mentor WHERE mentor_no = #{mentor_no})
-					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date} AND m.classification = 32;
+					AND DATE_FORMAT(reserve_date, '%m/%d/%Y') = #{reserve_date} AND m.classification = 32
 	</select>
 	
 	<select id="getMentorInfo" parameterType="int" resultType="FindMentorDTO">
@@ -265,7 +265,7 @@
 			FROM career WHERE mentor_no = #{mentor_no} AND entering_date = (
 				select max(entering_date) FROM career WHERE mentor_no = #{mentor_no} )
 		) sub   
-			WHERE mentor_no = #{mentor_no};
+			WHERE mentor_no = #{mentor_no}
 	</select>
 	
 	
@@ -273,7 +273,7 @@
 	<delete id="deleteBookmark">
 		DELETE FROM bookmark WHERE 
 		mentee_no = (SELECT mentee_no FROM mentee JOIN member 
-		USING(member_no) WHERE member_no = #{member_no}) AND mentor_no = #{mentor_no};
+		USING(member_no) WHERE member_no = #{member_no}) AND mentor_no = #{mentor_no}
 	</delete>
 	
 	
@@ -283,13 +283,13 @@
 		VALUES(sysdate(),(
 		SELECT mentee_no FROM mentee JOIN member 
 		USING(member_no) 
-		WHERE member_no = #{member_no}),#{mentor_no}); 
+		WHERE member_no = #{member_no}),#{mentor_no}) 
 	</insert>
 	
 	
 	<!--  멘티의 깃허브, 블로그 주소를 가져온다.  -->
 	<select id="getMenteePortfolio" parameterType="int" resultType="MenteeDTO">
-		SELECT * FROM mentee WHERE member_no = #{member_no};
+		SELECT * FROM mentee WHERE member_no = #{member_no}
 	</select>
 	
 	<!-- file 테이블의 file_no MAX 값을 가져온다. -->
@@ -303,12 +303,24 @@
 		SELECT * FROM 
 		(SELECT * FROM payment 
 			JOIN mentoring USING(mentoring_no)) a  
-			JOIN service s USING(service_no) WHERE payment_no = #{payment_no};
+			JOIN service s USING(service_no) WHERE payment_no = #{payment_no}
 	</select>
 	
 	<!-- 멘토에게 멘토링 신청이 들어왔다는 문자 보내기  위한 핸폰 번호 구해오기 -->
 	<select id="getPhone" resultType="String">
 		SELECT phone from mentor where mentor_no = #{mentor_no}
 	</select>
+	
+	<!--  멘토에게 알림 보내기  -->
+	<insert id="sendMentoringApplyalarm" parameterType="MentoringDTO">
+	    <selectKey keyColumn="mentee_no,mentor_no" keyProperty="mentee_no,mentor_no" resultType="hashmap" order="BEFORE">
+	        SELECT mentee_no,mentor_no
+	        FROM  mentoring JOIN service USING(service_no) WHERE mentoring_no = #{mentoring_no}
+	    </selectKey>
+		    INSERT INTO alarm(title,content,happen_time,read_yn,receiver_mem_no,sender_mem_no) 
+			values('새로운 멘토링 신청이 들어왔습니다.','예약일시 3시간 전까지 수락하지 않는 경우 자동 환불됩니다. ',sysdate(),'N',
+			(SELECT member_no FROM mentor where mentor_no = #{mentor_no}),
+			(SELECT member_no FROM mentee where mentee_no = #{mentee_no}))
+	</insert>
 
 </mapper>

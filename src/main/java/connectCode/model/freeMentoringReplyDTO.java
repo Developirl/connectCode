@@ -11,6 +11,7 @@ private int board_no;
 private String name;
 private Timestamp free_reply_regdate;
 private String free_reply_content;
+
 public int getFree_reply_no() {
 	return free_reply_no;
 }

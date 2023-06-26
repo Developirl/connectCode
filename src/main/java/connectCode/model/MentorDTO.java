@@ -1,5 +1,6 @@
 package connectCode.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,14 @@ public class MentorDTO {
    private Date apply_date;
    private int member_no;
    
+   // 알람
+   private int alarm_no;
+   private String title;
+   private String content;
+   private Timestamp happen_time;
+   private String read_yn;
+   private int receiver_mem_no;
+   
    // 서비스 요금
    private int service_no;
    private String mentoring_kind;
@@ -57,7 +66,7 @@ public class MentorDTO {
    private String kind;
    private String license_name;
    private String issuing_authority;
-   private Date issuing_date;
+   private String issuing_date;
    
    // 페이징
    private int startRow;
@@ -80,9 +89,11 @@ public class MentorDTO {
    private String technology_stack;
    private String git;              
    private String blog;
+   
    private Date e_date;
    private Date g_date;
    private Date d_date;
+   private Date i_date;
    
    // 첨부파일 List
    private List<MultipartFile> files = new ArrayList<>();
@@ -95,9 +106,13 @@ public class MentorDTO {
    private long size;
 
    private String extension;
-
    
    // 알람수
    private int alarm_count;
+   
+   // ******** 혜지 추가추가 *********
+   private String password;
+   private String newpasswd;
+   private String quit_reason;
    
 }

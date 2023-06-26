@@ -23,11 +23,25 @@
 
 	<insert id="dbSaveFile" parameterType="FileDTO">
 	
-		insert into file(file_no,file_serial_number,origin_name,physical_name,
-		file_url,size,extension) values(#{file_no},#{file_serial_number},
-		#{origin_name},#{physical_name},#{file_url},#{size},#{extension}
+		INSERT INTO file(
+			  file_no
+			, file_serial_number
+			, origin_name
+			, physical_name
+			, file_url
+			, size
+			, extension
+		) values (
+			  #{file_no}
+			  #{file_serial_number}
+			, #{origin_name}
+			, #{physical_name}
+			, #{file_url}
+			, #{size}
+			, #{extension}
 		)
 	</insert>
+
 
 	<!-- 
 	<insert id="saveAll" parameterType="list">
@@ -62,4 +76,5 @@
 		where file_no=#{file_no} and file_serial_number=#{file_serial_number};
 	</select>
 	
+
 </mapper>

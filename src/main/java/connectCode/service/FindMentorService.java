@@ -56,4 +56,6 @@ public interface FindMentorService {
 
 	void sendMentoringApply(MentoringDTO mentoring, String phone);
 
+	void sendMentoringApplyalarm(MentoringDTO mentoringDTO);
+
 }

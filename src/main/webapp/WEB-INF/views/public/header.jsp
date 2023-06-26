@@ -12,6 +12,8 @@
 
     <!-- 부트스트랩 css CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"/>
+    <%-- 부트 스트랩  'x' 아이콘을 class로 가져다 사용하기 위한 CDN --%>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 
     <!-- 구글 폰트 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +50,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-2"></div>
-                    <div class="col-2 mino-title">CONNECT <span style="color: #004EA2;">Code</span></div>
+                    <div class="col-2 mino-title" style="text-align: center">CONNECT <span style="color: #004EA2;">Code</span></div>
                     <nav class="col-4">
                         <ul class="nav nav-ul">
                             <li class="nav-item">
@@ -67,22 +69,21 @@
                     </nav>
                     <div class="col-2">
                         <ul class="navbar-nav">
-                            <li class="nav-item" style="text-align:right;">
+                            <li class="nav-item mino-mypageBtn" style="text-align:right;">
                             	<sec:authorize access="isAnonymous()">
 	                                <a class="nav-link mino-align-right" href="/member/loginform">회원가입/로그인&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                             	</sec:authorize>
                             	<sec:authorize access="isAuthenticated()">
                             		<sec:authorize access="hasRole('ROLE_12')">
-                            			<a href="/mentee/main">멘티마이페이지</a>
+                            			<a href="/mentee/main">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-bell-fill" style="cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a id="logoutBtn">LOGOUT</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_13')">
-                            			<a href="/mentor/mentorPage">멘토마이페이지</a>
+                            			<a href="/mentor/mentorPage">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;<i class="bi bi-bell-fill" style="cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<a id="logoutBtn">LOGOUT</a>
                             		</sec:authorize>
                             		<sec:authorize access="hasRole('ROLE_11')">
-                            			<a href="/master/masterMainPage">관리자 대쉬보드</a>
+                            			<a href="/master/masterMainPage">관리자 대쉬보드</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="logoutBtn">LOGOUT</a>
                             		</sec:authorize>
-                            		<form action="/member/logout" method="post">
-                            			<input type="submit" value="로그아웃" />
+                            		<form action="/member/logout" method="post" id="logout">
                             			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                             		</form>
                             	</sec:authorize>
@@ -94,3 +95,21 @@
             </div>
         </header>
         <!-- 헤더 END -->
+        
+        <script>
+        	$("#logoutBtn").on("click", function(e){
+        		e.preventDefault();
+        		$("#logout").submit();
+        	});
+        </script>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

@@ -35,9 +35,13 @@
 			<div class="mentor_info infoCtg">휴대폰번호  <span class="small_jh">[선택]</span></div>
 			<div class="mentor_info infoInp" style="width: 40%;" >
 				<input type="text" id="phone" name="phone" style="width: 100%;" placeholder="'-'없이 숫자만 입력하세요." maxlength="11" value="${msel.phone}">
+				<input type="text" id="phone_certify" name="phone_certify" class="form-control input3" style="width: 100%;"> 
+				<div class="successPhoneChk">휴대폰 번호는 '-' 없이 번호만 입력하세요.</div>
+				<input type="hidden" id="phoneDoubleChk" />
 			</div>
 			<div class="mentor_info infoInp" style="width: 20%; text-align: right;">
-				<button type="button" class="btn_jh" style="width: 100%;">인증하기</button>
+				<input type="button" id="phoneChk" class="button btn_jh" style="width: 100%;" value="인증번호 전송"/>
+                <input type="button" id="phoneChk2" class="button btn_jh" style="width: 100%;" value="인증하기"> 
 			</div>
 		</div>
 		<div style="display: flex;">

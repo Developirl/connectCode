@@ -51,4 +51,6 @@ public interface FindMentorDAO {
 
 	String getPhone(int mentor_no);
 
+	void sendMentoringApplyalarm(MentoringDTO mentoringDTO);
+
 }

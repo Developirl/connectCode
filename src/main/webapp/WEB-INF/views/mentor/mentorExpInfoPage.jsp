@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <form method="post" action="mentorExpInfoPage_Up" id="myform" autocomplete="off" enctype="multipart/form-data">
 
@@ -8,43 +10,114 @@
 	</div>	
 	
 	<div class="cont_mar" id="plus_content" style="margin-bottom: 10px;">
-		<div class="plus_div">
-		
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">회사명  <span class="small_jh">[필수]</span></div>
-				<div class="mentor_info infoInp">
-					<input type="text" id="company" name="company" style="width: 100%;" value="" placeholder="회사명을 입력하세요.">
-				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">
-					<div style="margin-top: 40px;">재직기간  <span class="small_jh">[필수]</span></div>
-				</div>
-				<div style="width: 60%;">
+
+		<c:if test="${!empty car_sel}">
+			<c:forEach var="car_sel" items="${car_sel}" varStatus="status">
+				<div class="input_content" id="forDelete_content${status.index}" style="margin-bottom: 50px;">
 					<div style="display: flex;">
-						<div class="mentor_info infoCtg">입사일자</div>
+						<div class="mentor_info infoCtg">회사명  <span class="small_jh">[필수]</span></div>
 						<div class="mentor_info infoInp">
-							<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date" readonly="readonly">
-							<!-- <input type="text" class="PastDateDemo" name="entering_date" readonly="readonly"> -->
+							<input type="text" id="company" name="company" style="width: 100%;" value="${car_sel.company}" placeholder="회사명을 입력하세요.">
 						</div>
 					</div>
 					<div style="display: flex;">
-						<div class="mentor_info infoCtg">퇴사일자</div>
-						<div class="mentor_info infoInp">
-						   <input type="text" class="datepicker-here width100" id="departure_date" name="departure_date" value=" " readonly="readonly">
-							<!-- <input type="text" class="PastDateDemo" name="departure_date" readonly="readonly"> -->
+						<div class="mentor_info infoCtg">
+							<div style="margin-top: 40px;">재직기간  <span class="small_jh">[필수]</span></div>
+						</div>
+						<div style="width: 60%;">
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">입사일자</div>
+								<div class="mentor_info infoInp">
+									<input type="text" class="datepicker-here entering_date${status.index} width100" id="entering_date" name="entering_date" readonly="readonly">
+									<!-- <input type="text" class="PastDateDemo" name="entering_date" readonly="readonly"> -->
+								</div>
+							</div>
+							<div style="display: flex;">
+								<div class="mentor_info infoCtg">퇴사일자</div>
+								<div class="mentor_info infoInp">
+								   <input type="text" class="dDate datepicker-here departure_date${status.index} width100" id="departure_date" name="departure_date" readonly="readonly">
+									<!-- <input type="text" class="PastDateDemo" name="departure_date" readonly="readonly"> -->
+								</div>
+							</div>
 						</div>
 					</div>
+					<div style="display: flex;">
+						<div class="mentor_info infoCtg">직무  <span class="small_jh">[필수]</span></div>
+						<div class="mentor_info infoInp">
+							<select class="task" id="task" name="task" style="width: 50%; height: 30px;">
+								<option value="">선택</option>
+								<option value="프론트엔드">프론트엔드</option>
+								<option value="백엔드">백엔드</option>
+							</select>
+						</div>
+					</div>
+					<div align="right" style="margin-top: 10px;">
+						<button type="button" class="small_jh btn_jh" id="delBtn" style="background-color: red; color: #fff;" onClick="delete_btn2(${status.index});">삭제하기</button>
+					</div>
 				</div>
-			</div>
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">직무  <span class="small_jh">[필수]</span></div>
-				<div class="mentor_info infoInp">
-					<select id="task" id="task" name="task" style="width: 50%; height: 30px;"></select>
-				</div>
-			</div>
+				
+				<script>
+
+					$(document).ready(function(){
+						
+						// 사용자 입력 값 가져와서 selected 옵션 걸기
+						$('.task').val('${car_sel.task}').prop("selected",true);
+						
+						// 사용자 입력 값 가져와서 입사일자/퇴사일자 출력
+						$('.entering_date${status.index}').val( "<fmt:formatDate value='${car_sel.e_date}' pattern='yyyy-MM-dd'/>" );
+						$('.departure_date${status.index}').val( "<fmt:formatDate value='${car_sel.d_date}' pattern='yyyy-MM-dd'/>" );
+						
+					});
+						
+				</script>
+				
+			</c:forEach>
+		</c:if>
 			
-		</div>
+		<c:if test="${empty car_sel}">
+			<div class="plus_div">
+			
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">회사명  <span class="small_jh">[필수]</span></div>
+					<div class="mentor_info infoInp">
+						<input type="text" id="company" name="company" style="width: 100%;" value="" placeholder="회사명을 입력하세요.">
+					</div>
+				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">
+						<div style="margin-top: 40px;">재직기간  <span class="small_jh">[필수]</span></div>
+					</div>
+					<div style="width: 60%;">
+						<div style="display: flex;">
+							<div class="mentor_info infoCtg">입사일자</div>
+							<div class="mentor_info infoInp">
+								<input type="text" class="datepicker-here width100" id="entering_date" name="entering_date" readonly="readonly">
+								<!-- <input type="text" class="PastDateDemo" name="entering_date" readonly="readonly"> -->
+							</div>
+						</div>
+						<div style="display: flex;">
+							<div class="mentor_info infoCtg">퇴사일자</div>
+							<div class="mentor_info infoInp">
+							   <input type="text" class="dDate datepicker-here width100" id="departure_date" name="departure_date" value=" " readonly="readonly">
+								<!-- <input type="text" class="PastDateDemo" name="departure_date" readonly="readonly"> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">직무  <span class="small_jh">[필수]</span></div>
+					<div class="mentor_info infoInp">
+						<select id="task" id="task" name="task" style="width: 50%; height: 30px;">
+							<option value="">선택</option>
+							<option value="프론트엔드">프론트엔드</option>
+							<option value="백엔드">백엔드</option>
+						</select>
+					</div>
+				</div>
+				
+			</div>
+		</c:if>
+		
 	</div>
 	
 	<!-- 추가하기 btn -->

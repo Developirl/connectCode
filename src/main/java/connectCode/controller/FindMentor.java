@@ -338,6 +338,8 @@ public class FindMentor {
 	public String paymentCompletePage(@ModelAttribute MentoringDTO mentoring,Model model) {
 		
 		model.addAttribute("mentoring",mentoring);
+		System.out.println("findMentor 에서 paymentCompletePage 요청에서 꺼낸 mentoring 객체의 값 : ");
+		System.out.println(mentoring);
 		
 		return "findMentor/paymentComplete";
 	}

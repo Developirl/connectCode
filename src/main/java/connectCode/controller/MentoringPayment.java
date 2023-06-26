@@ -45,6 +45,9 @@ public class MentoringPayment {
 	private PaymentService payService;
 	
 	@Autowired
+	private FindMentorService findMentor;
+	
+	@Autowired
 	private FindMentorService fmservice;
 
 	
@@ -83,7 +86,8 @@ public class MentoringPayment {
 	@RequestMapping(value = "/order/complete", method = RequestMethod.POST)
 	public int paymentComplete(@RequestBody MentoringDTO mentoringDTO) throws Exception {
 
-		System.out.println("여기 도달");
+		System.out.println("dto 를 꺼내볼까용?");
+		System.out.println(mentoringDTO);
 		
 		 System.out.println("imp_uid:"+mentoringDTO.getIamport_order_no());
 		 System.out.println("merchant_uid:"+mentoringDTO.getOrder_no());
@@ -114,12 +118,12 @@ public class MentoringPayment {
 				return res;
 			}
 		    
-		    System.out.println("DB에 저장하는 내용들 : "+mentoringDTO);
-			//orderService.insert_pay(orderDTO); // 이게 DB에 저장하는 내용
-		    
 		    
 			payService.insertMentoringAndPayment(mentoringDTO);
+			System.out.println("insertMentoringAndPayment 매소드 사용시: "+mentoringDTO);
 		    
+			findMentor.sendMentoringApplyalarm(mentoringDTO);
+			
 		    
 		    return mentoringDTO.getPayment_no();
 
@@ -128,14 +132,19 @@ public class MentoringPayment {
 	
 	
 	@GetMapping("refund")
-	public void refund(int payment_no) {
+	@ResponseBody
+	public int refund(int payment_no) {
+		
+		int result = 0;
 		
 		try {
-			payService.orderCancle(payment_no);
+			result = payService.orderCancle(payment_no);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return result;
 		
 	}
 	
