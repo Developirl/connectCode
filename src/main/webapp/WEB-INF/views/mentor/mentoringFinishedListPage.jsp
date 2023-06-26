@@ -60,13 +60,6 @@
 	
 	
     <script>
-    /* $("#svg").click(function(){
-    	alert("test");
-    	$("#myform").value = "";
-    	$("#myform").action = "mentoringApplyListPage";
-    	$("#myform").submit();    	
-    	
-    });  */  
     
     // 정렬 기능
     function finished1(){
@@ -81,7 +74,6 @@
     
  	// 모달 오픈하는 함수로, 오픈시킬 버튼에 onclick에서 함수 호출해주심 됩니다.
 	function openReserveDetailModal(mentoring_no) {
-		alert(mentoring_no);
 	    const modal = document.querySelector('.jh-reserve-detail-modal');
 	    
 		$.ajax ({
@@ -105,7 +97,6 @@
 	    modal.style.display = 'none';
 	}
 	
-    </script>
     </script>
     
 	<div class="w3-container">

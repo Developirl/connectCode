@@ -70,7 +70,7 @@
 	<div style="display: flex;">
 		<div class="small_jh mentor_info infoCtg">포트폴리오</div>
 		<div class="small_jh mentor_info infoInp">
-			<a href="download.do?fname=${physical_name}"> ${apply_detail.origin_name}</a>
+			<a href="download?fname=${physical_name}"> ${apply_detail.origin_name}</a>
 		</div>
 	</div>
 </div>

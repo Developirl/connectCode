@@ -57,25 +57,25 @@
 				</div>
 			</c:forEach>
 		</c:if>	
-	</div>
 	
-	<c:if test="${empty msel.technology}">
-		<div class="plusTech_div">
-		
-			<div style="display: flex;">
-				<div class="mentor_info infoCtg">보유기술</div>
-				<div class="mentor_info infoInp">
-					<select id="technology" name="technology" style="width: 50%; height: 30px;"></select>
+		<c:if test="${empty msel.technology}">
+			<div class="plusTech_div">
+			
+				<div style="display: flex;">
+					<div class="mentor_info infoCtg">보유기술</div>
+					<div class="mentor_info infoInp">
+						<select class="technology" id="technology" name="technology" style="width: 50%; height: 30px;"></select>
+					</div>
 				</div>
+		
 			</div>
-	
-		</div>
-	</c:if>
-	
-	<!-- 추가하기 btn -->
-	<div class="cont_mar" align="right" style="margin-top: 0px;">
-		<button type="button" class="small_jh btn_jh plusTech_btn" style="background-color: black; color: #fff;">추가하기 +</button>
+		</c:if>
 	</div>
+		
+		<!-- 추가하기 btn -->
+		<div class="cont_mar" align="right" style="margin-top: 0px;">
+			<button type="button" class="small_jh btn_jh plusTech_btn" style="background-color: black; color: #fff;">추가하기 +</button>
+		</div>
 	
 	<hr class="title_hr">
 	

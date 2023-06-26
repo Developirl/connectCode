@@ -33,7 +33,7 @@
 			, extension
 		) values (
 			  #{file_no}
-			  #{file_serial_number}
+			, #{file_serial_number}
 			, #{origin_name}
 			, #{physical_name}
 			, #{file_url}
