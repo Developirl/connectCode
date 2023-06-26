@@ -5,29 +5,123 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="connectCode.mapper.freeMentoringMapper">
 
-<select id="getMentee" resultType="freeMentoringBoardDTO">
+<select id="getMentee" resultType="MenteeDTO">
 SELECT * FROM mentee WHERE member_no = #{member_no}
 </select>
 
+<!-- 검색과 전체개수 불러오기 -->
 <select id="getFreeBoardCount" resultType="int">
 select count(*) from free_mentoring_board
+<where>
+	<if test="keyword != null">
+      <choose>
+        <when test="search == 'name'">
+          AND name LIKE CONCAT('%', #{keyword}, '%')
+        </when>
+        <when test="search == 'free_title'">
+          AND free_title LIKE CONCAT('%', #{keyword}, '%')
+        </when>
+        <when test="search == 'free_regdate'">
+          AND free_regdate LIKE CONCAT('%', #{keyword}, '%')
+        </when>
+      </choose>
+    </if>
+</where>
 </select>
 
+<!-- list 가져오기 -->
 <select id="getList" resultType="freeMentoringBoardDTO">
+<!-- 	<bind name="paramend" value="${param2 - param1.startRow}"/>
+	<bind name="paramlimit" value="${param1.startRow - param1.endRow + 1}"/> -->
 
   select * from 
   (select * from free_mentoring_board
-  ORDER BY free_regdate DESC, free_no DESC) As subquery
-  Limit #{param2}, #{param1}
+  <where>
+	<if test="param1.keyword != null">
+      <choose>
+        <when test="param1.search == 'name'">
+          AND name LIKE CONCAT('%', #{param1.keyword}, '%')
+        </when>
+        <when test="param1.search == 'free_title'">
+          AND free_title LIKE CONCAT('%', #{param1.keyword}, '%')
+        </when>
+        <when test="param1.search == 'free_regdate'">
+          AND free_regdate LIKE CONCAT('%', #{param1.keyword}, '%')
+        </when>
+      </choose>
+    </if>
+</where> 
+  ORDER BY free_regdate DESC, free_no desc) As subquery 
+  Limit #{param2}, #{param3}
 
 </select>
 
-<insert id="freeInsert">
-INSERT INTO free_mentoring_board 
-(name, mentee_no, free_title, free_content, free_regdate, readcount, free_comment_count)
-SELECT DISTINCT mentee.name, mentee.mentee_no, , '안녕안녕하세요', sysdate(), 10, 10
-FROM mentee
-LEFT JOIN free_mentoring_board ON mentee.mentee_no = free_mentoring_board.mentee_no
+<select id="freeRead" resultType="freeMentoringBoardDTO">
+select * from free_mentoring_board where free_no = #{free_no}
+</select>
+
+<!-- 조회수 -->
+<update id="updatefreeReadCount">
+update free_mentoring_board set readcount = readcount + 1 where free_no = #{free_no}
+</update>
+
+<!-- 멘토 가져오기 -->
+<select id="getMentor" resultType="MentorDTO">
+select * from mentor where mentor_no = #{mentor_no}
+</select>
+
+<!-- 답글 리스트 가져오기 -->
+<select id="getFreeReplyList" resultType="freeMentoringReplyDTO">
+select * from free_mentoring_reply where free_no = #{free_no} order by free_reply_regdate desc
+</select>
+
+<select id="getFreeReplyCount" resultType="int">
+SELECT count(*) FROM free_mentoring_reply where free_no = #{free_no} 
+</select>
+
+<!-- 답글 insert -->
+<insert id="InsertFreeReply">
+INSERT INTO free_mentoring_reply(mentor_no,free_no,board_no,name, free_reply_regdate,free_reply_content)
+VALUES(#{mentor_no}, #{free_no}, 2, #{name}, sysdate(), #{free_reply_content})
 </insert>
+
+<!-- 답글 수 업데이트 + 1 -->
+<update id="updateFreeCommentCount">
+UPDATE free_mentoring_board SET free_comment_count = free_comment_count + 1 WHERE free_no = #{free_no}
+</update>
+
+<!-- 답글 수 업데이트 -1 -->
+<update id="updateMinusFreeCommentCount">
+UPDATE free_mentoring_board SET free_comment_count = free_comment_count - 1 WHERE free_no = #{free_no}
+</update>
+
+<!-- 답글 delete -->
+<delete id="DeleteFreeReply">
+DELETE FROM free_mentoring_reply WHERE free_reply_no = #{free_reply_no}
+</delete>
+
+<!-- 답글 update -->
+<update id="UpdateFreeReply">
+UPDATE free_mentoring_reply SET free_reply_content = #{param2}, free_reply_regdate = sysdate() WHERE free_reply_no = #{param1}
+</update>
+
+<!-- //////////////////////////////////////////////////////////////////////////// -->
+<!-- 원문 insert -->
+<insert id="freeInsert">
+insert into free_mentoring_board (mentee_no,free_title,free_content,name,free_regdate,readcount,free_comment_count)
+ values(#{mentee_no },#{free_title },#{free_content },#{name },sysdate(),0,0)
+</insert>
+
+<!-- 원문 update -->
+<update id="freeUpdate">
+update free_mentoring_board set free_title = #{free_title}, free_content = #{free_content}, free_regdate = sysdate() 
+where 
+free_no = #{free_no}
+</update>
+
+<!-- 원문 delete -->
+<delete id="deleteFree">
+DELETE FROM free_mentoring_board WHERE free_no = #{free_no}
+</delete>
 
 </mapper>
