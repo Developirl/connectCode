@@ -20,7 +20,7 @@
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->
 				<select name="search" id="search" class="search_sel small_jh"
-					style="width: 120px; float: left;">
+					style="width: 120px; float: left; margin-left:760px;">
 					<option value="all">전체</option>
 					<option value="apply">처리</option>
 					<option value="refuse">미처리</option>
@@ -58,7 +58,7 @@
 				<tbody align="center">
 					<tr
 						onClick="location.href='masterInquireDetail?member_no=${post.member_no}&post_no=${post.post_no}'">
-						<td>${post.ref_post_no }</td>
+						<td>${post.number }</td>
 						<td>${post.title }</td>
 						<td>${post.name }</td>
 						<td>${post.member_no }</td>
@@ -92,7 +92,7 @@
 			</c:forEach>
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterInquireList?pageNum=${p.endPage-1 }"
+					href="masterInquireList?pageNum=${p.endPage+1 }"
 					style="color: black;">다음</a></li>
 			</c:if>
 		</c:if>
@@ -111,7 +111,7 @@
 			</c:forEach>
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterInquireList?pageNum=${p.endPage-1 }&keyword=${keyword}&search=${search}"
+					href="masterInquireList?pageNum=${p.endPage+1 }&keyword=${keyword}&search=${search}"
 					style="color: black;">다음</a></li>
 			</c:if>
 			</c:if>

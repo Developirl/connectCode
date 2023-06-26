@@ -1,9 +1,14 @@
 package connectCode.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileDTO {
 
 	private int file_no; // 참조하는 테이블의 고유번호
@@ -11,11 +16,11 @@ public class FileDTO {
 	private String origin_name;
 	private String physical_name;
 	private String file_url;
-	private long size;	// springframework 클래스인 multipartFile.getSize() 메소드가 long 타입으로 반환 하므로 long으로 맞춰줌
+	private long size; // springframework 클래스인 multipartFile.getSize() 메소드가 long 타입으로 반환 하므로 long으로 맞춰줌
 	private String extension;
-	
+
 	// 생성자
-	@Builder 
+	@Builder
 	public FileDTO(String origin_name, String physical_name, String file_url, long size, String extension) {
 		this.origin_name = origin_name;
 		this.physical_name = physical_name;
@@ -23,13 +28,13 @@ public class FileDTO {
 		this.size = size;
 		this.extension = extension;
 	}
-	
+
 	// setter method
 	public void setfile_no(int file_no) {
 		this.file_no = file_no;
 	}
-	
-	//추가한 코드
+
+	// 추가한 코드
 	public void setFile_serial_number(int num) {
 		file_serial_number = num;
 	}
@@ -40,6 +45,5 @@ public class FileDTO {
 				+ origin_name + ", physical_name=" + physical_name + ", file_url=" + file_url + ", size=" + size
 				+ ", extension=" + extension + "]";
 	}
-	
-	
+
 }

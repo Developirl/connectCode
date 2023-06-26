@@ -14,6 +14,13 @@
 		},
 		options : {
 			responsive : false,
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			},
 		}
 	});
 

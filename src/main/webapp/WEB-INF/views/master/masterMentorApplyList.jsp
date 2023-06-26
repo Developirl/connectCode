@@ -19,7 +19,7 @@
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->
-				<select name="search" id="search" class="search_sel small_jh" onchange="searchChange(this.value)" style="width: 120px; float: left;">
+				<select name="search" id="search" class="search_sel small_jh" style="width: 120px; float: left; margin-left:760px;">
 					<option value="all"<c:if test="${search='all' }">selected="selected"</c:if>>전체</option>
 					<option value="wait"<c:if test="${search='wait' }">selected="selected"</c:if>>대기</option>
 					<option value="apply"<c:if test="${search='apply' }">selected="selected"</c:if>>승인완료</option>
@@ -68,6 +68,7 @@
 								<c:when test="${mentor.classification == '22'}">대기</c:when>
 								<c:when test="${mentor.classification == '23'}">승인완료</c:when>
 								<c:when test="${mentor.classification == '24'}">승인거부</c:when>
+								<c:when test="${mentor.classification == '25'}">프로필수정</c:when>
 						</c:choose>
 						</td>
 					</tr>
@@ -92,7 +93,7 @@
 			</c:forEach>
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterMentorApplyList?pageNum=${p.endPage-1 }"
+					href="masterMentorApplyList?pageNum=${p.endPage+1 }"
 					style="color: black;">다음</a></li>
 			</c:if>
 		</c:if>
@@ -111,7 +112,7 @@
 			</c:forEach>
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterMentorApplyList?pageNum=${p.endPage-1 }&keyword=${keyword}&search=${search}"
+					href="masterMentorApplyList?pageNum=${p.endPage+1 }&keyword=${keyword}&search=${search}"
 					style="color: black;">다음</a></li>
 			</c:if>
 			</c:if>

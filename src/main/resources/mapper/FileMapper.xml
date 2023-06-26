@@ -42,4 +42,39 @@
 		)
 	</insert>
 
+
+	<!-- 
+	<insert id="saveAll" parameterType="list">
+		<selectKey keyProperty="file_serial_number" resultType="int" order="AFTER">
+			SELECT COALESCE(MAX(file_serial_number),0)+1 AS file_serial_number
+			FROM file
+			WHERE file_no = #{file.file_no}
+		</selectKey>
+
+		INSERT INTO file (
+			<include refid="fileColumns"/>
+		) VALUES
+		<foreach item="file" collection="list" separator=","> 
+		item = 리스트에 담긴 각각의 FileDTO 객체 / collection = 파라미터의 타입 / separator = 각 쿼리를 구분할 구분자
+		(
+			  #{file_serial_number}
+			, #{file.file_no}
+			, #{file.origin_name}
+			, #{file.physical_name}
+			, #{file.file_url}
+			, #{file.size}
+			, #{file.extension}
+		)
+		</foreach>
+	</insert> -->
+	
+	<!-- 파일 다운로드 -->
+	<select id="file" resultType="FileDTO">
+		select file_no,
+		file_serial_number,file_serial_number, origin_name,
+		file_url,extension, size from file
+		where file_no=#{file_no} and file_serial_number=#{file_serial_number};
+	</select>
+	
+
 </mapper>

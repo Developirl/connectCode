@@ -13,7 +13,13 @@
 	</nav>
 
 	<div class="m_box" align="center">
-		<img src=${mentor.file_url } id="mentor_profile" />
+	<c:if test= "${ empty mentor.file_url }">
+		<img src="/public/img/profile_img.png" id="mentor_profile" >
+	</c:if>
+	<c:if test = "${!empty mentor.file_url }" >
+		<%-- <img src="${mentor.file_url }" id="mentor_profile" /> --%>
+		<img src='<c:url value="filedownload?file_no=${mentor.file_no }&file_serial_number=${mentor.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${mentor.size}"/>' id="mentor_profile">
+	</c:if>
 
 		<table border=1 id="mentor_det1">
 			<tr align="center">
@@ -126,16 +132,17 @@
 		<br>
 		
 		<div class="file-info" align="left">
-		첨부파일:	<c:forEach var="education" items="${educationFile }">
-				<a href='<c:url value="filedownload?file_no=${education.file_no }&file_serial_number=${education.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${education.size}"/>'>${education.origin_name }</a>
-				<%-- <img src='<c:url value="filedownload?efile_no=${education.file_no }&ef_serial_no=${education.file_serial_number}&mentor_no=${mentor.mentor_no }"/>'></img> --%>
-			</c:forEach>
-			<c:forEach var="career" items="${careerFile }">
+		첨부파일:	<c:forEach var="file" items="${file_list }">
+					<a href='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'>${file.origin_name }</a>
+				<%-- <img src='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'></img> --%>
+				</c:forEach>
+				
+<%-- 			<c:forEach var="career" items="${file_list }">
 				<a href='<c:url value="filedownload?cfile_no=${career.file_no }&mentor_no=${mentor.mentor_no }"/>'>${career.origin_name }</a>
 			</c:forEach>
-			<c:forEach var="license" items="${licenseFile }">
+			<c:forEach var="license" items="${file_list }">
 				<a href='<c:url value="filedownload?lfile_no=${license.file_no }&mentor_no=${mentor.mentor_no }"/>'>${license.origin_name }</a>
-			</c:forEach>
+			</c:forEach> --%>
 		</div>
 
 		<form action="mentorDetailApply">

@@ -23,5 +23,6 @@ public class PostDTO {
 	
 	private String name;
 	private String reply_status;
+	private int number;
 
 }

@@ -19,7 +19,7 @@
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->
 				<select name="search" class="search_sel small_jh"
-					style="width: 120px; float: left;">
+					style="width: 120px; float: left; margin-left:760px;">
 					<option value="all">전체</option>
 					<option value="mentor">멘토</option>
 					<option value="mentee">멘티</option>
@@ -80,13 +80,33 @@
 			</table>
 			<br>
 			<div align="right">
-				<input type="submit" value="메일보내기" class="btn btn-dark""
+				<input type="submit" value="메일보내기" class="btn btn-dark"
 					onClick="return check()">
 			</div>
 		</form>
-
-		<!-- 전체 목록 페이징 처리 -->
+<!-- 목록 페이징 처리 -->
 		<ul class="pagination justify-content-center">
+		<!-- 검색 했을 때 페이징 처리 -->
+			<c:if test="${not empty keyword}">
+			<c:if test="${p.startPage > p.pageBlk}">
+				<li class="page-item"><a class="page-link"
+					href="masterMemberList?pageNum=${p.startPage-1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">이전</a></li>
+			</c:if>
+			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
+				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
+					<a class="page-link" href="masterMemberList?pageNum=${i}&keyword=${keyword}&search=${search}"
+					style="color: black;">${i}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${p.endPage < p.totalPage }">
+				<li class="page-item"><a class="page-link"
+					href="masterMemberList?pageNum=${p.endPage+1 }"
+					style="color: black;">다음</a></li>
+			</c:if>
+		</c:if>
+		<!-- 전체 목록의 페이징 처리 -->
+		<c:if test="${empty keyword }">
 			<c:if test="${p.startPage > p.pageBlk}">
 				<li class="page-item"><a class="page-link"
 					href="masterMemberList?pageNum=${p.startPage-1 }"
@@ -98,11 +118,11 @@
 					style="color: black;">${i}</a>
 				</li>
 			</c:forEach>
-
 			<c:if test="${p.endPage < p.totalPage }">
 				<li class="page-item"><a class="page-link"
-					href="masterMemberList?pageNum=${p.endPage-1 }"
+					href="masterMemberList?pageNum=${p.endPage+1 }&keyword=${keyword}&search=${search}"
 					style="color: black;">다음</a></li>
+			</c:if>
 			</c:if>
 		</ul>
 	</div>

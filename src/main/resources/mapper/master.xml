@@ -3,15 +3,69 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="connectCode.mapper.MasterDAO">
-	<!-- 멘토 전체 데이터 -->
+	<!-- 멘토 승인 전체 데이터 -->
 	<select id="getTotal1" parameterType="MentorDTO"
 		resultType="int">
-		select count(distinct mentor.mentor_no) as count from
+		SELECT COUNT(*) AS count
+		FROM (
+		SELECT subquery.*,
+		subquery2.number,
+		(SELECT (YEAR(NOW()) - YEAR(subquery.birthday)) -
+		(DATE_FORMAT(subquery.birthday, '%m%d') > DATE_FORMAT(NOW(), '%m%d')))
+		AS 'age'
+		FROM (
+		SELECT DISTINCT mentor.*, career.years, career.task
+		FROM
 		mentor
-		left join career on mentor.mentor_no = career.mentor_no
+		LEFT JOIN career ON mentor.mentor_no = career.mentor_no
 		WHERE
-		classification = 22 or
-		classification=23 or classification=24
+		classification = 22 OR classification = 23 OR classification = 24
+		)
+		subquery
+		JOIN (
+		SELECT *, row_number() OVER (ORDER BY mentor_no) AS
+		number
+		FROM mentor
+		) subquery2 ON subquery.mentor_no =
+		subquery2.mentor_no
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					AND (subquery.name LIKE CONCAT('%', #{keyword}, '%')
+					OR subquery.task LIKE CONCAT('%', #{keyword}, '%')
+					OR subquery.years
+					LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+				<when test="keyword != null and search == 'wait'">
+					AND ((subquery.classification = 22 OR
+					subquery.classification = 25)
+					AND (subquery.name LIKE CONCAT('%',
+					#{keyword}, '%')
+					OR subquery.task LIKE CONCAT('%', #{keyword}, '%')
+					OR subquery.years LIKE CONCAT('%', #{keyword}, '%')))
+				</when>
+				<when test="keyword != null and search == 'apply'">
+					AND (subquery.classification = 23
+					AND (subquery.name
+					LIKE CONCAT('%', #{keyword}, '%')
+					OR subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					OR subquery.years LIKE CONCAT('%', #{keyword},
+					'%')))
+				</when>
+				<when test="keyword != null and search == 'refuse'">
+					AND (subquery.classification = 24
+					AND (subquery.name
+					LIKE CONCAT('%', #{keyword}, '%')
+					OR subquery.task LIKE CONCAT('%',
+					#{keyword}, '%')
+					OR subquery.years LIKE CONCAT('%', #{keyword},
+					'%')))
+				</when>
+			</choose>
+		</where>
+		ORDER BY number DESC
+		) subquery_with_count;
 	</select>
 
 	<!-- 멘티 전체 데이터 -->
@@ -19,6 +73,24 @@
 		resultType="int">
 		select
 		count(*) from mentee
+	</select>
+
+	<!-- 멤버 전체 데이터 -->
+	<select id="getTotalmember" resultType="int">
+		SELECT COUNT(DISTINCT
+		subquery_with_count.member_no) AS count
+		FROM (
+		SELECT member.member_no,
+		mentor.name AS mentor_name, mentee.name AS
+		mentee_name
+		FROM member
+		LEFT
+		JOIN mentor ON member.member_no = mentor.member_no
+		LEFT JOIN mentee ON
+		member.member_no = mentee.member_no
+		ORDER BY member.member_no DESC
+		)
+		subquery_with_count
 	</select>
 
 	<!-- 멘토 승인 요청 리스트 -->
@@ -61,9 +133,11 @@
 					LIKE CONCAT('%', #{keyword}, '%')
 				</when>
 				<when test="keyword != null and search == 'wait'">
-					subquery.classification = 22 and(
+					(subquery.classification = 22 or
+					subquery.classification=25) and(
 					subquery.name LIKE
-					CONCAT('%', #{keyword}, '%')
+					CONCAT('%',
+					#{keyword}, '%')
 					or subquery.task LIKE CONCAT('%',
 					#{keyword}, '%')
 					or subquery.years LIKE CONCAT('%', #{keyword},
@@ -90,7 +164,7 @@
 			</choose>
 		</where>
 		order by
-		apply_date desc
+		number desc
 		limit #{startRow},
 		#{endRow}
 	</select>
@@ -123,11 +197,17 @@
 		by e_date
 	</select>
 
+	<!-- 파일 가져오기 -->
+	<select id="getEduFileList" parameterType="int"
+		resultType="FileDTO">
+		select file_no,file_serial_number,file_url,origin_name,size
+		from file where file_no=#{file_no}
+	</select>
+
 	<!-- 멘토 자격증 -->
-	<select id="mentorLicenseFile" parameterType="int"
+	<select id="mentorLicense" parameterType="int"
 		resultType="MentorDTO">
-		select * from license as l left join file as f on
-		l.file_no=f.file_no where mentor_no=#{mentor_no}
+		select * from license where mentor_no=#{mentor_no}
 	</select>
 
 	<!-- 멘토 경력 파일 -->
@@ -141,13 +221,14 @@
 	<select id="mentorEducationFile" parameterType="int"
 		resultType="MentorDTO">
 		select Distinct e.education_no,f.file_no, f.origin_name,
-		f.size from education as e left join file as f on
+		f.size, f.file_serial_number from education as e left join file as f
+		on
 		e.file_no=f.file_no
 		where mentor_no=${mentor_no}
 	</select>
 
 	<!-- 멘토 자격증 파일 -->
-	<select id="mentorLicense" parameterType="int"
+	<select id="mentorLicenseFile" parameterType="int"
 		resultType="MentorDTO">
 		select * from license as l left join file as f on
 		l.file_no=f.file_no where mentor_no=#{mentor_no}
@@ -170,17 +251,21 @@
 		update mentor set
 		classification=24 where mentor_no=#{mentor_no}
 	</update>
-	
+
 	<!-- 멘토 요청 승인 알림 -->
 	<insert id="mentorApplyAlarm" parameterType="MentorDTO">
-		insert into alarm(title, content, happen_time, read_yn, receiver_mem_no) 
-		values('멘토 요청이 승인되었습니다.', '멘토 요청이 승인되었습니다. 활발한 멘토 활동을 기대하겠습니다.', sysdate(), 'N', #{member_no})
+		insert into
+		alarm(title, content, happen_time, read_yn, receiver_mem_no)
+		values('멘토 요청이 승인되었습니다.', '멘토 요청이 승인되었습니다. 활발한 멘토 활동을 기대하겠습니다.',
+		sysdate(), 'N', #{member_no})
 	</insert>
 
 	<!-- 멘토 요청 거부 알림 -->
 	<insert id="mentorApplyRefuse" parameterType="MentorDTO">
-		insert into alarm(title, content, happen_time, read_yn, receiver_mem_no) 
-		values('멘토 요청이 거부되었습니다.', '멘토 요청이 거부되었습니다. 프로필을 다시 작성해 주세요.', sysdate(), 'N', #{member_no})
+		insert into
+		alarm(title, content, happen_time, read_yn, receiver_mem_no)
+		values('멘토 요청이 거부되었습니다.', '멘토 요청이 거부되었습니다. 프로필을 다시 작성해 주세요.',
+		sysdate(), 'N', #{member_no})
 	</insert>
 
 	<!-- 멘티 리스트 -->
@@ -193,24 +278,35 @@
 	<!-- 멘토,멘티 전체 회원 -->
 	<select id="totallist" resultType="MentorDTO">
 		select *, mentor.name as
-		mentor_name, mentee.name as mentee_name from member
+		mentor_name, mentee.name as mentee_name from
+		member
 		left join mentor on
 		member.member_no=mentor.member_no
-		left join mentee on
+		left join
+		mentee on
 		member.member_no=mentee.member_no
 		<where>
 			<choose>
 				<when test="keyword != null and search == 'all'">
-					and mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
-					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%')
+					and mentor.name LIKE CONCAT('%', #{keyword}, '%') ||
+					mentee.name LIKE CONCAT('%', #{keyword}, '%')
+					or mentor.member_no
+					LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE
+					CONCAT('%', #{keyword}, '%')
 				</when>
 				<when test="keyword != null and search == 'mentor'">
-					member.classification=13 and (mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
-					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+					member.classification=13 and (mentor.name LIKE
+					CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%',
+					#{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword},
+					'%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
 				</when>
 				<when test="keyword != null and search == 'mentee'">
-					member.classification=12 and (mentor.name LIKE CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%', #{keyword}, '%')
-					or mentor.member_no LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+					member.classification=12 and (mentor.name LIKE
+					CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%',
+					#{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword},
+					'%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
 				</when>
 			</choose>
 		</where>
@@ -231,50 +327,81 @@
 	<!-- 문의 전체 데이터 -->
 	<select id="getPostTotal" parameterType="PostDTO"
 		resultType="int">
-		select
-		count(*) from post where ref_step=0 and board_no=1
+		SELECT COUNT(*) AS count
+		FROM (
+		SELECT p.*, t.name,
+		row_number() OVER
+		(ORDER BY p.reg_date) AS number
+		FROM post p
+		JOIN (
+		SELECT name, member_no
+		FROM mentor
+		UNION
+		SELECT name, member_no FROM mentee
+		) t ON p.member_no =
+		t.member_no
+		WHERE
+		<choose>
+			<when test="keyword != null and search == 'all'">
+				t.name LIKE CONCAT('%', #{keyword}, '%')
+				OR p.title
+				LIKE CONCAT('%', #{keyword}, '%')
+			</when>
+			<when test="keyword != null and search == 'apply'">
+				p.reply_yn = 'Y' AND (t.name LIKE CONCAT('%',
+				#{keyword}, '%') OR p.title LIKE
+				CONCAT('%', #{keyword}, '%'))
+			</when>
+			<when test="keyword != null and search == 'refuse'">
+				p.reply_yn = 'N' AND (t.name LIKE CONCAT('%',
+				#{keyword}, '%') OR p.title LIKE
+				CONCAT('%', #{keyword}, '%'))
+			</when>
+			<otherwise>
+				p.ref_step = 0 AND p.board_no = 1
+			</otherwise>
+		</choose>
+		ORDER BY number DESC
+		) subquery_with_count;
 	</select>
 
 	<!-- 문의 리스트 -->
 	<select id="postlist" resultType="PostDTO">
-		select p.*, t.name
+		select p.*, t.name,
+		row_number() over (order by p.reg_date) as number
 		from post p
 		join(
 		select name, member_no from mentor
 		union
-		select name, member_no
+		select name,
+		member_no
 		from mentee
 		) t on p.member_no =
 		t.member_no
-		where ref_step=0 and board_no=1
 		<where>
-			<choose> 
+			<choose>
 				<when test="keyword != null and search == 'all'">
-					and (t.name LIKE CONCAT('%', #{keyword}, '%')
+					t.name LIKE CONCAT('%', #{keyword}, '%')
+					or
+					p.title
+					LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+				<when test="keyword != null and search == 'apply'">
+					p.reply_yn='Y' and (t.name LIKE CONCAT('%',
+					#{keyword}, '%')
 					or
 					p.title LIKE CONCAT('%', #{keyword}, '%'))
 				</when>
-<!-- 				<when test="keyword != null and search == 'apply'">
-					(ref_step=0 and board_no=1) and(
-					subquery.name LIKE
-					CONCAT('%', #{keyword}, '%')
-					or subquery.task LIKE CONCAT('%',
+				<when test="keyword != null and search == 'refuse'">
+					p.reply_yn='N' and (t.name LIKE CONCAT('%',
 					#{keyword}, '%')
-					or subquery.years LIKE CONCAT('%', #{keyword},
-					'%'))
-				</when> -->
-<!-- 				<when test="keyword != null and search == 'refuse'">
-					subquery.classification = 24 and(
-					subquery.name LIKE
-					CONCAT('%', #{keyword}, '%')
-					or subquery.task LIKE CONCAT('%',
-					#{keyword}, '%')
-					or subquery.years LIKE CONCAT('%', #{keyword},
-					'%'))
-				</when> -->
+					or
+					p.title LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+				<otherwise>ref_step=0 and board_no=1</otherwise>
 			</choose>
 		</where>
-		order by p.reg_date desc
+		order by number desc
 		limit ${startRow}, #{endRow}
 	</select>
 
@@ -450,32 +577,73 @@
 	</select>
 
 	<!-- 파일 정보 -->
-	<select id="file" resultType="FileDTO">
-		select education_no, f.file_no,
-		file_serial_number, mentor_no, file_serial_number, origin_name,
-		file_url, extension, size from education
-		as e
-		left join file as f on
-		e.file_no=f.file_no where e.file_no=#{file_no} and
-		file_serial_number=#{file_serial_number}
-	</select>
+	<!-- <select id="file" resultType="FileDTO"> select education_no, f.file_no, 
+		file_serial_number, mentor_no, file_serial_number, origin_name, file_url, 
+		extension, size from education as e left join file as f on e.file_no=f.file_no 
+		where e.file_no=#{file_no} and file_serial_number=#{file_serial_number} </select> -->
 
-	<select id="efile" resultType="MentorDTO">
-		select * from file as f left join
-		education as e on
-		e.file_no=f.file_no where f.file_no=#{file_no}
+	<!-- 파일 다운로드 -->
+	<select id="file" resultType="FileDTO">
+		select file_no,
+		file_serial_number,file_serial_number, origin_name,
+		file_url,extension, size from file
+		where file_no=#{file_no} and
+		file_serial_number=#{file_serial_number};
 	</select>
 
 
 	<!-- 결제 총 데이터 -->
 	<select id="getPay" resultType="int">
 		select count(*) from payment
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					and payment_method LIKE CONCAT('%', #{keyword}, '%')
+					or
+					order_no LIKE CONCAT('%', #{keyword}, '%')
+					or
+					pay_amount LIKE
+					CONCAT('%', #{keyword}, '%')
+					or
+					pay_state LIKE CONCAT('%',
+					#{keyword}, '%')
+					or
+					mentoring_no LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+			</choose>
+		</where>
 	</select>
 
 	<!-- 결제 리스트 -->
 	<select id="paylist" resultType="PaymentDTO">
-		select * from payment order by
+		select * from payment
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					and payment_method LIKE CONCAT('%', #{keyword}, '%')
+					or
+					order_no LIKE CONCAT('%', #{keyword}, '%')
+					or
+					pay_amount LIKE
+					CONCAT('%', #{keyword}, '%')
+					or
+					pay_state LIKE CONCAT('%',
+					#{keyword}, '%')
+					or
+					mentoring_no LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+			</choose>
+		</where>
+		order by
 		pay_time desc limit #{startRow}, #{endRow}
+	</select>
+
+	<!-- 결제 상세 -->
+	<select id="payDetail" resultType="PaymentDTO">
+		select * from payment left
+		join mentoring on payment.mentoring_no=mentoring.mentoring_no
+		where
+		payment_no=#{payment_no}
 	</select>
 
 	<!-- 신고 철회 -->
@@ -508,7 +676,7 @@
 		where date(pay_time) = curdate();
 	</select>
 
-	<!-- 통계  -->
+	<!-- 통계 -->
 	<select id="getMale" resultType="int">
 		select count(gender) from mentor
 		where gender='male'
@@ -567,7 +735,7 @@
 
 	<select id="getTsign_up" resultType="int">
 		select count(*) from member
-		where year(reg_date)=year(current_date()) 
+		where year(reg_date)=year(current_date())
 	</select>
 
 	<select id="getquit" resultType="int">
@@ -577,8 +745,10 @@
 	</select>
 
 	<select id="getlastquit" resultType="int">
-		SELECT COUNT(*) FROM quit_member
-		WHERE YEAR(quit_date) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)
+		SELECT COUNT(*) FROM
+		quit_member
+		WHERE YEAR(quit_date) = YEAR(CURRENT_DATE() - INTERVAL 1
+		MONTH)
 		AND MONTH(quit_date) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH)
 	</select>
 

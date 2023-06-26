@@ -13,10 +13,16 @@
 	</nav>
 
 	<div class="m_box3" align="center">
-		<img src=${mentor.file_url } id="mentor_profile" />
+	<c:if test= "${ empty mentor.file_url }">
+		<img src="/public/img/profile_img.png" id="mentor_profile2" >
+	</c:if>
+	<c:if test = "${!empty mentor.file_url }" >
+		<%-- <img src="${mentor.file_url }" id="mentor_profile" /> --%>
+		<img src='<c:url value="filedownload?file_no=${mentor.file_no }&file_serial_number=${mentor.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${mentor.size}"/>' id="mentor_profile2">
+	</c:if>
 
 		<table border=1 id="mentor_det11">
-		<span class="large_jh" id="spanBox11"> 회원 기본 정보 </span>
+			<span class="large_jh" id="spanBox11"> 회원 기본 정보 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">회원번호</td>
 				<td style="background-color: #f3f3f3;">ID</td>
@@ -47,7 +53,7 @@
 
 		<br>
 		<table border=1 id="mentor_det11">
-		<span class="large_jh" id="spanBox11"> 학벌 </span>
+			<span class="large_jh" id="spanBox11"> 학벌 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">학교</td>
 				<td style="background-color: #f3f3f3;">학위</td>
@@ -73,7 +79,7 @@
 
 		<br>
 		<table border=1 id="mentor_det3">
-		<span class="large_jh" id="spanBox"> 경력 </span>
+			<span class="large_jh" id="spanBox"> 경력 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">회사</td>
 				<td style="background-color: #f3f3f3;">업무</td>
@@ -94,7 +100,7 @@
 
 		<br>
 		<table border=1 id="mentor_det3">
-		<span class="large_jh" id="spanBox"> 자격증 </span>
+			<span class="large_jh" id="spanBox"> 자격증 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">종류</td>
 				<td style="background-color: #f3f3f3;">자격증</td>
@@ -111,7 +117,7 @@
 		</table>
 		<br>
 		<table border=1 id="mentor_det3">
-		<span class="large_jh" id="spanBox"> 멘토링 </span>
+			<span class="large_jh" id="spanBox"> 멘토링 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">멘토링 종류</td>
 				<td style="background-color: #f3f3f3;">멘토링 요금</td>
@@ -125,7 +131,7 @@
 		</table>
 		<br>
 		<table border=1 id="mentor_det3">
-		<span class="large_jh" id="spanBox"> 멘토링 상세 내역 </span>
+			<span class="large_jh" id="spanBox"> 멘토링 상세 내역 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">기술</td>
 				<td style="background-color: #f3f3f3;">멘토링 장소</td>
@@ -142,7 +148,7 @@
 		<br>
 
 		<table border=1 id="mentor_det3">
-		<span class="large_jh" id="spanBox"> 기타 </span>
+			<span class="large_jh" id="spanBox"> 기타 </span>
 			<tr align="center">
 				<td style="background-color: #f3f3f3;">후기수</td>
 				<td style="background-color: #f3f3f3;">평점</td>
@@ -158,26 +164,27 @@
 
 		<div class="btnBox" align="center">
 			<form action="masterSendMailForm">
-				<input type="hidden" name="member_no" value="${mentor.member_no }"> <br> <input
-					type="submit" value="메일" class="mailBtn" />
+				<input type="hidden" name="member_no" value="${mentor.member_no }">
+				<br> <input type="submit" value="메일" class="mailBtn" />
 			</form>
 
 			<br> <input type="submit" value="목록" class="listBtn"
 				onClick="history.go(-1)" />
 
 			<form action="memberDelete">
-				<input type="hidden" name="member_no" value="${mentor.member_no }"> <br> <br> <input
-					type="submit" value="탈퇴" class="delBtn" onClick="return check()"/>
+				<input type="hidden" name="member_no" value="${mentor.member_no }">
+				<br> <br> <input type="submit" value="탈퇴" class="delBtn"
+					onClick="return check()" />
 			</form>
 		</div>
 	</div>
 
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
-	
+
 	<script>
-		function check(){
-			return confirm ("정말 탈퇴시키겠습니까?");
+		function check() {
+			return confirm("정말 탈퇴시키겠습니까?");
 		}
 	</script>
 

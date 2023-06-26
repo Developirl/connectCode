@@ -38,4 +38,10 @@ public class FileService {
 		}
 		//fileMapper.saveAll(files);
 	}
+
+	// 파일 다운로드
+	public FileDTO file(FileDTO fileDTO) {
+		
+		return fileMapper.file(fileDTO);
+	}
 }

@@ -16,11 +16,14 @@ import connectCode.model.VisitDTO;
 
 @Mapper
 public interface MasterDAO {
-	// 멘토 전체 데이터
+	// 멘토 승인 전체 데이터
 	int getTotal1(MentorDTO mentor);
 
 	// 멘티 전체 데이터
 	int getTotal2(MenteeDTO mentee);
+	
+	// 멘토 전체 데이터
+	int getTotalmember(MentorDTO mentor);
 
 	// 멘토 승인요청 목록 
 	List<MentorDTO> mentorlist(MentorDTO mentor);
@@ -142,6 +145,9 @@ public interface MasterDAO {
 
 	// 결제 리스트
 	List<PaymentDTO> paylist(PaymentDTO pay);
+	
+	// 결제 상세
+	PaymentDTO payDetail(int payment_no);
 
 	// 신고 철회
 	int reportCancle(int report_no);
@@ -179,6 +185,7 @@ public interface MasterDAO {
 	int getlastquit();
 	int getTquit();
 	
+	List<FileDTO> getEduFileList(int file_no);
 	
 	
 	
@@ -194,8 +201,6 @@ public interface MasterDAO {
 	public int getMentees();
 	public int getUnreadyMentors();
 	public int getReadyMentors();
-
-
 
 //*****************************병걸 작성***************************************
 	

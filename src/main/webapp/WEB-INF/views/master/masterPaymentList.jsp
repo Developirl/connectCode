@@ -14,13 +14,13 @@
 
 	<div class="m_box">
 		<!-- 검색 -->
-		<form action="masterMentorApplyList">
+		<form action="masterPaymentList">
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
 				<!-- SELECT 1 -->
 				<select name="search" class="search_sel small_jh"
-					style="width: 120px; float: left;">
-					<option value="">전체</option>
+					style="width: 120px; float: left; margin-left:760px;">
+					<option value="all">전체</option>
 				</select>
 			</div>
 
@@ -54,7 +54,7 @@
 			</thead>
 			<tbody align="center">
 			<c:forEach var="pay" items="${paylist}">
-				<tr>
+				<tr onClick="location.href='masterPaymentDetail?payment_no=${pay.payment_no}'">
 					<td>${pay.payment_no }</td>
 					<td>${pay.mentoring_no }</td>
 					<td>${pay.order_no }</td>
@@ -70,14 +70,46 @@
 			</tbody>
 		</table>
 
-		<!-- 페이지 버튼 css는 페이징 처리 하는 사람들이랑 맞추기 -->
+	<!-- 목록 페이징 처리 -->
 		<ul class="pagination justify-content-center">
-			<li class="page-item"><a class="page-link" href="#"
-				style="color: black;">이전</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				style="color: black;">1</a></li>
-			<li class="page-item"><a class="page-link" href="#"
-				style="color: black;">다음</a></li>
+		<!-- 검색 했을 때 페이징 처리 -->
+			<c:if test="${not empty keyword}">
+			<c:if test="${p.startPage > p.pageBlk}">
+				<li class="page-item"><a class="page-link"
+					href="masterPaymentList?pageNum=${p.startPage-1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">이전</a></li>
+			</c:if>
+			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
+				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
+					<a class="page-link" href="masterPaymentList?pageNum=${i}&keyword=${keyword}&search=${search}"
+					style="color: black;">${i}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${p.endPage < p.totalPage }">
+				<li class="page-item"><a class="page-link"
+					href="masterPaymentList?pageNum=${p.endPage+1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">다음</a></li>
+			</c:if>
+		</c:if>
+		<!-- 전체 목록의 페이징 처리 -->
+		<c:if test="${empty keyword }">
+			<c:if test="${p.startPage > p.pageBlk}">
+				<li class="page-item"><a class="page-link"
+					href="masterPaymentList?pageNum=${p.startPage-1 }"
+					style="color: black;">이전</a></li>
+			</c:if>
+			<c:forEach var="i" begin="${p.startPage }" end="${p.endPage }">
+				<li class="page-item"<c:if test="${p.currentPage==i }">active</c:if>">
+					<a class="page-link" href="masterPaymentList?pageNum=${i}"
+					style="color: black;">${i}</a>
+				</li>
+			</c:forEach>
+			<c:if test="${p.endPage < p.totalPage }">
+				<li class="page-item"><a class="page-link"
+					href="masterPaymentList?pageNum=${p.endPage+1 }&keyword=${keyword}&search=${search}"
+					style="color: black;">다음</a></li>
+			</c:if>
+			</c:if>
 		</ul>
 	</div>
 
