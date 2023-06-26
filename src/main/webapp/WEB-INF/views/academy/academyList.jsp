@@ -16,20 +16,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Angkor&display=swap" rel="stylesheet">
 
-
-
-
 </head>
 <body>
-	<div id="frame">
-		<!-- 네비게이션 바/부트스트랩 -->
-		<%@ include file="../public/header.jsp"%><br>
-		<style>
-<!--
 
-.back{
-  margin:0;
-  background:#c8c8c8;
+<style>
+<!--
+* {
+	font-family:'Noto Sans KR', sans-serif;
 }
 
 .container {
@@ -64,25 +57,47 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
-	/* max-width: 350px;
-	width: 100%; */
-	width: 350px;
-	height: 250px;
+	max-width: 350px;
+	width: 100%;
+	height: 400px;
 	border-radius: 10px;
 	/* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); */
 	overflow: hidden;
 	background-size: cover;
-	border-color:  #fff;
+	/* background-image:url("../academy/img/Hrd_net.jpg"); */
+	border-color:  rgba(0, 0, 0, 0);
 	position: relative;
+
 }
 
-.card h2, .card p {
+.card p {
 	padding: 5px;
 	margin: 0;
 	color: #fff;
-	background-color: rgba(0, 0, 0, 0);
+	background-color: #0090f980;
 	font-size: 14px;
 	font-weight: bold;
+	text-align: center;
+}
+
+.card h2{
+	padding: 5px;
+	margin: 0;
+	color: #fff;
+	background-color: #0090f980;
+	font-size: 17px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.card h3{
+	padding: 5px;
+	margin: 0;
+	color: #fff;
+	background-color: #0090f980;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
 }
 
 button{
@@ -100,8 +115,42 @@ font-family:'Noto Sans KR', sans-serif;
   color: white; 
 }
 
+a.page{
+text-decoration: none;
+color: #33a8ff;
+}
+
+.card img{
+ width: 50%;
+ height: auto;
+ display: block;
+ margin: auto;
+}
+
+.start{
+display: flex;
+}
+
+#searchInput::placeholder{
+color:#b8bebe;
+}
+
+.realMan{
+width: 280px;
+height: 50px;
+border-top: none;
+border-left: none;
+border-right: none;
+border-bottom: 3px solid black;
+}
+
 -->
 </style>
+
+	<div id="frame">
+		<!-- 네비게이션 바/부트스트랩 -->
+		<%@ include file="../public/header.jsp"%><br>
+		
 		<!-- 실제 콘텐츠 들어가는 부분 -->
 		<h4 style="font-size: 30px; position: static; margin: 10px; font-family: 'Noto Sans KR', sans-serif; color: #1c8dff;"
 		class="text" align="center">국비 훈련과정 목록</h4>
@@ -114,10 +163,12 @@ font-family:'Noto Sans KR', sans-serif;
 	
 	
 	<!-- 검색창 -->
-	<div class="search-container" style="padding-left: 300px;">
+	<div class="search-container" style="padding-left: 260px;">
 	<label style="position: static; margin: 10px; font-family: 'Noto Sans KR', sans-serif;" for="searchInput"
-	>학원명검색</label>
-	<input id="searchInput" type="text" placeholder="Search...">
+	 ><svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+</svg></label>
+	<input id="searchInput" type="text" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;학원명 또는 과정명을 입력" class="realMan">
 	</div>
 	
 	<!-- 필터링 버튼 -->
@@ -171,13 +222,14 @@ font-family:'Noto Sans KR', sans-serif;
 	  function loadCards() {
 	    $.ajax({
 	      // 수정된 API 주소 입력 (https://cors-anywhere.herokuapp.com/)
-	      url: "https://www.hrd.go.kr/jsp/HRDP/HRDPO00/HRDPOA60/HRDPOA60_1.jsp?returnType=JSON&authKey=Pw96YgGqSYb5Q3dMHCSwjBybzhZH5ffU&pageNum=1&pageSize=10&srchTraStDt=20230621&srchTraEndDt=20230921&outType=1&sort=ASC&sortCol=TRNG_CRSN&crseTracseSe=C0061&srchTraArea1=00",
+		  url:"https://www.hrd.go.kr/hrdp/api/apipo/APIPO0101T.do?srchTraEndDt=20230630&pageSize=100&srchTraArea1=11&crseTracseSe=C0061,C0104&srchTraStDt=20230628&sortCol=TRNG_CRSN&authKey=Pw96YgGqSYb5Q3dMHCSwjBybzhZH5ffU&sort=ASC&returnType=JSON&srchNcs1=20&outType=1&pageNum=1&srchNcs2=2001&srchNcs3=200102&srchTraPattern=N1&srchPart=-99&apiRequstPageUrlAdres=/jsp/HRDP/HRDPO00/HRDPOA60/HRDPOA60_1.jsp&apiRequstIp=221.146.253.123",
 	      type: "GET",
 	      dataType: "json",
 	      success: function(result) {
-	        console.log(result);
-	        console.log(typeof result);
-	        console.log(result.returnJSON);
+//	        console.log(result);
+//	        console.log(typeof result);
+//	        console.log(result.returnJSON);
+
 	        let parsedResult = JSON.parse(result.returnJSON);
 	        let srchLists = parsedResult.srchList;
 
@@ -185,32 +237,46 @@ font-family:'Noto Sans KR', sans-serif;
 	          return b.traStartDate.localeCompare(a.traStartDate);
 	        });
 
-	        let cardContainer = $(".card-container").addClass("card-container");
+//	        let cardContainer = $(".card-container").addClass("card-container");
+	        let cardContainer = $(".card-container");
 	        cardContainer.empty(); // 기존 카드 삭제
+	          let imagePath = "..//academy/img/Hrd_net.png";
 
 	        for (let i = 0; i < srchLists.length; i++) {
 	          let item = srchLists[i];
 	          let card = $("<div>").addClass("card");
+	          let image= '<img src="/academy/img/Hrd_net.png">';
 	          let title = $("<h2>").text(item.title); // 제목
-	          let subTitle = $("<h2>").text(item.subTitle); // 학원이름
+	          let subTitle = $("<h3>").text(item.subTitle); // 학원이름
 	          let address = $("<p>").text(item.address); // 주소
 	          let realMan = $("<p>").text(item.realMan); // 수강비
 	          let telNo = $("<p>").text(item.telNo); // 전화번호
-	          let date = $("<p>").text(item.traStartDate + " ~ " + item.traEndDate); // 날짜
+	          let date = $("<p>").text("훈련기간  :  " + item.traStartDate + " ~ " + item.traEndDate); // 날짜
+	          //let training = $("<p>").text("훈련기간");
+	          let link = $("<a>").text(item.titleLink);
+	          let br = $("<br>");
+	          //let start = $("<div>").addClass("start")
+	          //.append(training).append(date)
 
-	          card.append(title)
+	          card.append(image)
+	            .append(title)
 	            .append(subTitle)
+	            .append(date)
+	            
+	            /* .append(br)
 	            .append(address)
 	            .append(realMan)
 	            .append(telNo)
-	            .append(date);
-	          card.css("background-color", "rgba(0,144,249,.5)");
-
-	          card.click(function() {
-	            window.location.href = "itemsDetail.do?trprId=" + item.trprId;
-	          });
+	            ; */
+	            //card.css("background-color", "rgba(0,144,249,.5)");
+	            //card.css("background-image", "url('/academy/img/Hrd_net.png')");
 
 	          cardContainer.append(card);
+	          
+	          card.click(function() {
+	            window.location.href = item.titleLink;
+	          });
+
 	        }
 
 	        let totalCards = srchLists.length;
@@ -226,12 +292,12 @@ font-family:'Noto Sans KR', sans-serif;
 	        	    listItem.addClass("active");
 	        	  }
 
-	        	  listItem.on("click", function(go) {
-	        	    $(".pagination .page-item").removeClass("active");
-	        	    $(this).addClass("active");
-	        	    // 페이지 이동 코드 추가
-	        	    //window.location.href = "academyList.jsp?";
-	        	  });
+	        	  listItem.on("click", function() {
+	        		    $(".pagination .page-item").removeClass("active");
+	        		    $(this).addClass("active");
+	        		    // 페이지 이동 코드 추가
+	        		    window.location.href = "academy?page="+i;
+	        		  });
 
 	        	  pageLink.on("click", function(event) {
 	        	    event.preventDefault(); // 기본 동작인 페이지 이동을 막음
@@ -261,6 +327,14 @@ font-family:'Noto Sans KR', sans-serif;
 	  loadPageFromURL();
 	  loadCards();
 	});
+	
+	// 검색 기능
+    $("#searchInput").on("keyup", function() {
+      let value = $(this).val().toLowerCase();
+      $(".card").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      });
+    });
 	</script>
 
 </div>
