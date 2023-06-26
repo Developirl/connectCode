@@ -28,4 +28,9 @@ public class MenteeDTO {
 	
 	private String member;
 	private String id;
+	
+	// ******** 혜지 추가추가 *********
+	private String password;
+	private String newpasswd;
+	private String quit_reason;
 }

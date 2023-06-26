@@ -10,7 +10,7 @@
 }
 .mino-title, .mino-title>span{
     font-family: 'Angkor', cursive;
-    font-size: 18pt;
+    font-size: 20pt;
 }
 header{
     padding-top: 30px;
@@ -74,4 +74,10 @@ header{
 	text-overflow:ellipsis;
 	overflow:hidden;
 	white-space:nowrap;
+}
+.mino-mypageBtn a{
+	text-decoration: none;
+	cursor: pointer;
+	color: black;
+	font-weight: bold;
 }
