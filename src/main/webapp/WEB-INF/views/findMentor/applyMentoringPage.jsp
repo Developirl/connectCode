@@ -200,7 +200,10 @@
 }
 
 .js-date-css:hover,.js-time-css:hover{
-	background: white;
+	background: #353535;
+	color:white;
+	border:3px solid #353535;
+	font-weight: bold;
 }
 
 
@@ -396,6 +399,11 @@
 	font-size:11pt;
 }
 
+.js-gitBlogSelectBoxbox{
+	padding-top:20px;
+	font-size:11pt;
+}
+
 #js-gitgitgit,#js-blogblogblog{
 	font-size:11pt;
 	color:#BFBFBF;
@@ -453,8 +461,18 @@ function getCurrentTime() {
 	  var currentTime = currentDate.toLocaleTimeString();
 	  return currentTime;
 	}
+	
+	
+	
+
+	
+	
+	
 
 $(document).ready(function(){
+	
+	
+	
 	
 	
 	// 시큐리티용 변수 
@@ -462,91 +480,13 @@ $(document).ready(function(){
 	var csrfToken = "${_csrf.token}";
 	
 	
-	
+
+	// -----------------------
 	
 
-	/* --------------------------  깃허브 , 블로그 주소 ------------------------ */
 	
 	
-	// 처음 페이지 로드시 깃허브,블로그 주소 비공개 체크
-	$("#js-blogclose").prop("checked","checked");
-	$("#js-gitclose").prop("checked","checked");
-	
-	$("#js-gitgitgit").hide();
-	$("#js-blogblogblog").hide();
-	
-	// 깃 주소 라디오 박스 클릭이벤트 발생시 
-	$(".js-gitview").click(function(){
-		if($(this).attr('id')=='js-gitopen'){
-			$("#js-gitgitgit").show();
-			$("#js-menteegit").val('${mentee.git}');
-		}else{
-			$("#js-gitgitgit").hide();
-			$("#js-menteegit").val('');
-		}
-	});
-
-	// 깃 주소 라디오 박스 클릭이벤트 발생시 
-	$(".js-blogview").click(function(){
-		if($(this).attr('id')=='js-blogopen'){
-			$("#js-blogblogblog").show();
-			$("#js-menteeblog").val('${mentee.blog}');
-		}else{
-			$("#js-blogblogblog").hide();
-			$("#js-menteeblog").val('');
-		}
-	});
-	
-	
-	
-	/* --------------------------  멘토링 종류 선택시  ------------------------ */
-	
-	$('.js-sel-radio').change(function() {
-		  
-		if ($(this).is(':checked')) {
-		    $("#js-pay-print").text($(this).data('pay')+' 원');
-		    $("#js-final-price").text($(this).data('pay')+' 원');
-		  }
-		  
-		  // 30분 대면 멘토링이면 당일 예약을 막는다. 
-		  var kind = $(this).data('value');
-		  var kind_num = parseInt(kind.substring(0,1));  //2 or 3
-				  
-			if(kind_num == 3){
-			  //당일 버튼을 막는다. 
-			  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){
-			  	  alert("30분 대면 멘토링 선택 > disabled 안 돼 있어서 막습니다. ");
-			  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
-			  }
-			}	
-		  
-		  
-	});
-	
-	
-	/* -------------------  멘토링 종류 선택 후 들어온 경우 ---------------------- */
-	if('${kind}'!=null && '${kind}'!=''){
-		
-		
-		$('.js-sel-radio[data-value="${kind}"]').prop('checked', true);
-		// 맨 아래 가격 설정
-		$("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원');
-		
-		var kind = '${kind}'; 
-		var kind_num = parseInt(kind.substring(0,1));//2 or 3
-																		  
-		if(kind_num == 3){
-		  //당일 버튼을 막는다. 
-		  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){ 						//-----------------------여기 변경해야함ㅏㅓㅓ
-		  	  alert("30분 대면 멘토링이 선택 돼 있음. disabled 날짜가 아니기 때문에 오늘 날짜는 disabled한다. ");
-		  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
-			  alert("됨");
-		  }
-		}		
-		
-	}
-	
-	// 처음 로드될 때 disabled 시키기 위한 기본 unabled_date와 mentoring_time을 가져온다. 
+	// --------------   처음 로드될 때 disabled 시키기 위한 기본 unabled_date와 mentoring_time을 가져온다. 
 	var schedule = JSON.parse('${schedule}');
 	
 	var weekday = schedule[0].split(',');  // 날짜 선택시 사용할 변수(array)
@@ -554,8 +494,6 @@ $(document).ready(function(){
 	
 	
 	// 오늘 날짜로부터 7일 캘린더를 가져온다. 
-
-	// 현재 날짜를 가져오기
 	var today = new Date();
 
 	// 7일 후의 날짜 계산
@@ -604,128 +542,9 @@ $(document).ready(function(){
 	});
 	
 	
-	
-	// -------- 날짜 버튼 클릭시 
-	
-	$(".js-date-css").click(function(){
-		
-		/*
-		if($('.js-sel-radio[checked=true]').length==0){
-			alert("멘토링 종류를 먼저 선택해주세요 !");
-			return false;
-		}
-		*/
-		if($('input[type="radio"][name="mentoring_kind"]:checked').length==0){
-			alert("멘토링 종류를 먼저 선택해주세요 !");
-			return false;
-		}
-		
-		
-		$(".js-date-css").removeClass('js-date-css-selected');
-		$(this).addClass("js-date-css-selected");
-		$("#reserve_day").val($(this).data("value"));
-		
-		$('#js-time').html('');
-		setTimeList(); // 일단 타임 칸을 한번 리셋해준다. 
-		
-		var selecteddate = $(this).data('value');
-		var mentor_no = ${mentor_no};
-		
-		$.ajax({
-			  url: '/findMentor/getReservedTime',
-			  method: 'POST', // HTTP 요청 메서드 (GET, POST, 등)
-			  data: { reserve_date : selecteddate,
-				  mentor_no : mentor_no }, // 요청 데이터 (선택적)
-			  beforeSend: function(xhr){
-            	xhr.setRequestHeader(csrf,csrfToken);
-              },
-			  success: function(rsp) {
-				  
-				  
-				  console.log("rsp:"+rsp);
-				  if(rsp!=null){
-					  for(var i=0;i<rsp.length;i++){
-						  $('.js-time-css[value="'+rsp[i]+'"]').addClass('js-time-disabled');
-						  console.log("rsp[i]: "+rsp[i]);
-					  }
-				  }
-				  
-			  },
-			  error: function(xhr, status, error) {
-			    console.log('날짜 클릭시 보내는 ajax 요청 실패');
-			    console.log(error); 
-			  }
-		});
-		
-		//  **********   만약 당일 예약을 클릭하면 5시간 이내는 선택 못하게 disabled 한다. 
-		 /*  var kind = $('input[type="radio"][name="mentoring_kind"]:checked').data('value'); //2 or 3
-		  var kind_num = parseInt(kind.substring(0,1));
-	      var currentT = getCurrentTime();
-		  console.log("kind_num:"+kind_num);
-		  console.log("currentT:"+currentT);
-	      
-		  // 여기서 전화 멘토링 5시간 전 js-time-css 버튼을 disabled 한다. 
-		  if(kind_num == 2 && $('.js-date-css:first[checked:"checked"]').length() >= 1){
-			alert("일단 여기는 들어오니? 시바새캬");
-			// 현재 시간 가져오기
-			  var currentTime = new Date();
+	var hour = ['12','13','14','15','16','17','18'];
+	var min = ['00','30'];
 
-			  // 현재 시간에서 5시간 후의 시간 계산
-			  var fiveHoursLater = new Date();
-			  fiveHoursLater.setHours(currentTime.getHours() + 5);
-
-			  // 모든 해당 태그 선택
-			  var tags = document.querySelectorAll('.js-time-css');
-
-			  // 각 태그의 value 값 확인하여 조건에 따라 disabled 설정
-			  tags.forEach(function(tag) {
-			    var value = tag.value;
-			    
-			    // 시간 값 추출 (예: "12:30"에서 "12"와 "30" 추출)
-			    var parts = value.split(':');
-			    var tagTime = new Date();
-			    tagTime.setHours(parts[0]);
-			    tagTime.setMinutes(parts[1]);
-			    
-			    // 현재 시간과 5시간 이내의 시간 비교하여 disabled 설정
-			    if (tagTime <= fiveHoursLater) {
-			    	alert("20분 대면 멘토링 선택함");
-					if(!tag.hasClass('js-time-disabled')){
-						  tag.addClass('js-time-disabled');
-					  }
-			    	//tag.disabled = true;
-			   }
-			  })    
-			  
-		  }			
-
-		 */
-		//  **********   끝 
-	});
-	
-	
-
-
-
-	setTimeList();
-
-
-	
-	$("#js-mentoring-comment").keyup(function(){
-		
-		var leng = $("#js-mentoring-comment").val().length;
-		if(leng != 0){
-			$("#js-textlength-view").text(leng+'자/최대 1000자');
-		}else{
-			$("#js-textlength-view").text('0자/최대 1000자');
-		}
-		
-	});
-	
-   	
-   	var hour = ['12','13','14','15','16','17','18'];
-   	var min = ['00','30'];
-	
 	function setTimeList(){
 		for (var i = 0; i < hour.length; i++) {
 	        for(var j = 0; j < min.length; j++){
@@ -755,6 +574,230 @@ $(document).ready(function(){
 		
 	}
 	
+   
+	setTimeList();
+	
+	
+	/* -------------------  멘토링 종류 선택 후 들어온 경우 ---------------------- */
+	if('${kind}'!=null && '${kind}'!=''){
+		
+		
+		$('.js-sel-radio[data-value="${kind}"]').prop('checked', true);
+		// 맨 아래 가격 설정
+		$("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원');
+		
+		var kind = '${kind}'; 
+		var kind_num = parseInt(kind.substring(0,1));//2 or 3
+																		  
+		if(kind_num == 3){
+		  //당일 버튼을 막는다. 
+		  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){ 						//-----------------------여기 변경해야함ㅏㅓㅓ
+		  	  alert("30분 대면 멘토링이 선택 돼 있음. disabled 날짜가 아니기 때문에 오늘 날짜는 disabled한다. ");
+		  
+		  	var classCount = document.getElementsByClassName('js-calendar-box :first-child').length;
+		  	alert("갯수 : "+classCount);
+		  
+		  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
+			  alert("됨");
+		  }
+		}		
+		
+	}
+	
+	
+	
+	/* --------------------------  멘토링 종류 선택시  ------------------------ */
+	
+	$('.js-sel-radio').change(function() {
+		  
+		if ($(this).is(':checked')) {
+		    $("#js-pay-print").text($(this).data('pay')+' 원');
+		    $("#js-final-price").text($(this).data('pay')+' 원');
+		  }
+		  
+		  // 30분 대면 멘토링이면 당일 예약을 막는다. 
+		  var kind = $(this).data('value');
+		  var kind_num = parseInt(kind.substring(0,1));  //2 or 3
+				  
+			if(kind_num == 3){
+			  //당일 버튼을 막는다. 
+			  if(! $('.js-calendar-box :first-child').hasClass('js-disabled-button')){
+			  	  alert("30분 대면 멘토링 선택 > disabled 안 돼 있어서 막습니다. ");
+			  	$('.js-calendar-box :first-child').addClass('js-disabled-button');
+			  }
+			}else{
+			  	$('.js-calendar-box :first-child').removeClass('js-disabled-button');
+			}	
+		  
+		  
+	});
+	
+	
+	
+	
+	
+	// -------- 날짜 버튼 클릭시 
+	
+	$(".js-date-css").click(function(){
+		
+		/*
+		if($('.js-sel-radio[checked=true]').length==0){
+			alert("멘토링 종류를 먼저 선택해주세요 !");
+			return false;
+		}
+		*/
+		if($('input[type="radio"][name="mentoring_kind"]:checked').length==0){
+			alert("멘토링 종류를 먼저 선택해주세요 !");
+			return false;
+		}
+		
+		
+		$(".js-date-css").removeClass('js-date-css-selected');
+		$(this).addClass("js-date-css-selected");
+		$("#reserve_day").val($(this).data("value"));
+		
+		$('#js-time').html('');
+		setTimeList(); // 일단 타임 칸을 한번 리셋해준다. 
+		
+		var selecteddate = $(this).data('value');
+		var mentor_no = ${mentor_no};
+		
+		$.ajax({
+			  url: '/findMentor/getReservedTime',
+			  method: 'POST', 
+			  data: { 
+				  reserve_date : selecteddate,
+				  mentor_no : mentor_no
+				  }, 
+			  beforeSend: function(xhr){
+            	xhr.setRequestHeader(csrf,csrfToken);
+              },
+			  success: function(rsp) {
+				  
+				  
+				  console.log("rsp:"+rsp);
+				  if(rsp!=null){
+					  for(var i=0;i<rsp.length;i++){
+						  $('.js-time-css[value="'+rsp[i]+'"]').addClass('js-time-disabled');
+						  console.log("rsp[i]: "+rsp[i]);
+					  }
+				  }
+				  
+			  },
+			  error: function(xhr, status, error) {
+			    console.log('날짜 클릭시 보내는 ajax 요청 실패');
+			    console.log(error); 
+			  }
+		});
+		
+		
+		
+	//  **********   만약 당일 예약을 클릭하면 5시간 이내는 선택 못하게 disabled 한다. 
+		  var kind = $('input[type="radio"][name="mentoring_kind"]:checked').data('value'); //2 or 3
+		  var kind_num = parseInt(kind.substring(0,1));
+	      var currentT = getCurrentTime();
+	      var index = $('.js-date-css').index(this) + 1;
+		  console.log("kind_num:"+kind_num);
+		  console.log("currentT:"+currentT);
+	      console.log("index= "+index);
+		  // 여기서 전화 멘토링 5시간 전 js-time-css 버튼을 disabled 한다. 
+		  if(kind_num == 2 && index == 1){
+			  
+			  alert("여기 들어와?");
+			// 현재 시간 가져오기
+			  var currentTime = new Date();
+
+			  // 현재 시간에서 5시간 후의 시간 계산
+			  var fiveHoursLater = new Date();
+			  fiveHoursLater.setHours(currentTime.getHours() + 5);
+
+			  // 모든 해당 태그 선택
+			  var tags = document.querySelectorAll('.js-time-css');
+			  // 각 태그의 value 값 확인하여 조건에 따라 disabled 설정
+			  tags.forEach(function(tag) {
+			    var value = tag.value;
+			    
+			    // 시간 값 추출 (예: "12:30"에서 "12"와 "30" 추출)
+			    var parts = value.split(':');
+			    var tagTime = new Date();
+			    tagTime.setHours(parts[0]);
+			    tagTime.setMinutes(parts[1]);
+			    
+			    var tagtime = new Date(tagTime);
+			    var dateObject = new Date(fiveHoursLater);
+			    var timestamp1 = dateObject.getTime();
+			    var timestamp2 = tagtime.getTime();
+			    
+			    console.log('tagTime:'+timestamp1);
+			    console.log('dateObject:'+timestamp2);
+			    // 현재 시간과 5시간 이내의 시간 비교하여 disabled 설정
+			    if (timestamp2 <= timestamp1) {
+			    	console.log("아니 왜 안돼 ㅋ");
+					if(!tag.classList.contains("js-time-disabled")){
+						  tag.classList.add("js-time-disabled");
+					  }
+			   }
+			  })    
+			  
+		  }			
+		//  **********   끝 
+
+		
+		
+		
+		
+		
+		
+	}); // click(function(){}) end	
+	
+
+	/* --------------------------  깃허브 , 블로그 주소 ------------------------ */
+	
+	
+	// 처음 페이지 로드시 깃허브,블로그 주소 비공개 체크
+	$("#js-blogclose").prop("checked","checked");
+	$("#js-gitclose").prop("checked","checked");
+	
+	$("#js-gitgitgit").hide();
+	$("#js-blogblogblog").hide();
+	
+	// 깃 주소 라디오 박스 클릭이벤트 발생시 
+	$(".js-gitview").click(function(){
+		if($(this).attr('id')=='js-gitopen'){
+			$("#js-gitgitgit").show();
+			$("#js-menteegit").val('${mentee.git}');
+		}else{
+			$("#js-gitgitgit").hide();
+			$("#js-menteegit").val('');
+		}
+	});
+
+	// 깃 주소 라디오 박스 클릭이벤트 발생시 
+	$(".js-blogview").click(function(){
+		if($(this).attr('id')=='js-blogopen'){
+			$("#js-blogblogblog").show();
+			$("#js-menteeblog").val('${mentee.blog}');
+		}else{
+			$("#js-blogblogblog").hide();
+			$("#js-menteeblog").val('');
+		}
+	});
+	
+	
+
+	
+	$("#js-mentoring-comment").keyup(function(){
+		
+		var leng = $("#js-mentoring-comment").val().length;
+		if(leng != 0){
+			$("#js-textlength-view").text(leng+'자/최대 1000자');
+		}else{
+			$("#js-textlength-view").text('0자/최대 1000자');
+		}
+		
+	});
+	
+   
 	
 	
 	/*
@@ -1247,7 +1290,7 @@ function removeFile(element) {
             <%--시간선택 --%>
             <div class="js-selectbox-kind">
             	<span class="js-selectbox-font-L">시간 선택</span>
-            	<div class=".js-time-selectbox">	
+            	<div class="js-time-selectbox">	
             		<div id="js-time"></div>
             	</div>
             
@@ -1291,7 +1334,7 @@ function removeFile(element) {
 
 	            	 	<c:if test="${ ! empty mentee.blog }">
 		            	 	<tr>
-		            	 	<th class="js-gitBlogSelectBox">
+		            	 	<th class="js-gitBlogSelectBoxbox">
 				            	블로그 주소 &nbsp;&nbsp;&nbsp;
 				            	공개 <input type="radio" name="js-blogview" class="js-blogview" id="js-blogopen" value="Y">&nbsp;&nbsp; 
 				            	비공개 <input type="radio" name="js-blogview" class="js-blogview" id="js-blogclose" value="N"> 

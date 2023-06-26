@@ -31,7 +31,7 @@
 	</select>
 	
 	<update id="orderCancle">
-		UPDATE payment SET cancel_pay_time=SYSDATE() WHERE payment_no = #{payment_no}
+		UPDATE payment SET cancel_pay_time=SYSDATE(),pay_state='cancel' WHERE payment_no = #{payment_no}
 	</update>
 
 </mapper>
