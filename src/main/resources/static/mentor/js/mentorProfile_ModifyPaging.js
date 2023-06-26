@@ -444,31 +444,96 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 							$('#domain_sel').append(option);
 						}
 						
+						var code = "";
+						$("#phoneChk").click(function() {
+							phoneBtnChk = true;
+							var phone = $("#phone").val();
+
+							if ($("#phone").val()=="") {
+								alert("휴대폰 번호를 입력하세요.")
+								$("#phone").focus();
+								return false;
+							}
+
+							alert("인증번호 발송이 완료되었습니다. \n 휴대폰에서 인증번호를 확인해주세요.")
+
+							$.ajax({
+								type : "get",
+								url : "phoneChk",
+								data : {
+									phone : phone
+								},
+								cache : false,
+								success : function(data) {
+									if (data == "error") {
+										alert("휴대폰 번호가 올바르지 않습니다.");
+										$(".successPhoneChk").text("유효한 번호를 입력해주세요.");
+										$(".successPhoneChk").css("color", "red");
+										$("#phone").attr("autofocus", "true");
+									} else {
+										$("#phone_certify").attr("disabled", false);
+										$("#phoneChk2").css("display", "inline-block");
+										$(".successPhoneChk").text("인증번호를 입력한 뒤 인증하기를 눌러주세요.");
+										$(".successPhoneChk").css("color", "green");
+										$("#phone").attr("readonly", "true");
+										code = data;
+									}
+								}
+							});
+
+						// 휴대폰 인증번호 일치 여부
+						$("#phoneChk2").click(function() {
+							certifyBtnChk = true;
+							phoneCertifyChk = true;
+							var phone_certify = $("#phone_certify").val();
+
+							if (!phone_certify) {
+								alert("인증번호를 입력하세요.")
+								$("#phone_certify").focus();
+								return false;
+							}
+
+							if ($("#phone_certify").val() == code) {
+								$(".successPhoneChk").text("인증번호가 일치합니다.");
+								$(".successPhoneChk").css("color", "green");
+								$("#phoneDoubleChk").val("true");
+								$("#phone_certify").attr("disabled", true);
+
+								phoneCertifyChk = true;
+
+							} else {
+								$(".successPhoneChk").text("인증번호가 일치하지 않습니다.");
+								$(".successPhoneChk").css("color", "red");
+								$("#phoneDoubleChk").val("false");
+								$(this).attr("autofocus", true);
+
+								phoneCertifyChk = false;
+							}
+						});
+						
+					});
+				
 						$('#myform').submit(function(event){
 							event.preventDefault(); // form 기본 동작 막기
 							
 						// 유효성 검사 start
 							var new_phone = $('#phone').val();
 							var new_email = $('#email_id').val() + '@' + $('#domain').val();
+							var phone_certify = $('#phone_certify').val();
 							
 							if(new_phone === old_phone){
-								if (confirm('기존의 휴대폰번호와 동일한 번호로 저장합니다.')) {
-
-								} else {
-									alert('휴대폰 번호를 입력한 후 [인증하기] 버튼을 클릭하여 인증 후,\n[저장하기] 버튼을 클릭해주세요.')
-									$('#phone').focus();
-								    return;
+								confirm('기존의 휴대폰번호와 동일한 번호로 저장합니다.');
+							}else {
+								if(phone_certify.trim() === '') {
+									alert('[인증번호 전송] 버튼을 클릭 후,문자 메세지로 받으신 번호를 입력 하고\n[인증하기] 버튼을 클릭해주세요.')
+									$('#phone_certify').focus();
+									return;
 								}
+								
 							}
 								
 							if(new_email === old_email){
-								if(confirm('기존의 이메일과 동일한 이메일로 저장합니다.')) {
-
-								} else {
-									alert('변경할 메일 주소를 입력해주세요.')
-									$('#email_id').focus();
-								    return;
-								}
+								confirm('기존의 이메일과 동일한 이메일로 저장합니다.');
 							}
 							
 						// 유효성 검사 end
@@ -687,8 +752,6 @@ function serviceChar_load(check,mentor_no,input_bank) {
 // 학력사항 page 불러오기
 function eduInfo_load(check,mentor_no) {
 	
-	var degree = ['','학사','석사','박사'];
-	
 	console.log(check);
 	
 	if(check === 'N' || check == true) {
@@ -704,27 +767,19 @@ function eduInfo_load(check,mentor_no) {
 				$("span:contains('[필수]')").css('color', 'red');
 				$("span:contains('[선택]')").css('color', '#004EA2');
 				
-				// [학위] select option
-				for (var i = 0; i < degree.length; i++) {
-					if(degree[i] == ''){
-						var option = $('<option>').attr({
-							value : 'N'
-						}).text('선택'); // 값 설정
-					}else {
-						var option = $('<option>').attr({
-							value : degree[i]
-						}).text(degree[i]); // 값 설정
-					}
-					$('#degree').append(option);
-				}
 				
 				// Air-datePicker 호출
-				$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				//$(".datepicker-here0").datepicker({maxDate : currentDate, date:new Date(temp_entering_date)}); 
+//				$(".datepicker-here0").datepicker("setDate", new Date(temp_entering_date)); 
 				
 				// 추가,삭제 버튼 구현 start
 				
 				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-				var plus_content_read = $('#plus_content').html();
+				var plus_content_read = $('.input_content').html();
+				
+				if(plus_content_read == null){
+					plus_content_read = $(".plus_div").html();
+				}
 				
 				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
 				var plus_div_cnt = $(".plus_div").length;
@@ -747,8 +802,13 @@ function eduInfo_load(check,mentor_no) {
 										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
 									);
 					
-					/*// id 값이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
-					var new_id = 'minor' + del_cnt;
+					var temp = $("#del_div"+del_cnt+" input")
+					$("#del_div"+del_cnt+" #delBtn").remove();
+					for(var i = 0; i < temp.length; i++){
+						temp[i].value = null;
+					}
+					/*// id 이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
+					var new_id 값= 'minor' + del_cnt;
 					$('#minor0').attr('id', new_id);
 					
 					// id 값에 minor를 포함하는 input text 찾기
@@ -777,6 +837,11 @@ function eduInfo_load(check,mentor_no) {
 					$(".datepicker-here").datepicker({maxDate : currentDate}); 
 					
 				});
+				
+				// Air-datePicker 호출 따로 또 해줘야함..
+				/*if('${edu_sel}'.length < 1){
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				}*/
 				
 				$('#myform').submit(function(){
 					event.preventDefault(); // form 기본 동작 막기
@@ -818,15 +883,14 @@ function eduInfo_load(check,mentor_no) {
 						}
 				// 유효성 검사 end
 						
-				        /*// minor0 value 값 전달
-						// click 이벤트 밖에 정의해야함
-						var minor = $('#minor0').val();
+						// minor 입력 안 했을 경우 처리
+						var minor = $('.minor');
 						
-						if (minor === '') {
-							$('#myform').append('<input type="hidden" name="minor" value="N">');
-						}else {
-							$('#myform').append('<input type="hidden" name="minor" value="'+minor+'">');
-						}*/
+						for(var i=0; i<minor.length; i++){
+							if(minor[i].value == ""){
+								minor[i].value = "N";
+							}
+						}
 						
 						// form으로 데이터 전송 start
 						var form = $('#myform')[0];
@@ -895,8 +959,6 @@ function eduInfo_load(check,mentor_no) {
 // 경력사항 page 불러오기
 function expInfo_load(check,mentor_no) {
 	
-	var task = ['','프론트엔드','백엔드'];
-	
 	console.log(check);
 	
 	if(check === 'N' || check == true) {
@@ -912,29 +974,15 @@ function expInfo_load(check,mentor_no) {
 				$("span:contains('[필수]')").css('color', 'red');
 				$("span:contains('[선택]')").css('color', '#004EA2');
 				
-				// [직무] select option
-				for (var i = 0; i < task.length; i++) {
-					if(task[i] == ''){
-						var option = $('<option>').attr({
-							value : ''
-						}).text('선택'); // 값 설정
-					}else {
-						var option = $('<option>').attr({
-							value : task[i]
-						}).text(task[i]); // 값 설정
-					}
-					$('#task').append(option);
-				}
-				
-				/*// Air-datePicker 호출
-				$(".datepicker-here").datepicker({maxDate : currentDate}); */
-				
-				
 				// 추가,삭제 버튼 구현 start
 				
 				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-				var plus_content_read = $('#plus_content').html();
-	
+				var plus_content_read = $('.input_content').html();
+				
+				if(plus_content_read == null){
+					plus_content_read = $(".plus_div").html();
+				}
+				
 				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
 				var plus_div_cnt = $(".plus_div").length;
 				
@@ -956,6 +1004,12 @@ function expInfo_load(check,mentor_no) {
 										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
 									);
 					
+					var temp = $("#del_div"+del_cnt+" input")
+					$("#del_div"+del_cnt+" #delBtn").remove();
+					for(var i = 0; i < temp.length; i++){
+						temp[i].value = null;
+					}
+					
 					del_cnt++;
 					
 					// Air-datePicker 호출 따로 또 해줘야함..
@@ -964,7 +1018,9 @@ function expInfo_load(check,mentor_no) {
 				});
 
 				// Air-datePicker 호출 따로 또 해줘야함..
-				$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				if('${car_sel}'.length < 1){
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				}
 				
 				$('#myform').submit(function(){
 					event.preventDefault(); // form 기본 동작 막기
@@ -991,6 +1047,15 @@ function expInfo_load(check,mentor_no) {
 							return;
 						}*/
 				// 유효성 검사 end
+						
+						// departure_date 입력 안 했을 경우 처리
+						var departure_date = $('.dDate');
+						
+						for(var i=0; i<departure_date.length; i++){
+							if(departure_date[i].value == ""){
+								departure_date[i].value = "N";
+							}
+						}
 
 						// form으로 데이터 전송 start
 						var form = $('#myform')[0];
@@ -1056,7 +1121,7 @@ function expInfo_load(check,mentor_no) {
 // ******************************************[기술및분야 start]**********************************************
 
 // 기술및분야 page 불러오기
-function techInfo_load() {
+function techInfo_load(check1,check2,mentor_no) {
 	
 	var technology = ['', 'Java', 'Python', 'JavaScript', 'C#', 'C++', 'Ruby', 'PHP', 'Swift', 'Go', 'Kotlin',
             'HTML/CSS', 'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 'ASP.NET',
@@ -1068,105 +1133,211 @@ function techInfo_load() {
 	
 	technology.sort(); // 오름차순 정렬
 	
-	$.ajax({
-		url: 'mentorTechInfoPage',  // JSP 파일의 URL
-		method: 'GET',
-		success: function(data) {
-			$('#load_location').empty().append(data);
-			$('#load_location, .nav_items').removeAttr('style');
-			$('.techInfo').css(active);
-			$("span:contains('[필수]')").css('color', 'red');
-			$("span:contains('[선택]')").css('color', '#004EA2');
-			
-			// [보유기술] select option
-			for (var i = 0; i < technology.length; i++) {
-				if(technology[i] == ''){
-					var option = $('<option>').attr({
-						value : ''
-					}).text('선택'); // 값 설정
-				}else {
-					var option = $('<option>').attr({
-						value : technology[i]
-					}).text(technology[i]); // 값 설정
+	console.log('check1 :: ' + check1);
+	console.log('check2 :: ' + check2);
+	
+	if((check1 === 'N' && check2 === "") || check1 == true) {
+		
+		$.ajax({
+			url: 'mentorTechInfoPage',  // JSP 파일의 URL
+			method: 'GET',
+			data: {mentor_no : mentor_no},
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.techInfo').css(active);
+				$("span:contains('[필수]')").css('color', 'red');
+				$("span:contains('[선택]')").css('color', '#004EA2');
+				
+				// [보유기술] select option
+				for (var i = 0; i < technology.length; i++) {
+					if(technology[i] == ''){
+						var option = $('<option>').attr({
+							value : ''
+						}).text('선택'); // 값 설정
+					}else {
+						var option = $('<option>').attr({
+							value : technology[i]
+						}).text(technology[i]); // 값 설정
+					}
+					$('.technology').append(option);
 				}
-				$('#technology').append(option);
-			}
-			
-			// [자격증명] select option
-			for (var i = 0; i < kind.length; i++) {
-				if(kind[i] == ''){
-					var option = $('<option>').attr({
-						value : ''
-					}).text('선택'); // 값 설정
-				}else {
-					var option = $('<option>').attr({
-						value : kind[i]
-					}).text(kind[i]); // 값 설정
+				
+				// [자격증명] select option
+				for (var i = 0; i < kind.length; i++) {
+					if(kind[i] == ''){
+						var option = $('<option>').attr({
+							value : ''
+						}).text('선택'); // 값 설정
+					}else {
+						var option = $('<option>').attr({
+							value : kind[i]
+						}).text(kind[i]); // 값 설정
+					}
+					$('#kind').append(option);
 				}
-				$('#kind').append(option);
-			}
-			
-			// Air-datePicker 호출
-			$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			
-			
-			// 추가,삭제 버튼 구현 start
-			
-			// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-			var plusTech_content_read = $('#plusTech_content').html();
-			var plusLice_content_read = $('#plusLice_content').html();
+				
+				// Air-datePicker 호출
+				$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				
+				
+				// 추가,삭제 버튼 구현 start
+				
+				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+				var plus_content_read = $('.input_content').html();
+				
+				if(plus_content_read == null){
+					plus_content_read = $(".plus_div").html();
+				}
+				
+				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+				var plus_div_cnt = $(".plus_div").length;
+				
+				// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+				var del_cnt = '';
+				
+				del_cnt = plus_div_cnt; 
+				
+				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+				var plusTech_content_read = $('.input_techContent').html();
+				var plusLice_content_read = $('.input_liceContent').html();
+				
+				if(plusTech_content_read == null){
+					plusTech_content_read = $(".plusTech_div").html();
+				}
+				if(plusLice_content_read == null){
+					plusLice_content_read = $(".plusLice_div").html();
+				}
 
-			// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
-			var plus_div_cnt = $(".plus_div").length;
-			
-			// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
-			var del_cnt = '';
-			
-			del_cnt = plus_div_cnt; 
-			
-			// 보유기술 [추가하기] 버튼 클릭 이벤트
-			$('.plusTech_btn').click(function(){
 				
-				$('#plusTech_content').append('<div id="del_div' 
-						+	del_cnt
-						+	'" style="margin-top: 10px;">'
-						+	plusTech_content_read
-						+	'<div align="right" style="margin-top: 10px;">'
-						+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
-						+	del_cnt+'"'
-						+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
-				);
+				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+				var plusTech_div_cnt = $(".plusTech_div").length;
+				var plusLice_div_cnt = $(".plusLice_div").length;
+				
+				// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+				var delTech_cnt = '';
+				var delLice_cnt = '';
+				
+				delTech_cnt = plusTech_div_cnt; 
+				delLice_cnt = plusLice_div_cnt; 
+				
+				// 보유기술 [추가하기] 버튼 클릭 이벤트
+				$('.plusTech_btn').click(function(){
 					
+					$('#plusTech_content').append('<div id="del_div' 
+							+	delTech_cnt
+							+	'" style="margin-top: 10px;">'
+							+	plusTech_content_read
+							+	'<div align="right" style="margin-top: 10px;">'
+							+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+							+	delTech_cnt+'"'
+							+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+					);
+						
+					var temp = $("#del_div"+delTech_cnt+" input")
+					$("#del_div"+delTech_cnt+" #delBtn").remove();
+					for(var i = 0; i < temp.length; i++){
+						temp[i].value = null;
+					}
+					
+					delTech_cnt++;
+					
+				});
 				
-				del_cnt++;
+				// 자격증/수상내역 [추가하기] 버튼 클릭 이벤트
+				$('.plusLice_btn').click(function(){
+					
+					$('#plusLice_content').append('<div id="delLice_div' 
+							+	delLice_cnt
+							+	'"><hr class="title_hr">'
+							+	plusLice_content_read
+							+	'<div align="right" style="margin-top: 10px;">'
+							+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+							+	delLice_cnt+'"'
+							+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+					);
+					
+					var temp = $("#delLice_div"+delLice_cnt+" input")
+					$("#delLice_div"+delLice_cnt+" #delBtn").remove();
+					for(var i = 0; i < temp.length; i++){
+						temp[i].value = null;
+					}
+					
+					delLice_cnt++;
+					
+					// Air-datePicker 호출 따로 또 해줘야함..
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+				});
 				
-				// Air-datePicker 호출 따로 또 해줘야함..
-				$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			});
+				$('#myform').submit(function(){
+					event.preventDefault(); // form 기본 동작 막기
+						
+					var technology = '';
+
+					if(check2 === "") {
+						technology = $('#technology').val();
+					}
+				
+					// form으로 데이터 전송 start
+					var form = $('#myform')[0];
+					var formdata = new FormData(form);
+					
+					$.ajax({
+						url : $(this).attr('action'),
+						type : 'POST',
+						data : formdata,
+						processData : false,
+						contentType : false,
+						enctype : 'multipart/form-data',
+						success: function(){
+							
+							// 입력 완료 후 페이지 전환 (techInfo_load()에 매개변수 새로 넣어서 재호출)
+							if(check2 === "") {
+								techInfo_load('Y',technology,mentor_no);
+							}else {
+								techInfo_load('Y',check2,mentor_no);
+							}
+						},
+						error : function(){
+							alert("서버 오류");
+						}
+					});
+						
+				}); // submit end
+				
+				
+			} // techInfo_load() ajax-success end
+		}); // techInfo_load() ajax end
+
+	}else {
+		
+		$.ajax({
+			url: 'mentorTechInfoPage_View',  // JSP 파일의 URL
+			method: 'GET',
+			data: {mentor_no : mentor_no},
+			success: function(data) {
+				$('#load_location').empty().append(data);
+				$('#load_location, .nav_items').removeAttr('style');
+				$('.techInfo').css(active);
+				
+				// [수정하기] 버튼 클릭 이벤트
+			    $('#edit_btn').click(function() {
+			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
+			      
+			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
+			      techInfo_load(clicked,check2,mentor_no);	
+			      
+			    }); // [수정하기] 클릭 이벤트 end
+				
+			} // [mentorTechInfoPage_View] ajax-success end
 			
-			// 자격증/수상내역 [추가하기] 버튼 클릭 이벤트
-			$('.plusLice_btn').click(function(){
-				
-				$('#plusLice_content').append('<div id="del_div' 
-						+	del_cnt
-						+	'"><hr class="title_hr">'
-						+	plusLice_content_read
-						+	'<div align="right" style="margin-top: 10px;">'
-						+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
-						+	del_cnt+'"'
-						+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
-				);
-				
-				
-				del_cnt++;
-				
-				// Air-datePicker 호출 따로 또 해줘야함..
-				$(".datepicker-here").datepicker({maxDate : currentDate}); 
-			});
-			
-			
-		} // techInfo_load() ajax-success end
-	}); // techInfo_load() ajax end
+		}); // [mentorTechInfoPage_View] ajax end
+
+	} // else end
+
+
+
+
 } // techInfo_load() end
 
 // ******************************************[기술및분야 end]**********************************************

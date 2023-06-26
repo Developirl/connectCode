@@ -4,6 +4,35 @@
 
 <mapper namespace="connectCode.mapper.MentorMapper">
 
+<select id="accepted_mentoring_count" resultType="int">
+	SELECT COUNT(*)
+	FROM mentoring
+	LEFT JOIN service USING (service_no) 
+	WHERE mentor_no = #{mentor_no}
+	AND classification = 35
+</select>
+
+<select id="mentoring_review_count" resultType="int">
+	SELECT COUNT(*) 
+	FROM mentoring
+	LEFT JOIN review USING (mentoring_no)
+	LEFT JOIN service USING (service_no) 
+	WHERE mentor_no = #{mentor_no} 
+	AND classification = 35 
+	AND review_no is not null
+</select>
+
+<select id="select_accepted_mentoring" resultType="MentoringDTO">
+	SELECT
+	  * 
+	FROM mentoring
+	LEFT JOIN mentee USING (mentee_no)
+	LEFT JOIN service USING (service_no) 
+	WHERE mentor_no = #{mentor_no}
+	AND classification = 32 
+	ORDER BY reserve_date DESC LIMIT 3
+</select>
+
 <!-- Mentor 테이블 mentor_no으로 조회 [mentor 테이블 전체 & 재직중인 회사 & 알람수 조회] -->
 <select id="mentorProfile" resultType="MentorDTO">
 	SELECT
@@ -45,35 +74,42 @@
 	SET 
 	
 	<choose>
-		<!-- 경우 1 -->
+		<!-- 경우 1 : 기본정보 -->
 		<when test="intro != null and unable_date != null and mentoring_time != null">
-			intro = #{intro},
+			  intro = #{intro}
 			<if test="files.size() != 0">
-			profile_img_no = #{file_no},
+			, profile_img_no = #{file_no}
 			</if>
-			unable_date = #{unable_date},
-			mentoring_time = #{mentoring_time}
+			, unable_date = #{unable_date}
+			, mentoring_time = #{mentoring_time}
 		</when>
-		<!-- 경우 2 -->
+		<!-- 경우 2 : 서비스 요금 -->
+		<when test="phone != null and email != null">
+			  phone = #{phone}
+			, email = #{email}  
+		</when>
+		<!-- 경우 2 : 서비스 요금 -->
 		<when test="bank != null and account != null and account_name != null">
-			bank = #{bank},
-			account = #{account},
-			account_name = #{account_name}
+			  bank = #{bank}
+			, account = #{account}
+			, account_name = #{account_name}
 		</when>	
+		<!-- 경우 3 : 기술 및 분야 -->
+		<when test="technology != null">
+			technology = #{technology}
+		</when>
 	</choose>
 	
 	WHERE mentor_no = #{mentor_no}
 	
 </update>
-<!-- 	UPDATE mentor 
-	SET intro = #{intro} 
-	 , unable_date = #{unable_date}  
-	 , mentoring_time = #{mentoring_time} 
-	WHERE mentor_no = #{mentor_no} -->
 
-<!-- <insert id="fileInsert">
-	
-</insert> -->
+<!-- 프로필 미작성 멘토인 경우 요청 멘토로 up -->
+<update id="apply_mentor_classification" parameterType="MentorDTO">
+	UPDATE mentor 
+	SET classification = 22
+	WHERE mentor_no = #{mentor_no}
+</update>
 
 <!-- mentor 테이블 update -->
 <update id="mentorPerson_update" parameterType="MentorDTO">
@@ -158,17 +194,11 @@
 </select>
 
 <!-- education 테이블 update -->
-<update id="education_update" parameterType="MentorDTO">
-	UPDATE education 
-	SET   school = #{school}
-		, entering_date = CONCAT(#{entering_date},'-01')
-		, graduation_date = CONCAT(#{graduation_date},'-01')
-		, degree = #{degree}
-		, major = #{major}
-		, minor = #{minor}
-		, file_no = #{file_no}
+<delete id="education_delete" parameterType="MentorDTO">
+	DELETE 
+	FROM education
 	WHERE mentor_no = #{mentor_no}
-</update>
+</delete>
 
 <!-- ************************************* [학력사항] end ************************************* -->
 <!-- ************************************* [경력사항] start ************************************* -->
@@ -210,11 +240,106 @@
 </select>
 
 <!-- career 테이블 update -->
+<delete id="career_delete">
+	DELETE
+	FROM career
+	WHERE mentor_no = #{mentor_no}
+</delete>
 
 <!-- ************************************* [경력사항] end ************************************* -->
 <!-- ************************************* [기술및분야] start ************************************* -->
 
+<select id="license_select" resultType="MentorDTO">
+	SELECT
+	  *
+	  , issuing_date i_date
+	FROM license
+	WHERE mentor_no = #{mentor_no}
+</select>
+
+<insert id="license_insert" parameterType="MentorDTO">
+	<selectKey keyProperty="file_no" resultType="int" order="BEFORE">
+		SELECT COALESCE(MAX(file_no),0)+1 AS file_no
+		FROM file
+	</selectKey>
+	
+	INSERT INTO license (
+		  kind
+		, license_name
+		, issuing_authority
+		, issuing_date
+		, file_no
+		, mentor_no
+	) VALUES (
+		  #{kind}
+		, #{license_name}
+		, #{issuing_authority}
+		, #{issuing_date}
+		, #{file_no}
+		, #{mentor_no}
+	)
+</insert>
 
 <!-- ************************************* [기술및분야] end ************************************* -->
+
+<select id="select_file" resultType="FileDTO">
+	SELECT
+	  *
+	FROM file
+	WHERE file_no = #{file_no}
+</select>
+
+<delete id="delete_file" parameterType="int">
+	DELETE
+	FROM file
+	WHERE file_no = #{file_no}
+</delete>
+
+<select id="select_alarm" resultType="MentorDTO">
+   SELECT
+     * 
+   FROM alarm 
+   WHERE receiver_mem_no = #{member_no}
+       <if test="search == null and keyword != null">
+         AND (title LIKE CONCAT('%', #{keyword}, '%')
+         or content LIKE CONCAT('%', #{keyword}, '%'))
+       </if>
+     LIMIT #{startRow}, 10
+</select>
+
+<!-- 알림 총 데이터수 -->
+<select id="getTotal" resultType="int">
+      select count(*) from alarm where receiver_mem_no=#{member_no}
+      <if test="search == null and keyword != null">
+      AND (title LIKE CONCAT('%', #{keyword}, '%')
+      or content LIKE CONCAT('%', #{keyword}, '%'))
+    </if>
+</select>
+
+<select id="select_alarm_detail" resultType="MentorDTO">
+	SELECT
+	  * 
+	FROM alarm 
+	WHERE receiver_mem_no = #{member_no} and alarm_no = #{alarm_no}
+</select>
+
+<!--**************************** 혜지 작성 ******************************** -->
+   <select   id="mentorDetail" resultType="MentorDTO">
+      select * from mentor left join member on mentor.member_no=member.member_no
+      where mentor_no=#{mentor_no}
+   </select>
+
+   <insert id="insertquittbl" parameterType="MentorDTO">
+      insert into quit_member values(sysdate(),#{quit_reason},#{member_no})
+   </insert>
+   
+   <update id="quit_mentor" parameterType="MentorDTO">
+      update member set classification = 14 where member_no=#{member_no}
+   </update>
+   
+   <update id="mentorNewPwd" parameterType="MentorDTO">
+      update member set password=#{password} where member_no=#{member_no}
+   </update>
+
 
 </mapper>

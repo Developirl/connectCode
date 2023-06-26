@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../public/sidebar_jh.jsp" %>
 
-	<%-- 부트 스트랩  'x' 아이콘을 class로 가져다 사용하기 위한 CDN --%>
+<%-- 부트 스트랩  'x' 아이콘을 class로 가져다 사용하기 위한 CDN --%>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
-	
 	<style>
+
 	/*   ------- 모달 css 입니다. --------- */
 	.jh-reserve-detail-modal {
 		position: fixed;
@@ -57,81 +57,82 @@
 	}
 	
 	</style>
-
-	<script>
-		function accpted1(){
-			location.href="mentoringAcceptedListPage?search="+$("#search").val()+"&mentor_no="+${msel.mentor_no};
-		}
-		
-		$(function(){   	
-		    $("#search option[value='${search}']").attr("selected", true);  	
-		});
-		
-		function acceptsearch(){	//	************ 아직 작동이 안됨
-			location.href="mentoringAcceptedListPage?acceptsearch="+$("#acceptsearch").val()+"&mentor_no="+${msel.mentor_no};
-		}
-		
-		$(function(){   	
-		    $("#acceptsearch option[value='${acceptsearch}']").attr("selected", true);  	
-		});
 	
-		
-		// 모달 오픈하는 함수로, 오픈시킬 버튼에 onclick에서 함수 호출해주심 됩니다.
-		function openReserveDetailModal(mentoring_no,mentor_no) {
-			alert(mentoring_no);
-		    const modal = document.querySelector('.jh-reserve-detail-modal');
-		    
-			$.ajax ({
-		    	url : 'mentoringAcceptedDetailPage',
-		    	type : 'get',
-		    	data : {"mentoring_no": mentoring_no,
-		    			 mentor_no : mentor_no},
-				success: function(response) {
-					// alert("response:"+response);
-					$("#jh-content").html(response);
-				     // Request was successful
-				     console.log(response);
-				} // success end
-		    }); // ajax end
-		    
-		    modal.style.display = 'block';
-		}
 	
-		// 모달 닫는 함수, onclick 에서 함수 호출
-		function closeReserveDetailModal(){
-		    const modal = document.querySelector('.jh-reserve-detail-modal');
-		    modal.style.display = 'none';
-		}
-		
-	</script>
+    <script>
+    /* $("#svg").click(function(){
+    	alert("test");
+    	$("#myform").value = "";
+    	$("#myform").action = "mentoringApplyListPage";
+    	$("#myform").submit();    	
+    	
+    });  */  
+    
+    // 정렬 기능
+    function finished1(){
+    	
+	//  alert("test");
+    	location.href="mentoringFinishedListPage?search="+$("#search").val()+"&mentor_no="+${msel.mentor_no};
+    }   
+    
+    $(function(){   	
+    	$("#search option[value='${search}']").attr("selected", true);  	
+    });
+    
+ 	// 모달 오픈하는 함수로, 오픈시킬 버튼에 onclick에서 함수 호출해주심 됩니다.
+	function openReserveDetailModal(mentoring_no) {
+		alert(mentoring_no);
+	    const modal = document.querySelector('.jh-reserve-detail-modal');
+	    
+		$.ajax ({
+	    	url : 'mentoringFinishedDetailPage',
+	    	type : 'get',
+	    	data : {"mentoring_no": mentoring_no},
+			success: function(response) {
+				// alert("response:"+response);
+				$("#jh-content").html(response);
+			     // Request was successful
+			     console.log(response);
+			} // success end
+	    }); // ajax end
+	    
+	    modal.style.display = 'block';
+	}
 
+	// 모달 닫는 함수, onclick 에서 함수 호출
+	function closeReserveDetailModal(){
+	    const modal = document.querySelector('.jh-reserve-detail-modal');
+	    modal.style.display = 'none';
+	}
+	
+    </script>
+    </script>
+    
 	<div class="w3-container">
 		<div class="fixedTop_div"></div>
-		<font class="large_jh">예약된 상담</font>
+		<font class="large_jh">지난 멘토링</font>
 		<hr class="title_hr">
 		<!-- CONTENT -->
 		
-		<!-- 검색 -->
-		<div align="right" class="cont_mar">
-			<!-- SELECT 1 -->
-			<select class="search_sel small_jh" style="width: 120px;" id="acceptsearch" name="acceptsearch" onChange="acceptsearch()">
-				<option value="applytime">신청일순</option>
-				<option value="fast">빠른 상담순</option>
-				<option value="later">나중 상담순??</option>
-			</select>
-			<!-- SELECT 2 -->
-			<select class="search_sel small_jh" style="width: 120px;" id="search" name="search" onChange="accpted1()">
-				<option value="no">모든상담</option>
-				<option value="accept">예약완료</option>
-				<option value="cancel">예약취소</option>
-			</select>
-			
-			<!-- FORM -->
-			<div style="width: 20%; margin-left: 10px;">
-              <form id="myform" action="mentoringAcceptedListPage">
-                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                  <input type="hidden" name="mentor_no" value="${msel.mentor_no}">
-                  
+	<!-- 검색 -->
+      <div align="right" class="cont_mar" style="margin-bottom: 0px;">
+         <!-- SELECT -->
+         <div style="display: flex;">
+            <div style="width: 80%;">
+               <select class="search_sel small_jh" name="search" id="search" onChange="finished1()">
+                  <option value="last">정렬</option>
+                  <option value="last1">신청거절</option>
+                  <option value="last2">예약취소</option>
+                  <option value="last3">상담완료</option>
+                  <option value="last4">환불완료</option>
+               </select>
+            </div>
+            <div style="width: 20%; margin-left: 10px;">
+            
+              <form id="myform" action="mentoringFinishedListPage">
+              	 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+              	 <input type="hidden" name="mentor_no" value="${msel.mentor_no}">
+              
                   <!-- INPUT -->
                   <span style="position: relative;">
                       <input type="text" class="search small_jh" name="keyword" style="width: 100%;" placeholder="이름을 입력하세요."/>
@@ -143,10 +144,12 @@
                   </span>
                   
                </form>   
+               
             </div>
-            
-		</div>
-		<!-- 검색 end -->
+          </div>
+      </div>
+      <!-- 검색 end -->
+		
 		<hr class="title_hr">
 		
 		<!-- TITLE -->
@@ -157,92 +160,97 @@
 				<div class="list_div">상담종류</div>
 				<div class="list_div">신청일자</div>
 				<div class="list_div">상담일자</div>
+				<div class="list_div">회차</div>
 				<div class="list_div">상태</div>
 			</div>
 		</div>
 		<hr class="title_hr">
-		
-		<div class="list_mar">
-			<!-- 멘토링예약 list -->
-			<c:set var="no" value="${no}"/>
-			<c:forEach var="b" items="${acceptedList}">
-				<div class="accepted_list" onclick="openReserveDetailModal('${b.mentoring_no}',${msel.mentor_no})"> 
+		      
+   <!-- ******************************************* 추가 start ******************************************* -->
+      
+      <div class="cont_mar">
+         <!-- 멘토링예약 list -->
+         <c:set var="no" value="${no}"/>
+         <c:forEach var="b" items="${finishedList}">
+            <div class="accepted_list" onclick="openReserveDetailModal('${b.mentoring_no}')"> 
 				<div class="small_jh flex-txtAlign">
-				
 					<div class="list_div">${no}</div>
 					<c:set var="no" value="${no - 1}"/>	<!-- 삭제시 값 감소를 위한 -->
 					<div class="list_div">${b.name}</div>
 					<div class="list_div">${b.mentoring_kind}</div>
-					<div class="list_div">${b.apply_time }</div>
-					<div class="list_div">${b.reserve_date }</div>
-					  <c:if test="${b.classification == '32'}">
-					    <div class="list_div" style="color: red; font-weight: bold;">예약완료</div>
+					<div class="list_div">${b.apply_time}</div>
+					<div class="list_div">${b.reserve_date}</div>
+					<div class="list_div">1</div>	<!-- 멘토링 횟수 ( count(*)로 해야하나 ? -->
+					  <c:if test="${b.classification == '33'}">
+					    <div class="list_div" style="color: gray; font-weight: bold;">신청거절</div>
 					  </c:if>
-					  <c:if test="${b.classification =='34'}">
+					  <c:if test="${b.classification == '34'}">
 					    <div class="list_div" style="color: black; font-weight: bold;">예약취소</div>
+					  </c:if>
+					  <c:if test="${b.classification =='35'}">
+					    <div class="list_div" style="color: blue; font-weight: bold;">상담완료</div>
+					  </c:if>
+					  <c:if test="${b.classification =='36'}">
+					    <div class="list_div" style="color: red; font-weight: bold;">환불완료</div>
 					  </c:if>
 				</div>
 			</div>
 			</c:forEach>
 			<!-- 멘토링예약 list end -->
-		</div>
+			</div>
+      
+   <!-- ******************************************* 추가 end ******************************************* -->
 		
-		<!-- 주석 풀어서 사용 /// c:if 써서 예약된 상담 empty 일때 보여지도록 (페이지 버튼은 가려지게 하기~) -->
-		<c:if test="${empty acceptedList}">
+		<!-- 주석 풀어서 사용 /// c:if 써서 요청 상담 empty 일때 보여지도록 (페이지 버튼은 가려지게 하기~) -->
+		<c:if test="${empty finishedList}">
 		<div class="cont_mar">
 			<div align="center" class="large_jh" style="margin-top: 20px;">
 				<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-emoji-dizzy" viewBox="0 0 16 16">
 				  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
 				  <path d="M9.146 5.146a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zm-5 0a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 1 1 .708.708l-.647.646.647.646a.5.5 0 1 1-.708.708L5.5 7.207l-.646.647a.5.5 0 1 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 0-.708zM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/>
 				</svg>
-				<br><br>아직 예약된
-				<br>상담이 없습니다.
+				<br><br>아직 완료 된
+				<br>멘토링이 없습니다.
 			</div>
 		</div>
 		</c:if>
 		
 		<hr class="title_hr">
 		
-		<!-- 페이지 버튼 css는 페이징 처리 하는 사람들이랑 맞추기 -->
 		<ul class="pagination justify-content-center">
-		
-		
 			<!-- 검색 했을 경우의 페이징 처리 -->
 			<c:if test="${not empty keyword}">
 				<c:if test="${paging.startPage > paging.pageBlk }">
 					<li class="page-item"><a class="page-link"
-						href="mentoringAcceptedListPage?page=${paging.startPage - 1}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;">이전</a></li>
+						href="mentoringFinishedListPage?page=${paging.startPage - 1}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;">이전</a></li>
 				</c:if>
 				<c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
 					<li <c:if test="${paging.currentPage==i}">class="active"</c:if>><a class="page-link" 
-						href="mentoringAcceptedListPage?page=${i}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;">${i}</a></li>
+						href="mentoringFinishedListPage?page=${i}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;">${i}</a></li>
 				</c:forEach>
 				<c:if test="${paging.endPage < paging.totalPage}">
 					<li class="page-item"><a class="page-link" 
-						href="mentoringAcceptedListPage?page=${paging.endPage + 1}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;" >다음</a></li>
+						href="mentoringFinishedListPage?page=${paging.endPage + 1}&search=${search}&keyword=${keyword}&mentor_no=${msel.mentor_no}" style="color: black;" >다음</a></li>
 				</c:if>
 			</c:if>
-			
-			
 			<!-- 전체목록 페이징 처리 -->
 			<c:if test="${empty keyword}">
 				<c:if test="${paging.startPage > paging.pageBlk }">
-				<li class="page-item"><a class="page-link" href="mentoringAcceptedListPage?page=${paging.startPage - 1}&search=${search}&mentor_no=${msel.mentor_no}" style="color: black;">이전</a></li>
+				<li class="page-item"><a class="page-link" href="mentoringFinishedListPage?page=${paging.startPage - 1}&search=${search}&mentor_no=${msel.mentor_no}" style="color: black;">이전</a></li>
 				</c:if>
 				
 				<c:forEach var="i" begin="${paging.startPage}" end="${paging.endPage}">
 				<li <c:if test="${paging.currentPage==i}">class="active"</c:if>>
-				<a class="page-link" style="color: black;" href="mentoringAcceptedListPage?page=${i}&search=${search}&mentor_no=${msel.mentor_no}">${i}</a>
+				<a class="page-link" style="color: black;" href="mentoringFinishedListPage?page=${i}&search=${search}&mentor_no=${msel.mentor_no}">${i}</a>
 				</li>
 				</c:forEach>
 				
 				<c:if test="${paging.endPage < paging.totalPage}">
 				<li class="page-item"><a class="page-link" 
-					href="mentoringAcceptedListPage?page=${paging.endPage + 1}&search=${search}&mentor_no=${msel.mentor_no}" style="color: black;">다음</a></li>
+					href="mentoringFinishedListPage?page=${paging.endPage + 1}&search=${search}&mentor_no=${msel.mentor_no}" style="color: black;">다음</a></li>
 				</c:if>
 			</c:if>
 		</ul>
-	
 	<!-- CONTENT end -->
 	</div>
 	

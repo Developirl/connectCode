@@ -8,29 +8,28 @@
 		<!-- CONTENT -->
 		
 		<!-- 검색 -->
-		<div align="right" class="cont_mar">
+		<div class="cont_mar">
 		
 		<!-- TITLE -->
-		<div class="form_write">
-			<div class="medium_jh flex-txtAlign" style="position: relative;">
-				 &nbsp;&nbsp;
-				<form action="/submit" method="POST">
-					  <div>
-					    <label for="title">제목:</label>
-					    <input type="text" id="title" name="title" required>
+			<div class="medium_jh">
+			
+				<form action="mentorInquery" method="POST">
+				
+				<input type="hidden" name="ref_post_no" value="0"> 
+				<input type="hidden" name="ref_step" value="0"> 
+			  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+					
+					<div class="infoTitle" style="margin-top: 200px;">
+					    <input class="mentor_info" type="text" id="title" name="title" style="width: 100%; text-align: center; margin-bottom: 20px;" value="일대일 문의합니다" readOnly>
+					    <textarea class="mentor_info" id="content" name="content" style="width: 100%; height: 200px;" required></textarea>
+					</div>
+					  
+					  <div align="center">
+					    <input class="btn_jh" type="submit" value="작성">
+					    <button type="button" class="btn_jh" onclick="mentorInqueryListPage?&page=${page}&mentor_no=${msel.mentor_no}&member_no=${msel.member_no}">목록</button>
 					  </div>
-					  <div>
-					    <label for="content">내용:</label>
-					    <textarea id="content" name="content" rows="4" cols="50" required></textarea>
-					  </div>
-					  <div>
-					    <input type="file" id="attachment" name="attachment">
-					  </div>
-					  <div>
-					    <input type="submit" value="작성">
-					  </div>
+					  
 				</form>
-			</div>
 		</div>
 
 		</div>

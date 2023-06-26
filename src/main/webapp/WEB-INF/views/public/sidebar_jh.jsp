@@ -58,7 +58,7 @@
 
 		<hr class="division_hr">
 		
-		<a href="mentorAlarmListPage" class="w3-bar-item w3-button">알림&nbsp;<span>${msel.alarm_count}</span></a>
+		<a href="mentorAlarmListPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item w3-button">알림&nbsp;<span>${msel.alarm_count}</span></a>
 		
 		<c:choose>
 			<c:when test="${msel.classification != '23'}">
@@ -75,22 +75,21 @@
 					멘토링관리 <i class="fa fa-caret-down"></i>
 				</button>
 				<div id="demoAcc" class="w3-hide w3-white w3-card">
-					<a href="mentoringApplyListPage" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;받은 요청</a>
-					<a href="mentoringAcceptedListPage" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;예약된 상담</a>
-					<a href="#" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;지난 상담</a>
-					<a href="#" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;신고 현황</a>
+					<a href="mentoringApplyListPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;받은 요청</a>
+					<a href="mentoringAcceptedListPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;예약된 상담</a>
+					<a href="mentoringFinishedListPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item w3-button dropContent">&nbsp;&nbsp;지난 상담</a>
 				</div>
 			</c:otherwise>
 		</c:choose>
-		<a href="mentorInqueryListPage" class="w3-bar-item w3-button">1:1 문의</a>
+		<a href="mentorInqueryListPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item w3-button">1:1 문의</a>
 
 		<div class="bottomContent">
 			
 			<hr class="division_hr">
 
-			<a href="mentorPwModifyPage" class="w3-bar-item bottom_a">비밀번호 변경</a>
+			<a href="mentorPwModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item bottom_a">비밀번호 변경</a>
 			<a href="#" class="w3-bar-item bottom_a">로그아웃</a>
-			<a href="#" class="w3-bar-item bottom_a">회원탈퇴</a>
+			<a href="deleteMentor" class="w3-bar-item bottom_a">회원탈퇴</a>
 
 			<hr class="division_hr">
 			
