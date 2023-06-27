@@ -17,7 +17,7 @@
 																										 FROM mentoring INNER JOIN service 
 																														ON (mentoring.service_no = service.service_no) 
 																										 GROUP BY mentor_no 
-																										 ORDER BY cnt 
+																										 ORDER BY cnt DESC
 																										 limit 8) A)
 																			 GROUP BY mentor_no)) B
 							ON (mentor.mentor_no = B.mentor_no)) C 
@@ -25,7 +25,7 @@
 	</select>
 	
 	<select id="getRecentReviewList" resultType="HomeReviewListDTO">
-		SELECT mentor.name mentor_name, service.mentoring_kind, (SELECT name FROM mentee WHERE mentee_no = mentoring.mentee_no) mentee_name, review.reg_date, review.rating, mentor.mentor_no, review.content
+		SELECT mentor.name mentor_name, mentor.mentor_no, service.mentoring_kind, (SELECT name FROM mentee WHERE mentee_no = mentoring.mentee_no) mentee_name, review.reg_date, review.rating, mentor.mentor_no, review.content
 		FROM mentor INNER JOIN service ON mentor.mentor_no = service.mentor_no
 					INNER JOIN mentoring ON service.service_no = mentoring.service_no
 		            INNER JOIN review ON mentoring.mentoring_no = review.mentoring_no

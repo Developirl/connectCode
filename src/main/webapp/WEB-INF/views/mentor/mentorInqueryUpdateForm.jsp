@@ -45,7 +45,7 @@
 		   		</div>
 		   		
 			   	<input type="submit" value="수정" class="btn_jh">
-			    <button onclick="mentorInqueryDetail?page=${page}&post_no=${mymentoring.post_no}&ref_post_no=${mymentoring.ref_post_no}&mentor_no=${msel.mentor_no}" class="btn_jh" style="width: 150px;">이전페이지</button>
+			    <button type="button" onclick="location.href='mentorInqueryDetail?page=${page}&post_no=${mymentoring.post_no}&ref_post_no=${mymentoring.ref_post_no}&mentor_no=${msel.mentor_no}'" class="btn_jh" style="width: 150px;">이전페이지</button>
 			</div>
 	
 		</form>

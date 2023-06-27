@@ -34,7 +34,12 @@
 			&nbsp;<font style="color: #004EA2; font-family:'Angkor', cursive;">Code</font>
 		</div>
 		<div class="mentoProfileBox">
-			<img class="mentoProfile" src="/public/img/profile_img.png">
+			<c:if test="${empty msel.physical_name}">
+				<img class="mentoProfile" src="/public/img/profile_img.png">
+			</c:if>
+			<c:if test="${!empty msel.physical_name}">
+				<img class="mentoProfile" src="/download/${msel.physical_name}">
+			</c:if>
 		</div>
 		<div align="center" style="color: #fff;">${msel.name }</div>
 		<div align="center">

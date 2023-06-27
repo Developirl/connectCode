@@ -8,9 +8,9 @@
 <title>ACCESSEROR</title>
 </head>
 <body>
-	<div>
+	<div style="font-weigh:bold; font-size:20px;">
 		<c:forEach begin="0" end="1000">
-			띵동~ 당신은 접근 권한이 없습니다~ 꺼져주세요~~ 돌아가주세요~~ 사요나라~~
+			띵동~ 당신은 접근 권한이 없습니다~ 꺼져주세요~~ 돌아가주세요~~ 사요나라~~ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		</c:forEach>
 	</div>
 </body>

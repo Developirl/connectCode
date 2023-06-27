@@ -109,7 +109,7 @@
 			(SELECT reserve_date,m.classification as menClassification,m.apply_time,mentoring_kind,mentoring_no,service_no,mentor_no,mentee_no 
 				FROM mentoring m 
 				JOIN service USING(service_no)
-				WHERE mentee_no = 121 
+				WHERE mentee_no = #{mentee_no} 
 				AND classification IN (31,32,35)
 					) a 
 					JOIN mentor USING(mentor_no)) USING(member_no)    

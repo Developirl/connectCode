@@ -29,7 +29,7 @@
 					  
 					  <div align="center">
 					    <input class="btn_jh" type="submit" value="작성">
-					    <button type="button" class="btn_jh" onclick="mentorInqueryListPage?page=${page}&mentor_no=${msel.mentor_no}&member_no=${msel.member_no}">목록</button>
+					    <button type="button" class="btn_jh" onclick="location.href='mentorInqueryListPage?page=${page}&mentor_no=${msel.mentor_no}&member_no=${msel.member_no}'">목록</button>
 					  </div>
 					  
 				</form>
