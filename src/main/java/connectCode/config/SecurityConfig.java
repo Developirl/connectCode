@@ -38,7 +38,7 @@ public class SecurityConfig {
 	            .antMatchers("/public/**").permitAll() 
 	            .antMatchers("/member/**").permitAll() 
 	            .antMatchers("/findMentor/**").permitAll()
-	            .antMatchers("/freeMentoring/**").permitAll()
+	            .antMatchers("/freeMentoring/**").hasAnyAuthority("ROLE_11", "ROLE_12", "ROLE_13")
 	            .antMatchers("/master/**").hasAuthority("ROLE_11")
 	            .antMatchers("/mentee/**").hasAuthority("ROLE_12") 
 	            .antMatchers("/mentor/**").hasAuthority("ROLE_13")
