@@ -100,18 +100,21 @@
 
 <!--  지수 작업 영역  -->
 	<select id="getMentoringHistory" parameterType="int" resultType="MenteeMentoringDTO">
-		select * from review right join
-			(select p.pay_amount,p.payment_no,p.iamport_order_no,p.order_no, b.*,p.pay_state from payment p right join(
-					SELECT menClassification,name,mentoring_kind,reserve_date,mentee_no,mentor_no,mentoring_no FROM member 
-					JOIN(  
-						(SELECT reserve_date,m.classification as menClassification,mentoring_kind,mentoring_no,service_no,mentor_no,mentee_no 
-						FROM mentoring m 
-						JOIN service USING(service_no)
-						WHERE mentee_no = #{mentee_no} 
-						AND classification IN (31,32,35)
+		 SELECT * FROM review RIGHT JOIN
+			(SELECT p.pay_amount,p.payment_no,p.iamport_order_no,p.order_no, b.*,p.pay_state 
+			FROM payment p 
+			RIGHT JOIN(
+			SELECT menClassification,name,mentoring_kind,reserve_date,mentee_no,mentor_no,mentoring_no,apply_time FROM member 
+			JOIN(  
+			(SELECT reserve_date,m.classification as menClassification,m.apply_time,mentoring_kind,mentoring_no,service_no,mentor_no,mentee_no 
+				FROM mentoring m 
+				JOIN service USING(service_no)
+				WHERE mentee_no = 121 
+				AND classification IN (31,32,35)
 					) a 
 					JOIN mentor USING(mentor_no)) USING(member_no)    
-					) b using(mentoring_no) ) sub using(mentoring_no) where pay_state != 'cancel'
+					) b using(mentoring_no) ) sub using(mentoring_no) where pay_state != 'cancel' 
+                    ORDER BY apply_time DESC;
        
 	</select>
 	

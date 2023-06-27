@@ -305,6 +305,14 @@
 }
 
 
+.bi-bookmark-fill,.bi-bookmark{
+	margin-right: 10px;
+	font-size:28px;
+}
+
+i{
+	cursor: pointer;
+}
 </style>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -555,12 +563,12 @@ function goApplyMentoringPage(kind){
             	    <div class="js-icorn-box-side">
             	       <sec:authorize access="isAuthenticated()"> 
 	            	        <div class="bookmark-fill" style="width:auto;">
-	            	        	<i class="bi bi-bookmark-fill fs-3 js-bookmarkclick" style="color:#F2B661;" data-value="1"></i>
+	            	        	<i class="bi bi-bookmark-fill js-bookmarkclick" style="color:#F2B661;" data-value="1"></i>
 	            	   		</div>
 	            	   </sec:authorize>     
             	       <sec:authorize access="isAuthenticated()"> 
 	            	        <div class="bookmark">
-		            	        <i class="bi bi-bookmark fs-3 js-bookmarkclick" style="color:#F2B661;" data-value="0"></i>
+		            	        <i class="bi bi-bookmark js-bookmarkclick" style="color:#F2B661;" data-value="0"></i>
 	            	   		</div>
 	            	   </sec:authorize>
             	        <div class="js-modal-icon" style="display:inline;" >
@@ -857,6 +865,10 @@ function goApplyMentoringPage(kind){
 						</div>   
     
             	    </c:if><!--  후기가 없다면 뜨지 않게 한다.  -->
+            	    
+            	    <c:if test="${reviewcount == 0 }">
+            	    	<div style="font-size:12pt;text-align: center;margin-top:60px;">아직 작성된 후기가 없습니다. </div>
+            	    </c:if>
         			</div>    	 
         			
             	    

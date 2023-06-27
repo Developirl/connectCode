@@ -117,8 +117,8 @@
 			</table>
 			</div>
 			
-			<a href="localhost">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="#">예약 내역 확인</a>
+			<a href="/mentee/main">마이페이지</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="/mentee/myMentoringHistoryPage">예약 내역 확인</a>
 			
 			
 			</div>

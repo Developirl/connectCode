@@ -68,10 +68,12 @@
     background:#F2F5F5;
     border-radius: 10px;
     padding:5px 18px;
-    color:#004EA2;
-    text-align: center;
     margin-right: 30px;
     margin-left: 20px;
+}
+.js-mentoring-kindbox2 *{
+    color:#004EA2;
+    text-align: center;
     font-weight: 500;
 }
 .js-paymentbottommargin2:nth-child(2) td{
@@ -1260,8 +1262,8 @@ function removeFile(element) {
                                     <input type="radio" name="mentoring_kind" id="js-mentoring-${st.index}" class="js-sel-radio" value="${i.service_no }" data-value="${i.mentoring_kind}" data-pay="${i.mentoring_fee }">
 	 							</th>
 								<td>
-									<div class="js-mentoring-kindbox2">${i.mentoring_kind }</div>
-								</td>		      			    
+									<div class="js-mentoring-kindbox2"><label for="js-mentoring-${st.index}">${i.mentoring_kind }</label></div>
+								</td>	
 								<td style="font-size:14pt;">
 									<fmt:formatNumber value="${i.mentoring_fee }" type="number" var="pay" /><b>${pay}</b> 원
 								</td>	
@@ -1323,29 +1325,29 @@ function removeFile(element) {
 
 	            	 	<c:if test="${ ! empty mentee.git }">
 		            	 	<tr>
-		            	 	<th class="js-gitBlogSelectBox">
+		            	 	<td class="js-gitBlogSelectBox">
 				            	깃허브 주소 &nbsp;&nbsp;&nbsp;
 				            	공개 <input type="radio" name="js-gitview" class="js-gitview" id="js-gitopen" value="Y">&nbsp;&nbsp; 
 				            	비공개 <input type="radio" name="js-gitview" class="js-gitview" id="js-gitclose" value="N"> 
-		            	 	</th>
+		            	 	</td>
 		            	 	<td style="padding-top:50px;"> <span id="js-gitgitgit">${mentee.git }</span></td>
 		            	 	</tr>
 	            	 	</c:if>
 
 	            	 	<c:if test="${ ! empty mentee.blog }">
 		            	 	<tr>
-		            	 	<th class="js-gitBlogSelectBoxbox">
+		            	 	<td class="js-gitBlogSelectBoxbox">
 				            	블로그 주소 &nbsp;&nbsp;&nbsp;
 				            	공개 <input type="radio" name="js-blogview" class="js-blogview" id="js-blogopen" value="Y">&nbsp;&nbsp; 
 				            	비공개 <input type="radio" name="js-blogview" class="js-blogview" id="js-blogclose" value="N"> 
-		            	 	</th>
-		            	 	<td style="padding-top:50px;"> <span id="js-blogblogblog">${mentee.blog }</span></td>
+		            	 	</td>
+		            	 	<td style="padding-top:20px;"> <span id="js-blogblogblog">${mentee.blog }</span></td>
 		            	 	</tr>
 	            	 	</c:if>
 	            	 	
 	            	 	
 	            	 	<tr>
-	            	 	<td>
+	            	 	<td colspan="3">
 							<form action="insertMentoring_file" id="js-file-insert-form" autocomplete="off" enctype="multipart/form-data">	            	 	
 	            	 	
 								<!-- 파일 첨부 -->
