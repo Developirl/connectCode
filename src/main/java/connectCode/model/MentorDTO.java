@@ -37,6 +37,7 @@ public class MentorDTO {
    private Timestamp happen_time;
    private String read_yn;
    private int receiver_mem_no;
+   private int row_num;
    
    // 서비스 요금
    private int service_no;
@@ -78,10 +79,20 @@ public class MentorDTO {
    
    // 조인
    private int number;
+   private int mentoring_no;
    private String age;
    private String mentor_name;
    private String mentee_name;
    private String mentee_no;
+   private String request_content;
+   private String location;
+   private String comment;
+   private String cancel_reason;
+   private String git_YN;
+   private String blog_YN;
+   private Timestamp apply_time;
+   private Timestamp reserve_date;
+   
 	
    private String id;
    private Date reg_date;
@@ -102,6 +113,7 @@ public class MentorDTO {
    private int file_serial_number;
    private String file_url;
    private String origin_name;
+   private String physical_name;
 
    private long size;
 

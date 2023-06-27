@@ -10,7 +10,7 @@
 				<img class="mentoProfile" src="/public/img/profile_img.png">
 			</c:if>
 			<c:if test="${!empty msel.profile_img_no}">
-				<img src="${msel.file_url}">
+				<img class="mentoProfile" src="/download/${msel.physical_name}">
 			</c:if>
 		</div>
 	</div>

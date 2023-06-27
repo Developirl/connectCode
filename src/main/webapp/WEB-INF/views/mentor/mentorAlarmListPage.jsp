@@ -82,6 +82,7 @@
 	function closeReserveDetailModal(){
 	    const modal = document.querySelector('.jh-reserve-detail-modal');
 	    modal.style.display = 'none';
+	    location.reload();
 	}
 	
 	</script>
@@ -125,17 +126,29 @@
 		<hr class="title_hr">
 		
 		<div class="list_mar">
-		
+			
 			<!-- 알람 list -->
 			<c:forEach var="sel_al" items="${sel_alarm}">
-				<div class="accepted_list" onclick="openReserveDetailModal(${sel_al.alarm_no})">
-					<div class="small_jh flex-txtAlign">
-						<div class="alarm_div">번호</div>
-						<div class="alarm_div">${sel_al.title}</div>
-						<div class="alarm_div"><fmt:formatDate value="${sel_al.happen_time}" pattern="yyyy-MM-dd"/></div>
-						<div class="alarm_div">운영팀</div>
+				<c:if test="${sel_al.read_yn == 'N'}">
+					<div class="accepted_list" onclick="openReserveDetailModal(${sel_al.alarm_no})" style="font-weight: bold;">
+						<div class="small_jh flex-txtAlign">
+							<div class="alarm_div">${sel_al.row_num}</div>
+							<div class="alarm_div">${sel_al.title}</div>
+							<div class="alarm_div"><fmt:formatDate value="${sel_al.happen_time}" pattern="yyyy-MM-dd"/></div>
+							<div class="alarm_div">운영팀</div>
+						</div>
 					</div>
-				</div>
+				</c:if>			
+				<c:if test="${sel_al.read_yn == 'Y'}">
+					<div class="accepted_list" onclick="openReserveDetailModal(${sel_al.alarm_no})" style="color: gray;">
+						<div class="small_jh flex-txtAlign">
+							<div class="alarm_div">${sel_al.row_num}</div>
+							<div class="alarm_div">${sel_al.title}</div>
+							<div class="alarm_div"><fmt:formatDate value="${sel_al.happen_time}" pattern="yyyy-MM-dd"/></div>
+							<div class="alarm_div">운영팀</div>
+						</div>
+					</div>
+				</c:if>			
 			</c:forEach>
 			<!-- 알람 list end -->
 			

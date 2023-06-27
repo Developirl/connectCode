@@ -1352,6 +1352,11 @@ public class MentorController {
 		
 		MentorDTO select_alarm_detail = ms.select_alarm_detail(mentor);
 		
+		if(select_alarm_detail.getRead_yn().equals("N")) {
+			int result = ms.update_alarm(select_alarm_detail.getAlarm_no());
+			System.out.println("update_alarm :: "+result);
+		}
+		
 		model.addAttribute("detail_al", select_alarm_detail);
 		
 		return "mentor/mentorAlarmDetailPage";

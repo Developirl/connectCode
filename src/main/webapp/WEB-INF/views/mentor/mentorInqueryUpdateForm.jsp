@@ -21,41 +21,35 @@
 	}
    
 </script>
-	<div class="w3-container">
-		<div class="fixedTop_div"></div>
-		<font class="large_jh"> 1:1 문의 </font>
-		<hr class="title_hr">
-		<!-- CONTENT -->
-		
- <div id="wrap">
-  <h2 class="title">게시판 수정</h2>
-  <form method="POST" action="mentorInqueryUpdate" onSubmit="return mentorInqueryUpdate()">
-  <input type="hidden" name="post_no" value="${mymentoring.post_no}" />
-  <input type="hidden" name="page" value="${page}" />
+<div class="w3-container">
+	<div class="fixedTop_div"></div>
+	<font class="large_jh"> 1:1 문의 </font>
+	<hr class="title_hr">
+	<!-- CONTENT -->
+	
+	<div align="center" class="cont_mar" style="margin-top: 60px;">
+		<img src="/mentor/img/question2.png" style="width: 150px;">		
+	</div>
+	
+	<div class="cont_mar" style="margin-top: 0px;">
+		<form method="POST" action="mentorInqueryUpdate" onSubmit="return mentorInqueryUpdate()">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+  			<input type="hidden" name="post_no" value="${mymentoring.post_no}" />
+ 			<input type="hidden" name="page" value="${page}" />
   
-   <table id="tableInquery">
-    <tr>
-     <th>글내용</th>
-     <td>
-      <textarea name="content" id="content" rows="8" cols="50"
-      			class="input_box">${mymentoring.content}</textarea>
-     </td>
-    </tr> 
-    
-   </table>
-   
-   <div id="inqueryMenu">
-   
-   <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-   <%--  <a href="javascript:onClick=mentorInqueryUpdate('${mymentoring.post_no}', '${page}', '${mymentoring.ref_post_no}')" class="btn btn-info">수정</a> --%>
-    <input type="submit" value="수정" class="btn btn-info">
-    <a href="mentorInqueryDetail?page=${page}&post_no=${mymentoring.post_no}&ref_post_no=${mymentoring.ref_post_no}&mentor_no=${msel.mentor_no}" class="btn btn-info">이전페이지</a>
-
-<!--     <input type="reset" value="취소" class="input_button"/>
-    <input type="submit" value="수정" class="input_button" />
- -->   
- </div>
-  </form>
- </div>
+			<!-- TITLE -->
+			<div class="medium_jh" align="center">
+				<div class="infoTitle" style="margin-top: 0px;">
+					<div class="mentor_info" id="title" style="width: 100%; text-align: center; margin-bottom: 20px;">1:1 문의합니다.</div>
+					<textarea class="mentor_info" name="content" id="content" style="width: 100%; height: 350px; resize: none;">${mymentoring.content}</textarea>
+		   		</div>
+		   		
+			   	<input type="submit" value="수정" class="btn_jh">
+			    <button onclick="mentorInqueryDetail?page=${page}&post_no=${mymentoring.post_no}&ref_post_no=${mymentoring.ref_post_no}&mentor_no=${msel.mentor_no}" class="btn_jh" style="width: 150px;">이전페이지</button>
+			</div>
+	
+		</form>
+	</div>
+</div>
 
 <%@ include file="../public/sidebar_footer.jsp" %>

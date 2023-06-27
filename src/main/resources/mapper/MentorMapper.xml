@@ -22,7 +22,7 @@
 	AND review_no is not null
 </select>
 
-<select id="select_accepted_mentoring" resultType="MentoringDTO">
+<select id="select_accepted_mentoring" resultType="MentorDTO">
 	SELECT
 	  * 
 	FROM mentoring
@@ -47,7 +47,7 @@
 	LEFT JOIN (
 		SELECT COUNT(*) AS alarm_count, receiver_mem_no AS member_no 
 		FROM alarm 
-		WHERE receiver_mem_no = #{member_no} group by receiver_mem_no) a 
+		WHERE receiver_mem_no = #{member_no} and read_yn = 'N' group by receiver_mem_no) a 
 	USING (member_no)
 	LEFT JOIN file f 
 	ON m.profile_img_no = f.file_no
@@ -296,15 +296,18 @@
 </delete>
 
 <select id="select_alarm" resultType="MentorDTO">
-   SELECT
-     * 
-   FROM alarm 
-   WHERE receiver_mem_no = #{member_no}
-       <if test="search == null and keyword != null">
-         AND (title LIKE CONCAT('%', #{keyword}, '%')
-         or content LIKE CONCAT('%', #{keyword}, '%'))
-       </if>
-     LIMIT #{startRow}, 10
+	SELECT
+		ROW_NUMBER() OVER (ORDER BY happen_time) AS row_num,
+		alarm.*
+	FROM alarm 
+	WHERE receiver_mem_no = #{member_no}
+		<if test="search == null and keyword != null">
+		  AND (title LIKE CONCAT('%', #{keyword}, '%')
+		  or content LIKE CONCAT('%', #{keyword}, '%'))
+		</if>
+	ORDER BY
+  	happen_time DESC
+	LIMIT #{startRow}, 10
 </select>
 
 <!-- 알림 총 데이터수 -->
@@ -322,6 +325,12 @@
 	FROM alarm 
 	WHERE receiver_mem_no = #{member_no} and alarm_no = #{alarm_no}
 </select>
+
+<update id="update_alarm" parameterType="MentorDTO">
+	UPDATE alarm
+	SET read_yn = 'Y'
+	WHERE alarm_no = #{alarm_no}
+</update>
 
 <!--**************************** 혜지 작성 ******************************** -->
    <select   id="mentorDetail" resultType="MentorDTO">

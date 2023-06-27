@@ -68,6 +68,8 @@ public interface MentorMapper {
 	
 	public List<MentorDTO> select_accepted_mentoring(MentorDTO mentor);
 	
+	public int update_alarm(int alarm_no);
+	
    // ******************* 혜지 작성 *****************************
    public MentorDTO mentorDetail(int mentor_no);
 
