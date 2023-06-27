@@ -766,12 +766,11 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 						 --%>
 
 
-
 							<table class="js-profileCardtable">
 								<tr>
 								<td class="js-profileimgtd">
 									<c:if test="${ ! empty i.file_url}">
-										<img alt="profile" src="${i.file_url}" class="js-circular-image">
+										<img alt="profile" src="/download/${i.physical_name}" class="js-circular-image">
 									</c:if>
 									<c:if test="${ empty i.file_url}">
 										<img alt="profile" src="/public/img/profile_img.png" class="js-circular-image">

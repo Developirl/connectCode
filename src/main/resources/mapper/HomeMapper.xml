@@ -5,7 +5,7 @@
 <mapper namespace="connectCode.mapper.HomeMapper">
 	
 	<select id="getPopularMentorList" resultType="FindMentorDTO">
-		SELECT mentor_no, name, technology, mentoring_location, company, years, file_url 
+		SELECT mentor_no, name, technology, mentoring_location, company, years, file_url, physical_name 
 		FROM (
 				SELECT mentor.mentor_no, name, technology, mentoring_location, company, years, profile_img_no
 				FROM mentor INNER JOIN (SELECT * 

@@ -45,7 +45,7 @@
 
 		SELECT *
 		FROM (
-		SELECT subquery.*, f.file_url
+		SELECT subquery.*, f.file_url, f.physical_name
 		FROM (
 		SELECT DISTINCT m.*,
 		c.years,
@@ -210,7 +210,7 @@
 	
 	<!--  멘토 디테일 페이지에서 멘토 프로필 정보 가져오는 쿼리문 -->
 	<select id="getMentorProfile" parameterType="int" resultType="connectCode.model.FindMentorDTO">
-		select a.mentor_no,f.file_url,a.name,a.company,a.task,a.intro,a.mentoring_location from 
+		select a.mentor_no,f.file_url,f.physical_name,a.name,a.company,a.task,a.intro,a.mentoring_location from 
 		( select * from mentor join career using(mentor_no) where mentor_no = #{mentor_no} 
 		order by entering_date desc limit 1) a left join file f ON a.profile_img_no = f.file_no
 	</select>

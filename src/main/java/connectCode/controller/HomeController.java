@@ -26,4 +26,9 @@ public class HomeController {
 		return "academy/academyList";
 	}
 	
+	@GetMapping("/public/accessError")
+	public String accessErrorPage() {
+		return "public/accessError";
+	}
+	
 }

@@ -33,7 +33,8 @@ public class SecurityConfig {
         http
             .authorizeRequests()
             	.antMatchers("/").permitAll()
-            	.antMatchers("/academy").permitAll()
+            	.antMatchers("/academy/**").permitAll()
+            	.antMatchers("/download/**").permitAll()
 	            .antMatchers("/public/**").permitAll() 
 	            .antMatchers("/member/**").permitAll() 
 	            .antMatchers("/findMentor/**").permitAll()
@@ -53,7 +54,7 @@ public class SecurityConfig {
 	            .usernameParameter("id")
 	            .passwordParameter("password")
 	            .successHandler(authenticationSuccessHandler())
-	            .failureUrl("/member/login?error=true") 
+	            .failureUrl("/member/loginform?error=true") 
 	            .and()
 	           .rememberMe()
 	            .key("connectCode")
