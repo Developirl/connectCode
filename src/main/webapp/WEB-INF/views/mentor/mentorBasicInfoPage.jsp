@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <form method="post" action="mentorBasicInfo_Up" id="myform" enctype="multipart/form-data">
 
@@ -11,7 +12,12 @@
 				</div>
 				<div style="width: 30%; margin-top: 20px;">
 					<div class="mentoProfileBox uplode_pro">
-						<img class="mentoProfile" id="preview" src="/public/img/profile_img.png">
+						<c:if test="${empty msel.profile_img_no}">
+							<img class="mentoProfile" id="preview" src="/public/img/profile_img.png">
+						</c:if>
+						<c:if test="${!empty msel.profile_img_no}">
+							<img class="mentoProfile" id="preview" src="/download/${msel.physical_name}">
+						</c:if>
 					</div>
 				</div>
 			</div>

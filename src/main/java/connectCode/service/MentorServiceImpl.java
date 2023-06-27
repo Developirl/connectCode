@@ -312,6 +312,11 @@ public class MentorServiceImpl implements MentorService{
 		return mm.select_accepted_mentoring(mentor);
 	}
 	
+	@Override
+	public int update_alarm(int alarm_no) {
+		return mm.update_alarm(alarm_no);
+	}
+	
    // ***************** 혜지 추가 *******************
    @Override
    public MentorDTO mentorDetail(int mentor_no) {
@@ -337,5 +342,6 @@ public class MentorServiceImpl implements MentorService{
    public int getTotal(int member_no) {
       return mm.getTotal(member_no);
    }
+
 	
 }

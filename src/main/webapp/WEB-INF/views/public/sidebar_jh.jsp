@@ -88,9 +88,11 @@
 			<hr class="division_hr">
 
 			<a href="mentorPwModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="w3-bar-item bottom_a">비밀번호 변경</a>
-			<a href="#" class="w3-bar-item bottom_a">로그아웃</a>
+			<a class="w3-bar-item bottom_a" id="logoutBtn">로그아웃</a>
 			<a href="deleteMentor" class="w3-bar-item bottom_a">회원탈퇴</a>
-
+			<form action="/member/logout" method="post" id="logout">
+       			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+       		</form>
 			<hr class="division_hr">
 			
 			<a href="/" class="w3-bar-item bottom_a small_jh">
@@ -104,4 +106,11 @@
 		</div>
 
 	</div>
+	
+	<script>
+		$("#logoutBtn").on("click", function(e){
+			e.preventDefault();
+			$("#logout").submit();
+		});
+	</script>
 	

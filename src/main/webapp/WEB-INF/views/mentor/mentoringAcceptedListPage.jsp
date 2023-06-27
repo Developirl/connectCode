@@ -174,8 +174,8 @@
 					<c:set var="no" value="${no - 1}"/>	<!-- 삭제시 값 감소를 위한 -->
 					<div class="list_div">${b.name}</div>
 					<div class="list_div">${b.mentoring_kind}</div>
-					<div class="list_div">${b.apply_time }</div>
-					<div class="list_div">${b.reserve_date }</div>
+					<div class="list_div"><fmt:formatDate value="${b.apply_time }" pattern="yyyy-MM-dd HH:mm"/></div>
+					<div class="list_div"><fmt:formatDate value="${b.reserve_date }" pattern="yyyy-MM-dd HH:mm"/></div>
 					  <c:if test="${b.classification == '32'}">
 					    <div class="list_div" style="color: red; font-weight: bold;">예약완료</div>
 					  </c:if>

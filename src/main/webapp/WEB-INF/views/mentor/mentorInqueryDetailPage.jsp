@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../public/sidebar_jh.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 	<script>
 	function mentorInqueryDelete(post_no, page, mentor_no){	
@@ -12,32 +13,27 @@
 
 	<div class="w3-container">
 		<div class="fixedTop_div"></div>
-		<font class="large_jh"> 1:1 문의 </font>
-		<hr class="title_hr">
+		<div class="large_jh"> 1:1 문의 </div>
+		<hr class="title_hr infoTitle">
 		<!-- CONTENT -->
 		
-		<!-- 검색 -->
-		<div align="right" class="cont_mar">
 		
 		<!-- TITLE -->
-		<div class="container" align="center">
-		<h2 class="text-primary">게시글 상세정보</h2>
-		<div class="table table-bordered">
-			<div>
-				<div>제목</div>
-				<div>${mymentoring.title}</div>
+		<div class="medium_jh" align="center">
+			<div class="cont_mar" style="display: flex;">
+				<div class="mentor_info infoCtg" style="width: 10%;">제목</div>
+				<div class="mentor_info infoCtg" style="width: 40%; text-align: left;">${mymentoring.title}</div>
+				<div class="mentor_info infoCtg" style="width: 10%;">작성일</div>
+				<div class="mentor_info infoCtg" style="width: 20%; text-align: left;"><fmt:formatDate value="${mymentoring.reg_date}" pattern="yyyy-MM-dd"/></div>
+				<div class="mentor_info infoCtg" style="width: 10%;">처리상태</div>
+				<div class="mentor_info infoInp" style="width: 20%; text-align: left;">
+					<c:if test="${mymentoring.reply_yn == 'N'}">문의 진행중</c:if>
+					<c:if test="${mymentoring.reply_yn == 'Y'}">답변 완료</c:if>
+				</div>
 			</div>
-			<div>
-				<div>작성일</div>
-				<div>${mymentoring.reg_date}</div>
-			</div>
-			<div>
-				<div>처리상태</div>
-				<div>${mymentoring.reply_yn}</div>
-			</div>
-			<div>
-				<div>내용</div>
-				<div>${mymentoring.content}</div>
+			<div class="cont_mar">
+				<div class="mentor_info">내용</div>
+				<div class="mentor_info" style="height: 400px;">${mymentoring.content}</div>
 			</div>
 		</div>
 
@@ -52,19 +48,18 @@
 			</div>
 		</div>
 		</c:forEach>
-				
-		<a href="mentorInqueryListPage?page=${page}&mentor_no=${msel.mentor_no}" class="btn btn-info">목록</a>
-		 
-		<c:if test="${mymentoring.reply_yn == 'N'}">
-			<a href="mentorInqueryUpdateForm?post_no=${mymentoring.post_no}&page=${page}&mentor_no=${msel.mentor_no}" class="btn btn-info">수정</a> 
-			<a href="javascript:onClick=mentorInqueryDelete('${mymentoring.post_no}','${page}',${msel.mentor_no})" class="btn btn-info">삭제</a> 
-		</c:if>
-<%-- 		<a href="mentorInqueryDelete?post_no=${mymentoring.post_no}&page=${page}" class="btn btn-info">삭제</a>  --%>
+		
+		<div align="center" class="cont_mar">
+			<button onclick="location.href='mentorInqueryListPage?page=${page}&mentor_no=${msel.mentor_no}'" class="custom_btn" style="width: 100px;">목록</button>
+			 
+			<c:if test="${mymentoring.reply_yn == 'N'}">
+				<button onclick="location.href='mentorInqueryUpdateForm?post_no=${mymentoring.post_no}&page=${page}&mentor_no=${msel.mentor_no}'" class="custom_btn" style="width: 100px;">수정</button> 
+				<button onclick="mentorInqueryDelete('${mymentoring.post_no}','${page}',${msel.mentor_no})" class="custom_btn" style="width: 100px;">삭제</button> 
+			</c:if>
+		</div>
 		<div id="list"></div>
 			
 	</div>
 	<!-- CONTENT end -->
-	</div>
-	</div>
 
 <%@ include file="../public/sidebar_footer.jsp" %>

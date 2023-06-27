@@ -151,7 +151,6 @@
 				<div class="list_div">상담종류</div>
 				<div class="list_div">신청일자</div>
 				<div class="list_div">상담일자</div>
-				<div class="list_div">회차</div>
 				<div class="list_div">상태</div>
 			</div>
 		</div>
@@ -159,7 +158,7 @@
 		      
    <!-- ******************************************* 추가 start ******************************************* -->
       
-      <div class="cont_mar">
+      <div class="list_mar">
          <!-- 멘토링예약 list -->
          <c:set var="no" value="${no}"/>
          <c:forEach var="b" items="${finishedList}">
@@ -169,9 +168,8 @@
 					<c:set var="no" value="${no - 1}"/>	<!-- 삭제시 값 감소를 위한 -->
 					<div class="list_div">${b.name}</div>
 					<div class="list_div">${b.mentoring_kind}</div>
-					<div class="list_div">${b.apply_time}</div>
-					<div class="list_div">${b.reserve_date}</div>
-					<div class="list_div">1</div>	<!-- 멘토링 횟수 ( count(*)로 해야하나 ? -->
+					<div class="list_div"><fmt:formatDate value="${b.apply_time}" pattern="yyyy-MM-dd HH:mm"/></div>
+					<div class="list_div"><fmt:formatDate value="${b.reserve_date}" pattern="yyyy-MM-dd HH:mm"/></div>
 					  <c:if test="${b.classification == '33'}">
 					    <div class="list_div" style="color: gray; font-weight: bold;">신청거절</div>
 					  </c:if>

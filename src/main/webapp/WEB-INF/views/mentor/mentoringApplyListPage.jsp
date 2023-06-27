@@ -163,7 +163,7 @@
                <div class="mentee_info" style="width: 80%;">
                   <div style="display: flex;">
                      <div class="medium_jh" style="width: 50%;">${b.name}</div>
-                     <div class="small_jh" style="width: 50%; text-align: right; color: #777777">${b.apply_time}</div>
+                     <div class="small_jh" style="width: 50%; text-align: right; color: #777777"><fmt:formatDate value="${b.apply_time}" pattern="yyyy-MM-dd HH:mm"/></div>
                   </div>
                   <div class="small_jh">${b.desired_job}</div>
                   <div class="small_jh">${b.mentoring_location}</div>

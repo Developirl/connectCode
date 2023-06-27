@@ -77,33 +77,93 @@
 						<br>상담이 없습니다.
 					</div>
 				</c:if>
-
-				<%-- <c:if test="${!empty select_accepted_mentoring}">
-					<c:forEach var="sam" items="${select_accepted_mentoring}">
-						<div class="accepted_list" onclick=""> 
-							<div class="small_jh flex-txtAlign">
-								<div class="list_div">${sam.name}</div>
-								<div class="list_div">${sam.mentoring_kind}</div>
-								<div class="list_div">${sam.reserve_date }</div>
+				
+				<c:if test="${!empty select_accepted_mentoring}">
+					<div class="cont_mar" style="display: flex; margin-top: 10px;">
+						<c:forEach var="sam" items="${select_accepted_mentoring}" varStatus="status">
+						<div style="float: left; margin: 10px;">
+							<div class="card" style="width:300px;">
+								<c:if test="${sam.mentoring_kind == '20분 전화 멘토링'}">
+								  <img class="card-img-top" src="/mentor/img/call.jpg" alt="Card image" style="opacity: 0.5;">
+							  </c:if>
+							  <c:if test="${sam.mentoring_kind == '30분 대면 멘토링'}">
+								  <img class="card-img-top" src="/mentor/img/talk.jpg" alt="Card image" style="opacity: 0.5;">
+							  </c:if>
+							  <hr class="title_hr" style="margin: 0px;">
+								<div class="card-body">
+									<div class="card-title">${sam.name}</div>
+							    	<div class="card-title" id="phoneNumber${status.index}"></div>
+							    	<div class="card-text"><fmt:formatDate value="${sam.reserve_date }" pattern="yyyy-MM-dd HH:mm"/></div>
+								</div>
 							</div>
+							
+							<script>
+								$(document).ready(function(){
+									
+									// 전화번호에 구분기호(-) 넣어서 화면단으로 출력
+									var formattedPhoneNumber = '${sam.phone}'.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+									$('#phoneNumber${status.index}').append(formattedPhoneNumber);
+									
+								});
+							</script>	
 						</div>
-					</c:forEach>
-				</c:if> --%>
+						</c:forEach>
+					</div>
+				</c:if>
 				
 			</div>
-			<hr class="title_hr">
-			<c:if test="${msel.intro == null || education_select_check == 'N' || career_select_check == 'N' || service_select_check == 'N' || license_select_check == 'N'}">
-				<div align="center" class="small_jh">
-					<span style="font-weight: bold; color: red;">[Tip]</span> 프로필을 작성하셔야 멘토링 활동을 시작할 수 있습니다!&nbsp;&nbsp;&nbsp;
-					<a href="mentorProfileModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="profileEdit_a">작성하러 가기
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-							<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-						</svg>
-					</a>
-				</div>
-			</c:if>
+		</c:if>
+		
+		<c:if test="${msel.intro == null || education_select_check == 'N' || career_select_check == 'N' || service_select_check == 'N' || (msel.technology == null && license_select_check == 'N') || msel.classification == 21}">
+		<hr class="title_hr">
+			<div align="center" class="small_jh">
+				<span style="font-weight: bold; color: red;">[Tip]</span> 프로필을 작성하셔야 멘토링 활동을 시작할 수 있습니다!&nbsp;&nbsp;&nbsp;
+				<a href="mentorProfileModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="profileEdit_a">작성하러 가기
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
+					</svg>
+				</a>
+			</div>
 		</c:if>
 	<!-- CONTENT end -->
 	</div>
-
+	
+	<!-- 모달 띄우기 -->
+	<div class="jh-reserve-detail-modal">
+      <div class="jh-reserve-detail-modal_body" align=center>
+    
+    	<div class="jh-modal-cancelbutt" onclick="closeReserveDetailModal();">
+    	<i class="bi bi-x-circle"></i>
+    	</div>
+	    	<div>
+	           <div id='jh-content'></div>
+	        </div>
+      </div>
+    </div>
+	<script>
+			// 모달 오픈하는 함수로, 오픈시킬 버튼에 onclick에서 함수 호출해주심 됩니다.
+		function openReserveDetailModal(mentoring_no,mentor_no) {
+		    const modal = document.querySelector('.jh-reserve-detail-modal');
+		    
+			$.ajax ({
+		    	url : 'mentoringAcceptedDetailPage',
+		    	type : 'get',
+		    	data : {"mentoring_no": mentoring_no,
+		    			 mentor_no : mentor_no},
+				success: function(response) {
+					$("#jh-content").html(response);
+				} // success end
+		    }); // ajax end
+		    
+		    modal.style.display = 'block';
+		}
+	
+		// 모달 닫는 함수, onclick 에서 함수 호출
+		function closeReserveDetailModal(){
+		    const modal = document.querySelector('.jh-reserve-detail-modal');
+		    modal.style.display = 'none';
+		}
+		
+	</script>
+	
 <%@ include file="../public/sidebar_footer.jsp" %>

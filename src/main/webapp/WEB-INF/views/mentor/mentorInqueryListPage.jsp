@@ -32,15 +32,21 @@
 		<!-- CONTENT -->
 		
 		<!-- 검색 -->
-		<div align="right" class="cont_mar">
+		<div align="right" class="cont_mar"style="margin-bottom: 40px;">
 			<!-- select -->
-			<input type="button" class="search_sel small_jh" style="width: 120px;" onClick="ask(${msel.mentor_no},${msel.member_no})" value="문의하기" readOnly>
-			&nbsp;&nbsp;
-			<select class="search_sel small_jh" style="width: 120px;" id="search" name="search" onChange="inquery()">
-				<option value="inlist">문의 진행 상태</option>
-				<option value="start">문의 진행중</option>
-				<option value="end">처리 완료</option>
-			</select>
+	        <div style="display: flex;">
+	        	<div style="width: 80%; margin-left: 40%;">
+					<input type="button" class="search_sel small_jh" onClick="ask(${msel.mentor_no},${msel.member_no})" value="문의하기" readOnly>
+				</div>
+				<div style="width: 20%;">
+				<select class="search_sel small_jh" style="width: 150px;" id="search" name="search" onChange="inquery()">
+					<option value="inlist">문의 진행 상태</option>
+					<option value="start">문의 진행중</option>
+					<option value="end">처리 완료</option>
+				</select>
+				</div>
+			</div>
+		</div>
 		<!-- 검색 end -->
 		
 		<hr class="title_hr">
@@ -48,7 +54,6 @@
 		<!-- title -->
 		<div class="list_mar">
 			<div class="medium_jh flex-txtAlign">
-				 &nbsp;&nbsp;
 				<div class="list_div">번호</div>
 				<div class="list_div"></div>
 				<div class="list_div">제목</div>
@@ -56,7 +61,6 @@
 				<div class="list_div">작성일자</div>
 				<div class="list_div"></div>
 				<div class="list_div">상태</div> <!-- 신청 , 처리완료 -->
-				&nbsp;&nbsp;
 			</div>
 		</div>
 		<!-- title end -->
@@ -64,29 +68,28 @@
 		<hr class="title_hr">
 		
 		<!-- 일대일 문의 list -->
-		<c:set var="no" value="${no}"/>
-		<c:forEach var="b" items="${inqueryList}">
 		<div class="list_mar">
-			<div class="accepted_list" onclick="inqueryDetail('${b.post_no}','${b.ref_post_no}','${page}')">
-				<div class="small_jh flex-txtAlign">
-					
-					<div class="list_div">${no}</div>
-					<c:set var="no" value="${no - 1}"/>	<!-- 삭제시 값 감소를 위한 -->
-					<div class="list_div"></div>
-					<div class="list_div">일대일 문의입니다</div>
-					<div class="list_div"></div>
-					<div class="list_div">${b.reg_date}</div>
-					<div class="list_div"></div>
-					 <c:if test="${b.reply_yn == 'N'}">
-					    <div class="list_div" style="color: black; font-weight: bold;">문의 진행중</div>
-					 </c:if>
-					 <c:if test="${b.reply_yn == 'Y'}">
-					    <div class="list_div" style="color: red; font-weight: bold;">처리완료</div>
-					 </c:if>
+			<c:set var="no" value="${no}"/>
+			<c:forEach var="b" items="${inqueryList}">
+				<div class="accepted_list" onclick="inqueryDetail('${b.post_no}','${b.ref_post_no}','${page}')">
+					<div class="small_jh flex-txtAlign">
+						<div class="list_div">${no}</div>
+						<c:set var="no" value="${no - 1}"/>	<!-- 삭제시 값 감소를 위한 -->
+						<div class="list_div"></div>
+						<div class="list_div">1:1 문의합니다.</div>
+						<div class="list_div"></div>
+						<div class="list_div"><fmt:formatDate value="${b.reg_date}" pattern="yyyy-MM-dd HH:mm"/></div>
+						<div class="list_div"></div>
+						 <c:if test="${b.reply_yn == 'N'}">
+						    <div class="list_div" style="color: black; font-weight: bold;">문의 진행중</div>
+						 </c:if>
+						 <c:if test="${b.reply_yn == 'Y'}">
+						    <div class="list_div" style="color: red; font-weight: bold;">처리완료</div>
+						 </c:if>
+					</div>
 				</div>
-			</div>
+			</c:forEach>
 		</div>
-		</c:forEach>
 		<!-- 일대일 문의 list end -->
 		
 		<!-- 일대일 문의 list가 empty값 일 때 -->
@@ -144,7 +147,6 @@
 		<!-- 페이징 처리 end -->
 		
 		<!-- CONTENT end -->
-		</div>
 	</div>
 
 <%@ include file="../public/sidebar_footer.jsp" %>
