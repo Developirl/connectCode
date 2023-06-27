@@ -35,8 +35,9 @@ public class MemberController {
 	PasswordEncoder passwordEncorder;
 
 	// 로그인 폼 가기
-	@GetMapping("/loginform")
-	public String loginForm() {
+	@GetMapping("loginform")
+	public String loginError(String error, Model model) {
+		model.addAttribute("error", error);
 		return "member/loginForm";
 	}
 	

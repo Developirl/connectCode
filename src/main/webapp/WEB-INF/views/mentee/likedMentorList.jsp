@@ -27,7 +27,7 @@
 		                                <tr>
 		                                    <td class="js-profileimgtd">
 		                                        <c:if test="${ ! empty mentor.file_url}">
-													<img alt="profile" src="${mentor.file_url}" class="js-circular-image">
+													<img alt="profile" src="/download/${mentor.physical_name}" class="js-circular-image">
 												</c:if>
 												<c:if test="${ empty mentor.file_url}">
 													<img alt="profile" src="/public/img/profile_img.png" class="js-circular-image">

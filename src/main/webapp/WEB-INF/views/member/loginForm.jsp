@@ -212,5 +212,13 @@
 		</div>
 	<%@ include file="../public/footer.jsp"%>
 	<!------------------------------ 전체 프레임 end ------------------------------>
+	<script>
+		$(document).ready(function(){
+			var error = "${error}";
+			if(error == "true"){
+				alert("로그인 정보가 올바르지 않습니다.");
+			}
+		});
+	</script>
 </body>
 </html>

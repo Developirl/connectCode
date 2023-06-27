@@ -24,13 +24,14 @@
                         	<c:forEach var="mentor" items="${pMentorList}" begin="0" end="3">
                         		<div class="col-3">
 	                                <div class="mino-card" style="width: 18rem">
-	                                    <img src="${mentor.file_url}}" class="card-img-top" alt="profile_img" />
+	                                    <img src="/download/${mentor.physical_name}" class="card-img-top" alt="profile_img" />
 	                                    <div class="card-body mino-card-body">
 	                                        <h6 class="mino-bold" style="margin-top: 10px" >${mentor.company}</h6>
 	                                        <h5 class="card-title mino-bold" style="margin-bottom: 15px;">${mentor.name}</h5>
 	                                        <span class="mino-bold">${fn:replace(mentor.technology,',',' ')}</span><br />
 	                                        <span class="mino-bold">
-	                                     		 ${mentor.mentoring_location}&nbsp;&#183;&nbsp;${mentor.years}
+	                                     		 <c:set var="i" value="${fn:indexOf(mentor.mentoring_location,'구 ')}"/>
+	                                     		 ${fn:substring(mentor.mentoring_location,0,i+1)}&nbsp;&#183;&nbsp;${mentor.years}년차
 	                                        </span>
 	                                    </div>
 	                                </div>
@@ -39,7 +40,7 @@
                         </div>
                         <br /><br />
                         <div class="row">
-                        	<c:forEach var="mentor" items="${pMentorList}" begin="0" end="3">
+                        	<c:forEach var="mentor" items="${pMentorList}" begin="4" end="7">
                         		<div class="col-3">
 	                                <div class="mino-card" style="width: 18rem">
 	                                    <img src="${mentor.file_url}}" class="card-img-top" alt="profile_img" />
@@ -48,7 +49,8 @@
 	                                        <h5 class="card-title mino-bold" style="margin-bottom: 15px;">${mentor.name}</h5>
 	                                        <span class="mino-bold">${fn:replace(mentor.technology,',',' ')}</span><br />
 	                                        <span class="mino-bold">
-	                                     		 ${mentor.mentoring_location}&nbsp;&#183;&nbsp;${mentor.years}
+	                                        	 <c:set var="i" value="${fn:indexOf(mentor.mentoring_location,'구 ')}"/>
+	                                     		 ${fn:substring(mentor.mentoring_location,0,i)}&nbsp;&#183;&nbsp;${mentor.years}년차
 	                                        </span>
 	                                    </div>
 	                                </div>
@@ -58,6 +60,7 @@
                     </div>
                     <!-- 이달의 인기 멘토 끝 -->
                     
+                    <br><br><br><br><br>
                     
                     <!-- 최신 멘토 후기 START-->
                     <div class="container-fluid">

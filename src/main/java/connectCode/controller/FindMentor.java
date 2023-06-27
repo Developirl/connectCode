@@ -166,7 +166,7 @@ public class FindMentor {
 		
 		// 멘토 카드 
 		FindMentorDTO dto = service.getMentorProfile(mentor_no);
-		
+		System.out.println(dto);
 		
 		 int member_no = 0;
 	        

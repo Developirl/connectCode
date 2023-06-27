@@ -575,7 +575,7 @@ function goApplyMentoringPage(kind){
             	    <tr>
             	    	<td width=20%  >
             	    	 <c:if test="${ ! empty mentorInfo.file_url }">
-	            	    	<img src="${mentorInfo.file_url }" class="js-profile-image">
+	            	    	<img src="/download/${mentorInfo.physical_name}" class="js-profile-image">
             	    	 </c:if>
             	    	 <c:if test="${ empty mentorInfo.file_url }">
 	            	    	<img src="/public/img/profile_img.png" class="js-profile-image">

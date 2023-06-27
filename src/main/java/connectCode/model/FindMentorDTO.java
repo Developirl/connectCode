@@ -25,6 +25,7 @@ public class FindMentorDTO {
 	
 	// 프로필 사진 url
 	private String file_url;
+	private String physical_name;
 	
 	// service 테이블 데이터 
 	private String[] mentoring_payment;

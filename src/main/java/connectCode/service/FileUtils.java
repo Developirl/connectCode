@@ -50,8 +50,8 @@ public class FileUtils {
 		}
 		
 		String saveName = generateSaveFilename(multipartFile.getOriginalFilename());
-		String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")).toString();
-		String uploadPath = getUploadPath(today) + File.separator + saveName;
+		//String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyMMdd")).toString();
+		String uploadPath = getUploadPath() + File.separator + saveName;
 		File uploadFile = new File(uploadPath);
 		String extension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
 		
@@ -94,9 +94,9 @@ public class FileUtils {
 	}
 	
 	/* 업로드 경로 반환 */
-	private String getUploadPath(String addPath) {
-		return makeDirectories(uploadPath + File.separator + addPath);
-	}
+//	private String getUploadPath(String addPath) {
+//		return makeDirectories(uploadPath + File.separator + addPath);
+//	}
 	
     /* 업로드 폴더(디렉토리) 생성 */
     private String makeDirectories(String path) {
