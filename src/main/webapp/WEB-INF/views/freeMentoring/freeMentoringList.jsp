@@ -118,13 +118,29 @@ background-color: blue;
 								</tr>
 							</thead>
 							<tbody>
+								<c:if test="${empty list }">
+								<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<th align="center"><h2>데이터가 없습니다.</h2></th>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								</tr>
+								</c:if>
+							
+							
+							
 								<c:set var="num" value="${pageMaker.number}"></c:set>
 								<c:forEach items="${list}" var="free">
 									<c:if test="${not empty list}">
 										
 										<tr align="center" id="ys_freelisttr">
 											<td style="width: 15%;"><c:out value="${num}"></c:out> </td>
-											<td style="width: 15%;">
+											<td style="width: 20%;">
 											
 											<c:if test="${empty freeboard.keyword}">
 											<a class="ys_freetitle"
@@ -178,11 +194,12 @@ background-color: blue;
 						</c:if>
 
 						<!-- 페이지 번호 표시 -->
-						<c:forEach var="i" begin="${pageMaker.startPage}"
-							end="${pageMaker.endPage}" step="1">
+						<c:forEach var="i" begin="${pageMaker.startPage == 0 ? 1 : pageMaker.startPage }"
+							end="${pageMaker.endPage == 0 ? 1 : pageMaker.endPage}" step="1">
+							
 							<li class="page-item ${pageMaker.currentPage == i ? 'active':''}" >
 							<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${i}">${i}</a></li>
-
+							
 						</c:forEach>
 
 						<!-- 다음 버튼 -->
@@ -197,7 +214,7 @@ background-color: blue;
 						</c:if>
 						
 						<li class="page-item">
-    					<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${pageMaker.pageCount}">LastPage</a></li>
+    					<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${pageMaker.pageCount == 0 ? 1 : pageMaker.pageCount}">LastPage</a></li>
 						</ul>
 						</c:if>
 						
@@ -219,8 +236,8 @@ background-color: blue;
 						</c:if>
 
 						<!-- 페이지 번호 표시 -->
-						<c:forEach var="i" begin="${pageMaker.startPage}"
-							end="${pageMaker.endPage}" step="1">
+						<c:forEach var="i" begin="${pageMaker.startPage == 0 ? 1 : pageMaker.startPage }"
+							end="${pageMaker.endPage == 0 ? 1 : pageMaker.endPage}" step="1">
 							<li class="page-item ${pageMaker.currentPage == i ? 'active':''}">
 							<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${i}&search=${freeboard.search}&keyword=${freeboard.keyword}">${i}</a></li>
 
@@ -238,7 +255,7 @@ background-color: blue;
 						</c:if>
 						
 						<li class="page-item">
-    					<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${pageMaker.pageCount}&search=${freeboard.search}&keyword=${freeboard.keyword}">LastPage</a></li>
+    					<a class="page-link" href="/freeMentoring/freeMentoringList.do?page=${pageMaker.pageCount == 0 ? 1 : pageMaker.pageCount}&search=${freeboard.search}&keyword=${freeboard.keyword}">LastPage</a></li>
 						</ul>
 						</c:if>
 					</div>
