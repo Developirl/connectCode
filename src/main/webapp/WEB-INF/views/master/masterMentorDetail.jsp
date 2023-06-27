@@ -110,8 +110,7 @@
 				<tr align="center">
 					<td>${license.kind }</td>
 					<td>${license.license_name }</td>
-					<td><fmt:formatDate value="${license.issuing_date }"
-							pattern="yy.MM.dd"></fmt:formatDate></td>
+					<td>${license.issuing_date }</td>
 				</tr>
 			</c:forEach>
 		</table>

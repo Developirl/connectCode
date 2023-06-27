@@ -104,11 +104,14 @@
 		AS 'age'
 		FROM (
 		SELECT DISTINCT mentor.*,
-		career.years, career.task
+		c.years, c.task
 		FROM
 		mentor
-		LEFT JOIN career ON
-		mentor.mentor_no = career.mentor_no
+		LEFT JOIN (SELECT career.mentor_no, company, years, task, entering_date
+                        FROM career INNER JOIN (SELECT mentor_no, MAX(entering_date) max_entering_date FROM career GROUP BY mentor_no) a
+                                    ON career.mentor_no = a.mentor_no
+                        WHERE career.entering_date = a.max_entering_date) c 
+		ON mentor.mentor_no = c.mentor_no
 		WHERE
 		classification = 22 or
 		classification=23 or classification=24
@@ -256,7 +259,7 @@
 	<insert id="mentorApplyAlarm" parameterType="MentorDTO">
 		insert into
 		alarm(title, content, happen_time, read_yn, receiver_mem_no)
-		values('멘토 요청이 승인되었습니다.', '멘토 요청이 승인되었습니다. 활발한 멘토 활동을 기대하겠습니다.',
+		values('멘토 요청이 승인되었습니다.', '멘토 요청이 승인되었습니다.\n 활발한 멘토 활동을 기대하겠습니다.',
 		sysdate(), 'N', #{member_no})
 	</insert>
 
@@ -264,7 +267,7 @@
 	<insert id="mentorApplyRefuse" parameterType="MentorDTO">
 		insert into
 		alarm(title, content, happen_time, read_yn, receiver_mem_no)
-		values('멘토 요청이 거부되었습니다.', '멘토 요청이 거부되었습니다. 프로필을 다시 작성해 주세요.',
+		values('멘토 요청이 거부되었습니다.', '멘토 요청이 거부되었습니다.\n 프로필을 다시 작성해 주세요.',
 		sysdate(), 'N', #{member_no})
 	</insert>
 

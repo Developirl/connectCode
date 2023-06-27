@@ -472,7 +472,6 @@ $(document).ready(function(){
 	
 	// 처음 해당 페이지 들어온 경우 이전에 검색한 필터가 있다면 목록을 출력한다. 
 	if($("#stacks").val()!=''){
-		alert($("#stacks").val());
 		
 		const stacksarr = $("#stacks").val().replace(',;',',').split(','); 
 		
@@ -483,7 +482,6 @@ $(document).ready(function(){
         }
 		for(let i=0;i<stacksarr.length-1;i++){
 			stacksarr[i] = stacksarr[i].replace(';','');
-			alert(stacksarr[i]);
 			stacksfilter +=  stacksarr[i]+',;'; // 컨트롤러로 넘겨주기 위한 값도 셋팅
 			$("#js-choicefilter").append(stacksarr[i]+"  ");
 			$("#afterfilter").text('필터가 적용된 검색 내역입니다. ');
@@ -559,7 +557,6 @@ $(document).ready(function(){
 	
 	// 검색 필터 적용시
 	$("#js-searchbutton").click(function(){
-	    alert('선택한 기술 스택: '+stacksfilter);
 	    const encodedValue = encodeURIComponent(stacksfilter);
 	    location.href="/findMentor/mentorlistpage?technology="+encodedValue+"&mentoring_location="+loc+"&gender="+gender+"&years="+years;
 		

@@ -184,8 +184,8 @@
 	<select id="inqueryList" parameterType="my_mentoring" resultType="my_mentoring">
 	  SELECT *
 	  FROM board b JOIN post p using(board_no)
-	  JOIN mentor m using (member_no)
-	  where mentor_no = #{mentor_no}
+	  			   JOIN mentor m using (member_no)
+	  where mentor_no = #{mentor_no} AND ref_step != 1
 	  
 		  <choose>
 			    <when test="search == null">
@@ -206,7 +206,7 @@
 	<select id="getInqueryListCount" parameterType="my_mentoring" resultType="int">
 		select count(*) 
 		from board b join post p using(board_no)
-		join mentor m using (member_no) where mentor_no = #{mentor_no}
+		join mentor m using (member_no) where mentor_no = #{mentor_no} AND ref_step != 1
 		
 		<choose>
 			    <when test="search == null">

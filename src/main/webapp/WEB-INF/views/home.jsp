@@ -22,8 +22,8 @@
                         <br />
                         <div class="row">
                         	<c:forEach var="mentor" items="${pMentorList}" begin="0" end="3">
-                        		<div class="col-3">
-	                                <div class="mino-card" style="width: 18rem">
+                        		<div class="col-3" style="padding-left: 15px; padding-right: 15px;">
+	                                <div class="mino-card" style="width: 18rem; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
 	                                    <img src="/download/${mentor.physical_name}" class="card-img-top" alt="profile_img" />
 	                                    <div class="card-body mino-card-body">
 	                                        <h6 class="mino-bold" style="margin-top: 10px" >${mentor.company}</h6>
@@ -38,12 +38,12 @@
                             	</div>
                         	</c:forEach>
                         </div>
-                        <br /><br />
+                        <br /><br /><br />
                         <div class="row">
                         	<c:forEach var="mentor" items="${pMentorList}" begin="4" end="7">
-                        		<div class="col-3">
-	                                <div class="mino-card" style="width: 18rem">
-	                                    <img src="${mentor.file_url}}" class="card-img-top" alt="profile_img" />
+                        		<div class="col-3" style="padding-left: 15px; padding-right: 15px;">
+	                                <div class="mino-card" style="width: 18rem; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
+	                                    <img src="/download/${mentor.physical_name}" class="card-img-top" alt="profile_img" />
 	                                    <div class="card-body mino-card-body">
 	                                        <h6 class="mino-bold" style="margin-top: 10px" >${mentor.company}</h6>
 	                                        <h5 class="card-title mino-bold" style="margin-bottom: 15px;">${mentor.name}</h5>
@@ -67,7 +67,7 @@
                     	<h3 style="font-weight: bold">최신 멘토 후기</h3>
                     	<br /><br />
                     	<table class="mino-reviewListTable">
-                    		<tr>
+                    		<tr  style="width:100%">
                     			<th style="width:10%">멘토</th>
                     			<th style="width:15%">상담종류</th>
                     			<th style="width:35%">리뷰내용</th>
@@ -76,10 +76,10 @@
                     			<th style="width:10%">작성일자</th>
                     		</tr>
                     		<c:forEach var="review" items="${rReviewList}">
-                    			<tr>
+                    			<tr style="width:100%">
                     				<td>${review.mentor_name}</td>
                     				<td>${review.mentoring_kind}</td>
-                    				<td class="mino-reviewContent">${review.content}</td>
+                    				<td style="width:300px; cursor:pointer;" class="mino-reviewContent" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${review.mentor_no}'">${review.content}</td>
                     				<td>${review.mentee_name}</td>
                     				<td>
                     					<c:forEach begin="1" end="5" var="i">

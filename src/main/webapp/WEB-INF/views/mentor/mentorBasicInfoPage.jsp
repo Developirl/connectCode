@@ -12,10 +12,10 @@
 				</div>
 				<div style="width: 30%; margin-top: 20px;">
 					<div class="mentoProfileBox uplode_pro">
-						<c:if test="${empty msel.profile_img_no}">
+						<c:if test="${empty msel.physical_name}">
 							<img class="mentoProfile" id="preview" src="/public/img/profile_img.png">
 						</c:if>
-						<c:if test="${!empty msel.profile_img_no}">
+						<c:if test="${!empty msel.physical_name}">
 							<img class="mentoProfile" id="preview" src="/download/${msel.physical_name}">
 						</c:if>
 					</div>

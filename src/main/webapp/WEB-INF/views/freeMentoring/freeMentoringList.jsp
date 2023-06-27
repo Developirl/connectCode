@@ -32,10 +32,6 @@
 <style type="text/css">
 @import
    url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
-*{
-font-family:'Noto Sans KR', sans-serif !important;
-}
-
 
 .ys_pagerow{
 margin-top: 100px;

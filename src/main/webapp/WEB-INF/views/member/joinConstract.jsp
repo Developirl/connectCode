@@ -45,7 +45,7 @@
 								<li><span class="bi-check-lg"></span>&nbsp;이용약관 동의(필수)</li>
 								<li class="checkBtn"><input type="checkbox" name="chk">
 								</li>
-							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control">
+							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control" readonly="readonly">
 [이용약관] 
 
  제1조(목적) 
@@ -70,7 +70,7 @@
 								개인정보 수집 및 이용에 대한 동의(필수)</li>
 								<li class="checkBtn"><input type="checkbox" name="chk">
 								</li>
-							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control">
+							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control" readonly="readonly">
 [개인정보 수집 및 이용]
 				
 가. 개인정보의 수집 및 이용 목적 국가공간정보포털은 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다. 
@@ -95,7 +95,7 @@
 								사용자의 행동규범 및 서비스 이용제한 동의(필수)</li>
 								<li class="checkBtn"><input type="checkbox" name="chk">
 								</li>
-							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control">
+							</ul> <textarea cols=110 rows=13 style="resize: none" class="form-control" readonly="readonly">
 [사용자의 행동규범 및 서비스 이용제한]
 
 ① 귀하가 제공하는 정보의 내용이 허위인 것으로 판명되거나, 그러하다고 의심할 만한 합리적인 사유가 발생할 경우 당 사이트는 귀하의 본 서비스 사용을 일부 또는 전부 중지할 수 있으며, 이로 인해 발생하는 불이익에 대해 책임을 부담하지 아니합니다.
@@ -116,7 +116,7 @@
 						</li>
 					</ul>
 					<ul class="footBtwrap clearfix">
-						<li><button class="fpmgBt1" type="reset">뒤로</button></li>
+						<li><button class="fpmgBt1" type="button" onclick="history.go(-1)">뒤로</button></li>
 						<li><button class="fpmgBt2" type="submit">동의</button></li>
 					</ul>
 				</form>

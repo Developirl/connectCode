@@ -71,11 +71,13 @@ public class FindMentorServiceImpl implements FindMentorService {
 			List<String> men_payment = dao.getMentoringPayment(mentor_no);
 			String[] str = new String[2];
 			String payment = "";
+			
 			for(int j=0; j<2;j++) {
 				payment = men_payment.get(j);
-				str[j] = payment;// 0과 1밖에 없는데, 2까지 갔다고 에러남
+				str[j] = payment;
 				System.out.println("str["+j+"] ="+str[j]);
 			}
+			
 			list.get(i).setMentoring_payment(str);   
 			System.out.println("str ="+Arrays.toString(str));
 			

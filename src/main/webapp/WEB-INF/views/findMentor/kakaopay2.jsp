@@ -32,7 +32,6 @@ function createOrderNum(){
 		orderNum += Math.floor(Math.random() * 8);	
 	}
 	
-    alert("주문번호:"+orderNum);
 	return orderNum;
 }
 
@@ -68,7 +67,6 @@ function requestPay() {
             }).done(function(data) {
                 // 결제를 요청했던 금액과 실제 결제된 금액이 같으면 해당 주문건의 결제가 정상적으로 완료된 것으로 간주한다.
                 if (300 == data.response.amount) {
-                	alert("여기 들어오나?");
                     // jQuery로 HTTP 요청
                     // 주문정보 생성 및 테이블에 저장 
 		        	
@@ -90,7 +88,6 @@ function requestPay() {
                             //"reserNum" :  reserNum.textContent // 예약정보를 담고있는번호
                         });
                     
-                    alert("requestData:"+requestData);
 					
                         $.ajax({
                             url: "/payment/order/complete", 
@@ -103,11 +100,9 @@ function requestPay() {
                             data : requestData,
                         }).done(function(res) {
                             if (res > 0) {
-                                alert('주문정보 저장 성공')
                                 //createPayInfo(uid);
                             }
                             else {
-                            	alert('주문정보 저장 실패');
                             }
                         })
                 }
