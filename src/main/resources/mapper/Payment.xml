@@ -33,5 +33,12 @@
 	<update id="orderCancle">
 		UPDATE payment SET cancel_pay_time=SYSDATE(),pay_state='cancel' WHERE payment_no = #{payment_no}
 	</update>
+	
+	<select id="getPaymentCancelInfo" resultType="MentoringDTO" parameterType="int">
+		SELECT s.mentoring_kind, a.* FROM service s JOIN (
+        SELECT * FROM mentoring JOIN payment USING(mentoring_no) WHERE payment_no = #{payment_no}) a USING(service_no) ;
+	</select>
+	
+	
 
 </mapper>

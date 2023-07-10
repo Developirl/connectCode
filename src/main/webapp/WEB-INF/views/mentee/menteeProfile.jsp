@@ -6,6 +6,7 @@
 <%@ include file="../public/header.jsp" %>
 
         <!-- 실제 콘텐츠 들어가는 부분 -->
+        <div class="jisoo-modify-font-noto">
         <div class="container-fluid main-content">
             <div class="row">
                 
@@ -91,6 +92,7 @@
                             <button type="button" class="btn btn-outline-dark" id="modifyFormBtn">수정</button>
                         </div>
                     </form>                	
+                </div>
                 </div>
                 <!-- <div class="col-8"> END -->
                 <!-- 여백 -->

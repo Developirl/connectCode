@@ -172,6 +172,7 @@ public class FindMentor {
 	        
 	        if(auth!=null) {
 	        	member_no = Integer.parseInt(String.valueOf(((AuthUser)auth.getPrincipal()).getMember().getMember_no()));
+	        	model.addAttribute("notEmptySession","true");
 	        }
 	        
 	    int bookmark = service.getCheckedBookmark(member_no,mentor_no);    

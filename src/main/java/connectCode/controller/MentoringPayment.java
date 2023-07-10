@@ -3,11 +3,8 @@ package connectCode.controller;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -148,7 +145,14 @@ public class MentoringPayment {
 		
 	}
 	
-	
+	@PostMapping("getPaymentCancelInfo")
+	public String getPaymentCancelInfo(int payment_no,Model model) {
+		
+		MentoringDTO info = payService.getPaymentCancelInfo(payment_no);
+		model.addAttribute("info",info);
+		
+		return "findMentor/etc/paymentCancelInfo";
+	}
 	
 	
 	

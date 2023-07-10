@@ -166,22 +166,7 @@
     font-size:24pt;
     font-weight: 500;
 }
-/*
-.js-reservationbutt{
-    border:1px solid #747474;
-    background: white;
-    padding:5px 18px;
-    margin-right: 30px;
-    border-radius: 10px;
-}
 
-.js-reservationbutt:hover{
-    border:1px solid #747474;
-    background: #747474;
-    color:white;
-    font-weight: bold;
-}
-*/
 .js-paymentbottommargin:nth-child(2) td{
     padding-top:20px;
 }
@@ -506,6 +491,15 @@ $(document).ready(function(){
  
 // -------------  멘토링 예약 페이지로 이동 ------------ 
 function goApplyMentoringPage(kind){
+	
+	if(${ empty notEmptySession}){
+		if(confirm("로그인하셔야 이용가능한 서비스입니다. \n로그인 페이지로 이동하시겠습니까?")){
+			location.href="/member/loginform";
+			return false;
+		}else{
+			return false;
+		}
+	}
 	
 	if(kind != null && kind != ''){
 		location.href="/findMentor/applyMentoringPage?mentoring_kind="+kind+"&mentor_no="+${mentorInfo.mentor_no };
