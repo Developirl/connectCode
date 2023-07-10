@@ -2,6 +2,7 @@ package connectCode.service;
 
 import java.util.List;
 
+import connectCode.model.FileDTO;
 import connectCode.model.MentorDTO;
 import connectCode.model.MyMentoringBean;
 
@@ -104,6 +105,8 @@ public interface MentorService {
 	
 	public int update_alarm(int alarm_no);
 	
+	public List<FileDTO> select_file(int file_no);
+	
    // ----------------------- 혜지 작성 -----------------------------
    public MentorDTO mentorDetail(int mentor_no);
 
@@ -114,6 +117,8 @@ public interface MentorService {
    public void mentorNewPwd(MentorDTO member);
 
    public int getTotal(int member_no);
+
+
 
 
 

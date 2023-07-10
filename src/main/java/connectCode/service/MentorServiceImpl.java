@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import connectCode.mapper.MentorDao;
 import connectCode.mapper.MentorMapper;
+import connectCode.model.FileDTO;
 import connectCode.model.MentorDTO;
 import connectCode.model.MyMentoringBean;
 import net.nurigo.java_sdk.api.Message;
@@ -315,6 +316,11 @@ public class MentorServiceImpl implements MentorService{
 	@Override
 	public int update_alarm(int alarm_no) {
 		return mm.update_alarm(alarm_no);
+	}
+	
+	@Override
+	public List<FileDTO> select_file(int file_no) {
+		return mm.select_file(file_no);
 	}
 	
    // ***************** 혜지 추가 *******************

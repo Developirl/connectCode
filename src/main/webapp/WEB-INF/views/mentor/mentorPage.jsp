@@ -21,7 +21,7 @@
 			</div>
 			<div class="medium_jh cont_mar" style="color:gray; background-color: white; padding: 20px;">
 				가입 신청이 완료되었습니다.<br>
-				운영팅에서 증빙서류 검토 후 승인되면 최종 가입 승인 됩니다.
+				운영팀에서 증빙서류 검토 후 승인되면 최종 가입 승인 됩니다.
 			</div>
 			<hr class="title_hr">
 			<div class="cont_mar">
@@ -35,7 +35,6 @@
 				</a>
 				</div>
 			</div>
-			<hr class="title_hr">
 		</c:if>
 		
 		<!-- 프로필 [작성완료] 상태인 멘토 -->
@@ -114,17 +113,8 @@
 			</div>
 		</c:if>
 		
-		<c:if test="${msel.intro == null || education_select_check == 'N' || career_select_check == 'N' || service_select_check == 'N' || (msel.technology == null && license_select_check == 'N') || msel.classification == 21}">
 		<hr class="title_hr">
-			<div align="center" class="small_jh">
-				<span style="font-weight: bold; color: red;">[Tip]</span> 프로필을 작성하셔야 멘토링 활동을 시작할 수 있습니다!&nbsp;&nbsp;&nbsp;
-				<a href="mentorProfileModifyPage?mentor_no=${msel.mentor_no}&member_no=${msel.member_no}" class="profileEdit_a">작성하러 가기
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
-						<path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
-					</svg>
-				</a>
-			</div>
-		</c:if>
+
 	<!-- CONTENT end -->
 	</div>
 	

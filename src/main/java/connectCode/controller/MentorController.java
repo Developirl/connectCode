@@ -447,6 +447,25 @@ public class MentorController {
 		return "mentor/mentorEduInfoPage";
 	}
 	
+	// 멘토 프로필 수정 [학력사항 승인 완료 후 수정] 페이지
+	@GetMapping("mentorEduInfoPage_accepted")
+	public String mentorEduInfoPage_accepted(MentorDTO mentor, Model model) {
+		
+		System.out.println("mentorEduInfoPage :: mentor_no :: "+mentor.getMentor_no());
+		
+		List<MentorDTO> education_select = ms.education_select(mentor);
+		
+		int file_no = education_select.get(0).getFile_no();
+		System.out.println("fileNo:::"+file_no);
+		
+		MentorDTO mentor_select = ms.mentorProfile(mentor);
+		
+		model.addAttribute("msel", mentor_select);
+		model.addAttribute("edu_sel", education_select);
+		
+		return "mentor/mentorEduInfoPage_accepted";
+	}
+	
 	// 멘토 프로필 수정 [학력사항] 페이지
 	@PostMapping("mentorEduInfo_Up")
 	public String mentorEduInfo_Up_first(MentorDTO mentor, Model model) {
@@ -544,13 +563,16 @@ public class MentorController {
 
 		List<MentorDTO> education_select = ms.education_select(mentor);
 		
-		MentorDTO find_file_no = education_select.get(0); // 인덱스 0번의 MentorDTO 객체 가져오기
-		int file_no = find_file_no.getFile_no();
+		//MentorDTO find_file_no = education_select.get(0); // 인덱스 0번의 MentorDTO 객체 가져오기
+		int file_no = education_select.get(0).getFile_no();
 		System.out.println("fileNo:::"+file_no);
+		List<FileDTO> edu_file_list = ms.select_file(file_no);
 		
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
+		
 		model.addAttribute("msel", mentor_select);
+		model.addAttribute("edu_file_list", edu_file_list);
 		model.addAttribute("edu_sel", education_select);
 		
 		return "mentor/mentorEduInfoPage_View";
