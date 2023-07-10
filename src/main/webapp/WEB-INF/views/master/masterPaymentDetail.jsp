@@ -85,7 +85,11 @@
 								pattern="yy.MM.dd HH:mm:ss"></fmt:formatDate></td>
 			</tr>
 		</table>
+				<br>
+				<br>
+				<br> <input type="submit" value="목록" class="paylistBtn" onClick="history.go(-1)" />
 	</div>
+	
 
 	<%@ include file="../public/sidebar_footer.jsp"%>
 

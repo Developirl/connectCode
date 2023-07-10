@@ -203,11 +203,13 @@ public interface MasterService {
 	// 파일 정보 가져오기
 	List<FileDTO> getEduFileList(int file_no);
 	
+	List<FileDTO> getLFileList(int l_file_no);
 	
+	List<FileDTO> getCFileList(int c_file_no);
 	
-	
-	
-	
+	int updateMentorEFile(int mentorNo);	
+	int updateMentorLFile(int mentorNo);
+	int updateMentorCFile(int mentorNo);
 	
 	//*****************************병걸 작성***************************************
 
@@ -221,6 +223,13 @@ public interface MasterService {
 	int getMentees();
 	int getUnreadyMentors();
 	int getReadyMentors();
+
+
+
+
+
+	
+
 	
 	//*****************************병걸 작성***************************************
 

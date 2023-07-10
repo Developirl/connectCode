@@ -14,17 +14,17 @@
 
 	<div class="m_box">
 		<!-- 검색 -->
-		<form action="masterPaymentList">
+<!-- 		<form action="masterPaymentList">
 			<input type="hidden" name="pageNum" value="1">
 			<div class="m_cont_mar">
-				<!-- SELECT 1 -->
+				SELECT 1
 				<select name="search" class="search_sel small_jh"
 					style="width: 120px; float: left; margin-left:760px;">
 					<option value="all">전체</option>
 				</select>
 			</div>
 
-			<!-- INPUT -->
+			INPUT
 			<div align="right">
 				<span style="position: relative;"> <svg
 						xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -36,7 +36,7 @@
 					placeholder="검색어를 입력하세요." />
 				</span>
 			</div>
-		</form>
+		</form> -->
 		<!-- 검색 end -->
 		<br>
 		
@@ -44,7 +44,6 @@
 			<thead align="center">
 				<tr>
 					<th>결제정보번호</th>
-					<th>결제멘토링</th>
 					<th>상품/서비스이름</th>
 					<th>결제금액</th>
 					<th>결제수단</th>
@@ -55,7 +54,6 @@
 			<tbody align="center">
 			<c:forEach var="pay" items="${paylist}">
 				<tr onClick="location.href='masterPaymentDetail?payment_no=${pay.payment_no}'">
-					<td>${pay.payment_no }</td>
 					<td>${pay.mentoring_no }</td>
 					<td>${pay.order_no }</td>
 					<td>${pay.pay_amount }</td>

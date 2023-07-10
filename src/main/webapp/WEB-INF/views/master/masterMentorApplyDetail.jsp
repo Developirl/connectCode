@@ -12,7 +12,7 @@
 		<div class="navbar-brand">승인요청</div>
 	</nav>
 
-	<div class="m_box" align="center">
+	<div class="m_boxApply" align="center">
 	<c:if test= "${ empty mentor.file_url }">
 		<img src="/public/img/profile_img.png" id="mentor_profile" >
 	</c:if>
@@ -133,15 +133,15 @@
 		<div class="file-info" align="left">
 		첨부파일:	<c:forEach var="file" items="${file_list }">
 					<a href='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'>${file.origin_name }</a>
-				<%-- <img src='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'></img> --%>
 				</c:forEach>
 				
-<%-- 			<c:forEach var="career" items="${file_list }">
-				<a href='<c:url value="filedownload?cfile_no=${career.file_no }&mentor_no=${mentor.mentor_no }"/>'>${career.origin_name }</a>
-			</c:forEach>
-			<c:forEach var="license" items="${file_list }">
-				<a href='<c:url value="filedownload?lfile_no=${license.file_no }&mentor_no=${mentor.mentor_no }"/>'>${license.origin_name }</a>
-			</c:forEach> --%>
+			    <c:forEach var="file" items="${l_file_list }">
+					<a href='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'>${file.origin_name }</a>
+				</c:forEach>
+
+			    <c:forEach var="file" items="${c_file_list }">
+					<a href='<c:url value="filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${mentor.mentor_no }&size=${file.size}"/>'>${file.origin_name }</a>
+				</c:forEach>
 		</div>
 
 		<form action="mentorDetailApply">
@@ -149,7 +149,9 @@
 				value=${mentor.mentor_no }> <br> <br> <input
 				type="submit" value="승인" class="appBtn" onClick="check1()"/>
 		</form>
-
+		
+			<br> <input type="submit" value="목록" class="listBtn" onClick="history.go(-1)" />
+		
 		<form action="mentorDetailRefuse">
 			<input type="hidden" name="mentor_no" value=${mentor.mentor_no }>
 			<br> <input type="submit" value="거부" class="refBtn" onClick="check2()"/>

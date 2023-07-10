@@ -78,23 +78,35 @@
 	padding: 30px;
 }
 
+.m_boxApply {
+	background-color: white;
+	width: 1250px;
+	height: 1500px;
+	margin-top: 30px;
+	margin-left: 206px;
+	padding: 30px;
+}
+
 .appBtn {
 	position: relative;
 	float: left;
-	left: 370px;
+	margin: 68px 0px;
 	width: 200px;
 	height: 45px;
 	background-color: #004EA2;
 	color: white;
-	margin-top: 22px;
+	left: 250px;
 }
 
 .refBtn {
+	position: relative;
+	float: left;
 	width: 200px;
 	height: 45px;
-	left: 30px;
 	background-color: #004EA2;
 	color: white;
+	left: 310px;
+	margin-top: 20px;
 }
 
 .search_sel0 {
@@ -168,6 +180,12 @@
 	background-color: #004EA2;
 	color: white;
 	left: 280px;
+}
+.paylistBtn {
+	width: 200px;
+	height: 45px;
+	background-color: #004EA2;
+	color: white;
 }
 
 .delBtn {

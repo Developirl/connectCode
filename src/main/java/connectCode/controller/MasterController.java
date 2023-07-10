@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.Address;
@@ -56,12 +57,12 @@ public class MasterController {
 		int newinquire = ms.newinquire();
 		int newReport = ms.newReport();
 		int newPay = ms.newPay();
-		
+
 		model.addAttribute("newMentor", newMentor);
 		model.addAttribute("newinquire", newinquire);
 		model.addAttribute("newReport", newReport);
 		model.addAttribute("newPay", newPay);
-		
+
 		model.addAttribute("totalVisitors", ms.getTotalVisitors());
 		model.addAttribute("todayVisitors", ms.getTodayVisitors());
 		model.addAttribute("mentors", ms.getMentors());
@@ -119,22 +120,57 @@ public class MasterController {
 		// List<MentorDTO> educationFile = ms.mentorEducationFile(mentor_no);
 		// System.out.println("educationFile:"+educationFile);
 		// List<MentorDTO> licenseFile = ms.mentorLicenseFile(mentor_no);
-		
-		
-		// file 가져오기 
-		int file_no = education.get(0).getFile_no();
-		List<FileDTO> file_list = ms.getEduFileList(file_no);
+
+		// file 가져오기
+		int file_no = 0;
+		List<FileDTO> file_list = new ArrayList<>();
+
+		if (!education.isEmpty()) {
+
+			file_no = education.get(0).getFile_no();
+
+			if (file_no != 0) {
+				file_list = ms.getEduFileList(file_no);
+			}
+		}
+
 		model.addAttribute("file_list", file_list);
 
-		// System.out.println(mentor);
+		int l_file_no = 0;
+		List<FileDTO> l_file_list = new ArrayList<>();
+
+		if (!license.isEmpty()) {
+			l_file_no = license.get(0).getFile_no();
+
+			if (l_file_no != 0) {
+				l_file_list = ms.getLFileList(l_file_no);
+			}
+		}
+
+		model.addAttribute("l_file_list", l_file_list);
 		
-		// MentorDTO find_file_no = education.get(0); 	// 인덱스 0번의 MentorDTO 객체 가져오기
-		// int file_no = find_file_no.getFile_no();	// 파일 번호 가져오기
+		int c_file_no = 0;
+		List<FileDTO> c_file_list = new ArrayList<>();
+		
+		if (!career.isEmpty()) {
+			c_file_no = career.get(0).getFile_no();
+			
+			if (c_file_no != 0) {
+				c_file_list = ms.getCFileList(c_file_no);
+			}
+		}
+		
+		model.addAttribute("l_file_list", l_file_list);
+
+		// System.out.println(mentor);
+
+		// MentorDTO find_file_no = education.get(0); // 인덱스 0번의 MentorDTO 객체 가져오기
+		// int file_no = find_file_no.getFile_no(); // 파일 번호 가져오기
 		// System.out.println("fileNo:::"+file_no);
-	    
-	    // 학벌 파일 구하기
-	    // List<MentorDTO> efile = ms.efile(file_no);
-	    // System.out.println(efile);
+
+		// 학벌 파일 구하기
+		// List<MentorDTO> efile = ms.efile(file_no);
+		// System.out.println(efile);
 
 		model.addAttribute("mentor", mentor);
 		model.addAttribute("career", career);
@@ -143,7 +179,7 @@ public class MasterController {
 		model.addAttribute("service", service);
 
 //		model.addAttribute("efile", efile);
-		
+
 		// model.addAttribute("careerFile", careerFile);
 		// model.addAttribute("educationFile", educationFile);
 		// model.addAttribute("licenseFile", licenseFile);
@@ -156,15 +192,28 @@ public class MasterController {
 	public String mentorDetailApply(int mentor_no) {
 
 		MentorDTO mentor = ms.mentorDetail(mentor_no);
+		List<MentorDTO> career = ms.mentorCareer(mentor_no);
+		List<MentorDTO> education = ms.mentorEducation(mentor_no);
+		List<MentorDTO> license = ms.mentorLicense(mentor_no);
 
+		System.out.println("career:::::::::::::::::::::"+career);
+		System.out.println("education::::::::::::::::::"+education);
+		System.out.println("license::::::::::::::::::::::"+license);
+		
 		System.out.println(mentor);
 
 		String phone = mentor.getPhone();
 		/* System.out.println(phone); */
-		ms.mentorDetailApply(phone);
+
+//		ms.mentorDetailApply(phone); 
 		ms.mentorlApplyUpdate(mentor);
 		ms.mentorApplyAlarm(mentor);
-
+		
+		int mentorNo = mentor.getMentor_no();
+//			ms.updateMentorEFile(mentorNo); 
+//			ms.updateMentorLFile(mentorNo); 
+//			ms.updateMentorCFile(mentorNo); 
+		
 		return "redirect:/master/masterMentorApplyList";
 	}
 
@@ -177,9 +226,14 @@ public class MasterController {
 		String phone = mentor.getPhone();
 //		System.out.println(phone);
 
-		ms.mentorDetailRefuse(phone);
+//		ms.mentorDetailRefuse(phone);
 		ms.mentorlRefuseUpdate(mentor);
 		ms.mentorApplyRefuse(mentor);
+		
+		int mentorNo = mentor.getMentor_no();
+		 	ms.updateMentorEFile(mentorNo); 
+		 	ms.updateMentorLFile(mentorNo); 
+		 	ms.updateMentorCFile(mentorNo);
 
 		return "redirect:/master/masterMentorApplyList";
 	}
@@ -359,7 +413,7 @@ public class MasterController {
 	public String SendMail(@RequestParam("allEmail") String allEmail, MailDTO mail, MentorDTO mentor)
 			throws UnsupportedEncodingException, MessagingException {
 		// System.out.println("allEmail00: " +allEmail);
-		 System.out.println(mail);
+		System.out.println(mail);
 
 		String[] allEmailArr = allEmail.split("-");
 		String emailArr = Arrays.deepToString(allEmailArr);
@@ -401,7 +455,7 @@ public class MasterController {
 			pageNum = "1";
 		}
 		int currentPage = Integer.parseInt(pageNum);
-		
+
 		int total = ms.getPay(pay);
 
 		int startRow = (currentPage - 1) * rowPage;
@@ -411,9 +465,9 @@ public class MasterController {
 
 		pay.setStartRow(startRow);
 		pay.setEndRow(endRow);
-		
+
 		List<PaymentDTO> paylist = ms.paylist(pay);
-		
+
 		model.addAttribute("p", p);
 		model.addAttribute("paylist", paylist);
 		model.addAttribute("search", pay.getSearch());
@@ -421,16 +475,16 @@ public class MasterController {
 
 		return "master/masterPaymentList";
 	}
-	
+
 	// 결제 상세
-	@RequestMapping("masterPaymentDetail") 
+	@RequestMapping("masterPaymentDetail")
 	public String masterPaymentDetail(int payment_no, PaymentDTO pay, Model model) {
-	  
+
 		List<PaymentDTO> paylist = ms.paylist(pay);
 		PaymentDTO payDetail = ms.payDetail(payment_no);
-	  
-		model.addAttribute("paylist", paylist); 
-		model.addAttribute("payDetail", payDetail); 
+
+		model.addAttribute("paylist", paylist);
+		model.addAttribute("payDetail", payDetail);
 		return "master/masterPaymentDetail";
 	}
 
@@ -492,67 +546,64 @@ public class MasterController {
 
 		return "master/masterReportDetail";
 	}
-	
+
 	// 신고 철회
 	@RequestMapping("reportCancle")
 	public String reportCancle(int report_no) {
-		
+
 		// System.out.println(member_no);
-		
+
 		ms.reportCancle(report_no);
-		
+
 		return "redirect:masterReportList";
 	}
-
 
 	// 파일 다운로드
 	@RequestMapping("filedownload")
 	public ResponseEntity<Resource> downloadFile(FileDTO fileDTO, int mentor_no) {
 
-		System.out.println("fileDTO: "+fileDTO);
-		
+		// System.out.println("fileDTO: "+fileDTO);
+
 		// 첨부파일 상세 정보
 		FileDTO file = fs.file(fileDTO);
-		System.out.println("file;;;;;"+file);
+		// System.out.println("file;;;;;"+file);
 
 		Resource resource = fu.readFileAsResource(file);
 		try {
 			String filename = URLEncoder.encode(file.getOrigin_name(), "UTF-8");
-			return ResponseEntity.ok()
-					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+			return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
 
 					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; fileName=\"" + filename + "\";")
-					.header(HttpHeaders.CONTENT_LENGTH, file.getSize()+"")
-					.body(resource);
-		}catch(UnsupportedEncodingException e) {
-			throw new RuntimeException("filename encoding failed: " +file.getOrigin_name());
+					.header(HttpHeaders.CONTENT_LENGTH, file.getSize() + "").body(resource);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("filename encoding failed: " + file.getOrigin_name());
 		}
-		
+
 	}
-	
+
 	// 이용자 성비 통계
 	@RequestMapping("masterStatistics1")
 	public String masterStatistics1(Model model) {
-		
+
 		// 멘토 성비
 		model.addAttribute("male", ms.getMale());
 		model.addAttribute("female", ms.getFemale());
-		
+
 		// 멘티 성비
 		model.addAttribute("eemale", ms.geteemale());
 		model.addAttribute("eefemale", ms.geteefemale());
-		
-		//전체 성비
+
+		// 전체 성비
 		model.addAttribute("tmale", ms.getTmale());
 		model.addAttribute("tfemale", ms.getTfemale());
-		
+
 		return "master/masterStatistics1";
 	}
 
 	// 이용자 현황 통계
 	@RequestMapping("masterStatistics2")
 	public String masterStatistics2(Model model) {
-		
+
 		model.addAttribute("sign_up", ms.getsign_up());
 		model.addAttribute("lastsign_up", ms.getlastsign_up());
 		model.addAttribute("Tsign_up", ms.getTsign_up());
@@ -560,10 +611,8 @@ public class MasterController {
 		model.addAttribute("quit", ms.getquit());
 		model.addAttribute("lastquit", ms.getlastquit());
 		model.addAttribute("Tquit", ms.getTquit());
-		
+
 		return "master/masterStatistics2";
 	}
-	
 
-	
 }
