@@ -37,7 +37,10 @@
 	
 	<div style="display: flex;">
 		<div class="mentor_info infoCtg">첨부파일</div>
-		<div class="mentor_info infoInp"></div>
+		<div class="mentor_info infoInp">
+			<c:forEach var="file" items="${edu_file_list}">
+				<a href='<c:url value="/filedownload?file_no=${file.file_no }&file_serial_number=${file.file_serial_number}&mentor_no=${msel.mentor_no }&size=${file.size}"/>'>${file.origin_name }</a>
+			</c:forEach>
 	</div>
 </div>
 

@@ -410,6 +410,7 @@ function basicInfo_load(check, mentor_no, unable_date, mentoring_time) {
 function personInfo_load(mentor_no, old_phone, old_email) {
 	
 	console.log('mentor_no'+mentor_no);
+	console.log('old_email'+old_email);
 	
 	$.ajax({
 		url: 'mentorPersonInfoPage_View',  // 입력 완료 페이지
@@ -442,7 +443,21 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 								value : domain[i]
 							}).text(domain[i]); // 값 설정
 							$('#domain_sel').append(option);
+							$('#domain_sel').val($('#domain').val()).prop("selected",true);
+							if($('#domain_sel').val() != $('#domain').val()){
+								$('#domain_sel').val('직접입력').prop("selected",true);
+							}
 						}
+						
+						$('#domain_sel').change(function() {
+							if ($(this).val() === '직접입력') {
+								$('#domain').removeAttr('readonly');
+								$('#domain').val('');
+							} else {
+							   $('#domain').prop('readonly', true);
+							   $('#domain').val($('#domain_sel').val());
+							}
+						});
 						
 						var code = "";
 						$("#phoneChk").click(function() {
@@ -517,6 +532,17 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 							event.preventDefault(); // form 기본 동작 막기
 							
 						// 유효성 검사 start
+							if($('#email_id').val() === '') {
+								alert('이메일 아이디을 입력하세요.');
+								$('#email_id').focus();
+								return;
+							}
+							if($('#domain').val() === '') {
+								alert('도메인을 입력/선택하세요.');
+								$('#domain_sel').focus();
+								return;
+							}
+							
 							var new_phone = $('#phone').val();
 							var new_email = $('#email_id').val() + '@' + $('#domain').val();
 							var phone_certify = $('#phone_certify').val();
@@ -525,7 +551,7 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 								confirm('기존의 휴대폰번호와 동일한 번호로 저장합니다.');
 							}else {
 								if(phone_certify.trim() === '') {
-									alert('[인증번호 전송] 버튼을 클릭 후,문자 메세지로 받으신 번호를 입력 하고\n[인증하기] 버튼을 클릭해주세요.')
+									alert('[인증번호 전송] 버튼을 클릭 후,\n문자 메세지로 받으신 번호를 입력 하고\n[인증하기] 버튼을 클릭해주세요.')
 									$('#phone_certify').focus();
 									return;
 								}
@@ -534,6 +560,12 @@ function personInfo_load(mentor_no, old_phone, old_email) {
 								
 							if(new_email === old_email){
 								confirm('기존의 이메일과 동일한 이메일로 저장합니다.');
+							}else {
+								var regEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+								if (!regEmail.test(new_email)) { 
+									alert('형식에 맞지 않는 이메일입니다. 다시 입력해 주세요.'); 
+								    return false;
+								}
 							}
 							
 						// 유효성 검사 end
@@ -730,8 +762,8 @@ function serviceChar_load(check,mentor_no,input_bank) {
 					    $('#edit_btn').click(function() {
 					      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 					      
-					      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-					      serviceChar_load(clicked,mentor_no);	
+					      // 수정 페이지로 전환 (serviceChar_load()에 매개변수 새로 넣어서 재호출)
+					      serviceChar_load(clicked,mentor_no,input_bank);	
 					      
 					    }); // [수정하기] 클릭 이벤트 end
 					    
@@ -750,181 +782,364 @@ function serviceChar_load(check,mentor_no,input_bank) {
 // ******************************************[학력사항 start]**********************************************
 
 // 학력사항 page 불러오기
-function eduInfo_load(check,mentor_no) {
+function eduInfo_load(check,mentor_no,mentor_classification) {
 	
 	console.log(check);
+	console.log(mentor_classification);
 	
 	if(check === 'N' || check == true) {
 		
-		$.ajax({
-			url: 'mentorEduInfoPage',  // JSP 파일의 URL
-			method: 'GET',
-			data: {mentor_no : mentor_no},
-			success: function(data) {
-				$('#load_location').empty().append(data);
-				$('#load_location, .nav_items').removeAttr('style');
-				$('.eduInfo').css(active);
-				$("span:contains('[필수]')").css('color', 'red');
-				$("span:contains('[선택]')").css('color', '#004EA2');
-				
-				
-				// Air-datePicker 호출
-				//$(".datepicker-here0").datepicker({maxDate : currentDate, date:new Date(temp_entering_date)}); 
-//				$(".datepicker-here0").datepicker("setDate", new Date(temp_entering_date)); 
-				
-				// 추가,삭제 버튼 구현 start
-				
-				// [추가하기] 버튼 클릭시 추가될 요소 가져오기
-				var plus_content_read = $('.input_content').html();
-				
-				if(plus_content_read == null){
-					plus_content_read = $(".plus_div").html();
-				}
-				
-				// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
-				var plus_div_cnt = $(".plus_div").length;
-				
-				// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
-				var del_cnt = '';
-				
-				del_cnt = plus_div_cnt; 
-				
-				// [추가하기] 버튼 클릭 이벤트
-				$('.plus_btn').click(function(){
+		if(mentor_classification == 23){
+			$.ajax({
+				url: 'mentorEduInfoPage_accepted',  // JSP 파일의 URL
+				method: 'GET',
+				data: {mentor_no : mentor_no},
+				success: function(data) {
+					$('#load_location').empty().append(data);
+					$('#load_location, .nav_items').removeAttr('style');
+					$('.eduInfo').css(active);
+					$("span:contains('[필수]')").css('color', 'red');
+					$("span:contains('[선택]')").css('color', '#004EA2');
 					
-					$('#plus_content').append('<div id="del_div'
-										+	del_cnt
-										+	'"><hr class="title_hr">'
-										+	plus_content_read
-										+	'<div align="right" style="margin-top: 10px;">'
-										+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
-										+	del_cnt+'"'
-										+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
-									);
+// 추가,삭제 버튼 구현 start
 					
-					var temp = $("#del_div"+del_cnt+" input")
-					$("#del_div"+del_cnt+" #delBtn").remove();
-					for(var i = 0; i < temp.length; i++){
-						temp[i].value = null;
+					// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+					var plus_content_read = $('.input_content').html();
+					
+					if(plus_content_read == null){
+						plus_content_read = $(".plus_div").html();
 					}
-					/*// id 이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
-					var new_id 값= 'minor' + del_cnt;
-					$('#minor0').attr('id', new_id);
 					
-					// id 값에 minor를 포함하는 input text 찾기
-					var minorTextInputs = $('input[type="text"]').filter(function() {
-						return $(this).attr('id') && $(this).attr('id').indexOf('minor') !== -1;
-					});
+					// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+					var plus_div_cnt = $(".plus_div").length;
 					
-					// 찾은 input text의 갯수 구하기
-					var count = minorTextInputs.length;
-					console.log('minorTextInputs count:::'+count);
+					// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+					var del_cnt = '';
 					
-					// 갯수만큼 루프돌리면서, hidden으로 minor 값 전달 [minor1 부터만 처리(minor0은 click 이벤트 밖에서 처리..)]
-					for(var i=1; i<count; i++) {
-						if ($('#minor'+i).val() == '') {
-							$('#myform').append('<input type="hidden" name="minor" value="N">');
-						}else {
-							$('#myform').append('<input type="hidden" name="minor" value="'+$('#minor'+i).val()+'">');
-						}
-					}*/
+					del_cnt = plus_div_cnt; 
 					
-					del_cnt++;
-					
-					console.log(del_cnt);
-					
-					// Air-datePicker 호출 따로 또 해줘야함..
-					$(".datepicker-here").datepicker({maxDate : currentDate}); 
-					
-				});
-				
-				// Air-datePicker 호출 따로 또 해줘야함..
-				/*if('${edu_sel}'.length < 1){
-					$(".datepicker-here").datepicker({maxDate : currentDate}); 
-				}*/
-				
-				$('#myform').submit(function(){
-					event.preventDefault(); // form 기본 동작 막기
-					
-				 // 유효성 검사 start
-						// 소개글
-						var school = $('#school').val();
-						if (school.trim() === '') {
-							alert('학교명을 입력하세요.');
-							$('#school').focus();
-							return;
-						}
-						// 입학일자
-						var entering_date = $('#entering_date').val();
-						if (entering_date.trim() === '') {
-							alert('입학일자를 선택하세요.');
-							$('#entering_date').focus();
-							return;
-						}
-						// 졸업일자
-						var graduation_date = $('#graduation_date').val();
-						if (graduation_date.trim() === '') {
-							alert('졸업일자를 선택하세요.');
-							$('#graduation_date').focus();
-							return;
-						}
-						/*// 학위
-						var degree_checked = $('#meet_mentoring').is(':selected');
-						if(!degree_checked) {
-							alert('학위를 선택하세요.');
-							return;
-						}*/
-						// 전공명
-						var major = $('#major').val();
-						if (major.trim() === '') {
-							alert('전공명을 입력하세요.');
-							$('#major').focus();
-							return;
-						}
-				// 유효성 검사 end
+					// [추가하기] 버튼 클릭 이벤트
+					$('.plus_btn').click(function(){
 						
-						// minor 입력 안 했을 경우 처리
-						var minor = $('.minor');
+						$('#plus_content').append('<div id="del_div'
+											+	del_cnt
+											+	'"><hr class="title_hr">'
+											+	plus_content_read
+											+	'<div align="right" style="margin-top: 10px;">'
+											+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+											+	del_cnt+'"'
+											+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+										);
 						
-						for(var i=0; i<minor.length; i++){
-							if(minor[i].value == ""){
-								minor[i].value = "N";
-							}
+						var temp = $("#del_div"+del_cnt+" input")
+						$("#del_div"+del_cnt+" #delBtn").remove();
+						for(var i = 0; i < temp.length; i++){
+							temp[i].value = null;
 						}
+						/*// id 이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
+						var new_id 값= 'minor' + del_cnt;
+						$('#minor0').attr('id', new_id);
 						
-						// form으로 데이터 전송 start
-						var form = $('#myform')[0];
-						var formdata = new FormData(form);
-						
-						$.ajax({
-							url : $(this).attr('action'),
-							type : 'POST',
-							data : formdata,
-							processData : false,
-							contentType : false,
-							enctype : 'multipart/form-data',
-							success: function(){
-								// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
-								eduInfo_load(school,mentor_no);
-								
-								if(check === 'N') {
-									// progress 올리기
-									var currentValue = parseInt($('#progress').val());
-									var updatedValue = currentValue + 25;
-									$('#progress').val(updatedValue);
-								}
-							},
-							error : function(){
-								alert("서버 오류");
-							}
+						// id 값에 minor를 포함하는 input text 찾기
+						var minorTextInputs = $('input[type="text"]').filter(function() {
+							return $(this).attr('id') && $(this).attr('id').indexOf('minor') !== -1;
 						});
 						
-				}); // submit end
-			
+						// 찾은 input text의 갯수 구하기
+						var count = minorTextInputs.length;
+						console.log('minorTextInputs count:::'+count);
+						
+						// 갯수만큼 루프돌리면서, hidden으로 minor 값 전달 [minor1 부터만 처리(minor0은 click 이벤트 밖에서 처리..)]
+						for(var i=1; i<count; i++) {
+							if ($('#minor'+i).val() == '') {
+								$('#myform').append('<input type="hidden" name="minor" value="N">');
+							}else {
+								$('#myform').append('<input type="hidden" name="minor" value="'+$('#minor'+i).val()+'">');
+							}
+						}*/
+						
+						del_cnt++;
+						
+						console.log(del_cnt);
+						
+						// Air-datePicker 호출 따로 또 해줘야함..
+						$(".datepicker-here").datepicker({maxDate : currentDate}); 
+						
+					});
+					
+					// Air-datePicker 호출 따로 또 해줘야함..
+					/*if('${edu_sel}'.length < 1){
+						$(".datepicker-here").datepicker({maxDate : currentDate}); 
+					}*/
+					
+					$('#myform').submit(function(){
+						event.preventDefault(); // form 기본 동작 막기
+						
+						var schoolCount = $('#school').length; // input 태그의 개수 확인
+						
+						if (schoolCount < 1) {
+					        alert('1개 이상은 반드시 작성해야합니다.');
+					        return;
+					    }
+						
+					 // 유효성 검사 start
+							// 소개글
+							var school = $('#school').val();
+							if (school.trim() === '') {
+								alert('학교명을 입력하세요.');
+								$('#school').focus();
+								return;
+							}
+							// 입학일자
+							var entering_date = $('#entering_date').val();
+							if (entering_date.trim() === '') {
+								alert('입학일자를 선택하세요.');
+								$('#entering_date').focus();
+								return;
+							}
+							// 졸업일자
+							var graduation_date = $('#graduation_date').val();
+							if (graduation_date.trim() === '') {
+								alert('졸업일자를 선택하세요.');
+								$('#graduation_date').focus();
+								return;
+							}
+							/*// 학위
+							var degree_checked = $('#meet_mentoring').is(':selected');
+							if(!degree_checked) {
+								alert('학위를 선택하세요.');
+								return;
+							}*/
+							// 전공명
+							var major = $('#major').val();
+							if (major.trim() === '') {
+								alert('전공명을 입력하세요.');
+								$('#major').focus();
+								return;
+							}
+					// 유효성 검사 end
+							
+							// minor 입력 안 했을 경우 처리
+							var minor = $('.minor');
+							
+							for(var i=0; i<minor.length; i++){
+								if(minor[i].value == ""){
+									minor[i].value = "N";
+								}
+							}
+							
+							// form으로 데이터 전송 start
+							var form = $('#myform')[0];
+							var formdata = new FormData(form);
+							
+							$.ajax({
+								url : $(this).attr('action'),
+								type : 'POST',
+								data : formdata,
+								processData : false,
+								contentType : false,
+								enctype : 'multipart/form-data',
+								success: function(){
+									// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
+									eduInfo_load(school,mentor_no);
+									
+									if(check === 'N') {
+										// progress 올리기
+										var currentValue = parseInt($('#progress').val());
+										var updatedValue = currentValue + 25;
+										$('#progress').val(updatedValue);
+									}
+								},
+								error : function(){
+									alert("서버 오류");
+								}
+							});
+							
+					}); // submit end
 				
-			} // eduInfo_load() ajax-success end
-		}); // eduInfo_load() ajax end
-	
+					
+				} // eduInfo_load() ajax-success end
+			}); // eduInfo_load() ajax end
+			
+		}else {
+			
+			$.ajax({
+				url: 'mentorEduInfoPage',  // JSP 파일의 URL
+				method: 'GET',
+				data: {mentor_no : mentor_no},
+				success: function(data) {
+					$('#load_location').empty().append(data);
+					$('#load_location, .nav_items').removeAttr('style');
+					$('.eduInfo').css(active);
+					$("span:contains('[필수]')").css('color', 'red');
+					$("span:contains('[선택]')").css('color', '#004EA2');
+					
+					
+					// Air-datePicker 호출
+					$(".datepicker-here").datepicker({maxDate : currentDate}); 
+					
+					// 추가,삭제 버튼 구현 start
+					
+					// [추가하기] 버튼 클릭시 추가될 요소 가져오기
+					var plus_content_read = $('.input_content').html();
+					
+					if(plus_content_read == null){
+						plus_content_read = $(".plus_div").html();
+					}
+					
+					// [추가하기] 버튼 클릭해서 추가된 요소 갯수 카운팅
+					var plus_div_cnt = $(".plus_div").length;
+					
+					// [삭제하기] 버튼의 id 고유번호 저장할 변수 선언
+					var del_cnt = '';
+					
+					del_cnt = plus_div_cnt; 
+					
+					// [추가하기] 버튼 클릭 이벤트
+					$('.plus_btn').click(function(){
+						
+						$('#plus_content').append('<div id="del_div'
+											+	del_cnt
+											+	'"><hr class="title_hr">'
+											+	plus_content_read
+											+	'<div align="right" style="margin-top: 10px;">'
+											+	'<button type="button" class="small_jh btn_jh" id="del_btn' 
+											+	del_cnt+'"'
+											+	' style="background-color: red; color: #fff;" onClick="delete_btn('+del_cnt+');">삭제하기</button></div></div>'
+										);
+						
+						var temp = $("#del_div"+del_cnt+" input")
+						$("#del_div"+del_cnt+" #delBtn").remove();
+						for(var i = 0; i < temp.length; i++){
+							temp[i].value = null;
+						}
+						/*// id 이 minor0인 요소의 id값 수정 [기존건 minor0, 이후 새로 생성된 minor부터는 1부터 매겨짐]
+						var new_id 값= 'minor' + del_cnt;
+						$('#minor0').attr('id', new_id);
+						
+						// id 값에 minor를 포함하는 input text 찾기
+						var minorTextInputs = $('input[type="text"]').filter(function() {
+							return $(this).attr('id') && $(this).attr('id').indexOf('minor') !== -1;
+						});
+						
+						// 찾은 input text의 갯수 구하기
+						var count = minorTextInputs.length;
+						console.log('minorTextInputs count:::'+count);
+						
+						// 갯수만큼 루프돌리면서, hidden으로 minor 값 전달 [minor1 부터만 처리(minor0은 click 이벤트 밖에서 처리..)]
+						for(var i=1; i<count; i++) {
+							if ($('#minor'+i).val() == '') {
+								$('#myform').append('<input type="hidden" name="minor" value="N">');
+							}else {
+								$('#myform').append('<input type="hidden" name="minor" value="'+$('#minor'+i).val()+'">');
+							}
+						}*/
+						
+						del_cnt++;
+						
+						console.log(del_cnt);
+						
+						// Air-datePicker 호출 따로 또 해줘야함..
+						$(".datepicker-here").datepicker({maxDate : currentDate}); 
+						
+					});
+					
+					// Air-datePicker 호출 따로 또 해줘야함..
+					/*if('${edu_sel}'.length < 1){
+						$(".datepicker-here").datepicker({maxDate : currentDate}); 
+					}*/
+					
+					$('#myform').submit(function(){
+						event.preventDefault(); // form 기본 동작 막기
+						
+						var schoolCount = $('#school').length; // input 태그의 개수 확인
+						
+						if (schoolCount < 1) {
+					        alert('1개 이상은 반드시 작성해야합니다.');
+					        return;
+					    }
+						
+					 // 유효성 검사 start
+							// 소개글
+							var school = $('#school').val();
+							if (school.trim() === '') {
+								alert('학교명을 입력하세요.');
+								$('#school').focus();
+								return;
+							}
+							// 입학일자
+							var entering_date = $('#entering_date').val();
+							if (entering_date.trim() === '') {
+								alert('입학일자를 선택하세요.');
+								$('#entering_date').focus();
+								return;
+							}
+							// 졸업일자
+							var graduation_date = $('#graduation_date').val();
+							if (graduation_date.trim() === '') {
+								alert('졸업일자를 선택하세요.');
+								$('#graduation_date').focus();
+								return;
+							}
+							/*// 학위
+							var degree_checked = $('#meet_mentoring').is(':selected');
+							if(!degree_checked) {
+								alert('학위를 선택하세요.');
+								return;
+							}*/
+							// 전공명
+							var major = $('#major').val();
+							if (major.trim() === '') {
+								alert('전공명을 입력하세요.');
+								$('#major').focus();
+								return;
+							}
+					// 유효성 검사 end
+							
+							// minor 입력 안 했을 경우 처리
+							var minor = $('.minor');
+							
+							for(var i=0; i<minor.length; i++){
+								if(minor[i].value == ""){
+									minor[i].value = "N";
+								}
+							}
+							
+							// form으로 데이터 전송 start
+							var form = $('#myform')[0];
+							var formdata = new FormData(form);
+							
+							$.ajax({
+								url : $(this).attr('action'),
+								type : 'POST',
+								data : formdata,
+								processData : false,
+								contentType : false,
+								enctype : 'multipart/form-data',
+								success: function(){
+									// 입력 완료 후 페이지 전환 (eduInfo_load()에 매개변수 새로 넣어서 재호출)
+									eduInfo_load(school,mentor_no);
+									
+									if(check === 'N') {
+										// progress 올리기
+										var currentValue = parseInt($('#progress').val());
+										var updatedValue = currentValue + 25;
+										$('#progress').val(updatedValue);
+									}
+								},
+								error : function(){
+									alert("서버 오류");
+								}
+							});
+							
+					}); // submit end
+				
+					
+				} // eduInfo_load() ajax-success end
+			}); // eduInfo_load() ajax end
+			
+		} // mentor_classification end
+		
 	}else { // if end else start
 		
 		$.ajax({
@@ -941,7 +1156,7 @@ function eduInfo_load(check,mentor_no) {
 			      clicked = true; 			// 버튼이 클릭되면 변수 값을 true로 변경
 			      
 			      // 수정 페이지로 전환 (basicInfo_load()에 매개변수 새로 넣어서 재호출)
-			      eduInfo_load(clicked,mentor_no);	
+			      eduInfo_load(clicked,mentor_no,mentor_classification);	
 			      
 			    }); // [수정하기] 클릭 이벤트 end
 			    
@@ -1024,6 +1239,14 @@ function expInfo_load(check,mentor_no) {
 				
 				$('#myform').submit(function(){
 					event.preventDefault(); // form 기본 동작 막기
+					
+					var companyCount = $('#company').length; // input 태그의 개수 확인
+					console.log('companyCount::'+companyCount);
+					
+					if (companyCount < 1) {
+				        alert('1개 이상은 반드시 작성해야합니다.');
+				        return;
+				    }
 					
 				 // 유효성 검사 start
 						// 회사명

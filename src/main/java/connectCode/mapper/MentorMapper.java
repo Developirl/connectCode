@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import connectCode.model.FileDTO;
 import connectCode.model.MentorDTO;
 import connectCode.model.MyMentoringBean;
 @Mapper
@@ -69,6 +70,8 @@ public interface MentorMapper {
 	public List<MentorDTO> select_accepted_mentoring(MentorDTO mentor);
 	
 	public int update_alarm(int alarm_no);
+	
+	public List<FileDTO> select_file(int file_no);
 	
    // ******************* 혜지 작성 *****************************
    public MentorDTO mentorDetail(int mentor_no);

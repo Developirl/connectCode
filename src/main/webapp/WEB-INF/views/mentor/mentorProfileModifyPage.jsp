@@ -20,7 +20,7 @@
 			<div class="basicInfo nav_items medium_jh" onclick="basicInfo_load('${msel.intro}',${msel.mentor_no},'${msel.unable_date}','${msel.mentoring_time}')">기본정보</div>
 			<div class="personInfo nav_items medium_jh" onclick="personInfo_load(${msel.mentor_no},'${msel.phone}','${msel.email}')">인적사항</div>
 			<div class="serviceChar nav_items medium_jh" onclick="serviceChar_load('${service_select_check}',${msel.mentor_no},'${msel.bank}')">서비스 요금</div>
-			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load('${education_select_check}',${msel.mentor_no})">학력사항</div>
+			<div class="eduInfo nav_items medium_jh" onclick="eduInfo_load('${education_select_check}',${msel.mentor_no},${msel.classification})">학력사항</div>
 			<div class="expInfo nav_items medium_jh" onclick="expInfo_load('${career_select_check}',${msel.mentor_no})">경력사항</div>
 			<div class="techInfo nav_items medium_jh" onclick="techInfo_load('${license_select_check}','${msel.technology}',${msel.mentor_no})">기술 및 분야</div>
 		</div>
@@ -156,20 +156,14 @@
 	
 	// [삭제하기] 버튼 클릭 이벤트
 	function delete_btn(del_cnt){
-		
 		$('#del_div'+del_cnt).remove();
-		
+			
 	}; // 추가,삭제 버튼 구현 end
 	
 	function delete_btn2(del_cnt){
-		
 		$('#forDelete_content'+del_cnt).remove();
 		
 	}; // 추가,삭제 버튼 구현 end
-	
-	/* $('#edit_btn').click(function(){
-		
-	}); */
 	
 	$(document).ready(function(){
 	
