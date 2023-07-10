@@ -75,22 +75,37 @@
 		count(*) from mentee
 	</select>
 
-	<!-- 멤버 전체 데이터 -->
-	<select id="getTotalmember" resultType="int">
-		SELECT COUNT(DISTINCT
-		subquery_with_count.member_no) AS count
-		FROM (
-		SELECT member.member_no,
-		mentor.name AS mentor_name, mentee.name AS
-		mentee_name
-		FROM member
-		LEFT
-		JOIN mentor ON member.member_no = mentor.member_no
-		LEFT JOIN mentee ON
-		member.member_no = mentee.member_no
-		ORDER BY member.member_no DESC
-		)
-		subquery_with_count
+	<!-- 멤버 전체 데이터 -->	
+ 	<select id="getTotalmember" resultType="int">
+		select count(*) from member
+		left join mentor on member.member_no=mentor.member_no
+		left join mentee on member.member_no=mentee.member_no
+		<where>
+			<choose>
+				<when test="keyword != null and search == 'all'">
+					and mentor.name LIKE CONCAT('%', #{keyword}, '%') ||
+					mentee.name LIKE CONCAT('%', #{keyword}, '%')
+					or mentor.member_no
+					LIKE CONCAT('%', #{keyword}, '%') || mentee.member_no LIKE
+					CONCAT('%', #{keyword}, '%')
+				</when>
+				<when test="keyword != null and search == 'mentor'">
+					member.classification=13 and (mentor.name LIKE
+					CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%',
+					#{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword},
+					'%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+				<when test="keyword != null and search == 'mentee'">
+					member.classification=12 and (mentor.name LIKE
+					CONCAT('%', #{keyword}, '%') || mentee.name LIKE CONCAT('%',
+					#{keyword}, '%')
+					or mentor.member_no LIKE CONCAT('%', #{keyword},
+					'%') || mentee.member_no LIKE CONCAT('%', #{keyword}, '%'))
+				</when>
+			</choose>
+		</where>
+		order by member.member_no desc
 	</select>
 
 	<!-- 멘토 승인 요청 리스트 -->
@@ -107,10 +122,12 @@
 		c.years, c.task
 		FROM
 		mentor
-		LEFT JOIN (SELECT career.mentor_no, company, years, task, entering_date
-                        FROM career INNER JOIN (SELECT mentor_no, MAX(entering_date) max_entering_date FROM career GROUP BY mentor_no) a
-                                    ON career.mentor_no = a.mentor_no
-                        WHERE career.entering_date = a.max_entering_date) c 
+		LEFT JOIN (SELECT career.mentor_no, company,
+		years, task, entering_date
+		FROM career INNER JOIN (SELECT mentor_no, MAX(entering_date)
+		max_entering_date FROM career GROUP BY mentor_no) a
+		ON career.mentor_no = a.mentor_no
+		WHERE career.entering_date = a.max_entering_date) c
 		ON mentor.mentor_no = c.mentor_no
 		WHERE
 		classification = 22 or
@@ -202,6 +219,18 @@
 
 	<!-- 파일 가져오기 -->
 	<select id="getEduFileList" parameterType="int"
+		resultType="FileDTO">
+		select file_no,file_serial_number,file_url,origin_name,size
+		from file where file_no=#{file_no}
+	</select>
+
+	<select id="getLFileList" parameterType="int"
+		resultType="FileDTO">
+		select file_no,file_serial_number,file_url,origin_name,size
+		from file where file_no=#{file_no}
+	</select>
+	
+	<select id="getCFileList" parameterType="int"
 		resultType="FileDTO">
 		select file_no,file_serial_number,file_url,origin_name,size
 		from file where file_no=#{file_no}
@@ -346,9 +375,10 @@
 		WHERE
 		<choose>
 			<when test="keyword != null and search == 'all'">
-				t.name LIKE CONCAT('%', #{keyword}, '%')
-				OR p.title
-				LIKE CONCAT('%', #{keyword}, '%')
+				p.ref_step=0 and (t.name LIKE CONCAT('%', #{keyword}, '%')
+				or
+				p.title
+				LIKE CONCAT('%', #{keyword}, '%'))
 			</when>
 			<when test="keyword != null and search == 'apply'">
 				p.reply_yn = 'Y' AND (t.name LIKE CONCAT('%',
@@ -384,10 +414,11 @@
 		<where>
 			<choose>
 				<when test="keyword != null and search == 'all'">
-					t.name LIKE CONCAT('%', #{keyword}, '%')
+					p.ref_step=0 and (t.name LIKE CONCAT('%',
+					#{keyword}, '%')
 					or
 					p.title
-					LIKE CONCAT('%', #{keyword}, '%')
+					LIKE CONCAT('%', #{keyword}, '%'))
 				</when>
 				<when test="keyword != null and search == 'apply'">
 					p.reply_yn='Y' and (t.name LIKE CONCAT('%',
@@ -760,8 +791,18 @@
 		quit_member
 		where year(quit_date)=year(current_date())
 	</select>
+	
+	<update id="updateMentorEFile">
+	 	update education set file_no=null where mentor_no=#{mentorNo}
+	</update>
 
+	<update id="updateMentorLFile">
+	 	update license set file_no=null where mentor_no=#{mentorNo}
+	</update>
 
+	<update id="updateMentorCFile">
+	 	update career set file_no=null where mentor_no=#{mentorNo}
+	</update>
 
 
 	<!-- *****************************병걸 작성*************************************** -->
@@ -800,8 +841,7 @@
 	<select id="getUnreadyMentors" resultType="int">
 		SELECT COUNT(*) FROM
 		mentor INNER JOIN member ON(mentor.member_no = member.member_no) WHERE
-		member.classification=13 AND (mentor.classification=21 OR
-		mentor.classification=22);
+		member.classification=13 AND mentor.classification=22;
 	</select>
 	<select id="getReadyMentors" resultType="int">
 		SELECT COUNT(*) FROM

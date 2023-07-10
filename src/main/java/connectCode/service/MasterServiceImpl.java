@@ -519,6 +519,32 @@ public class MasterServiceImpl implements MasterService {
 	public List<FileDTO> getEduFileList(int file_no) {
 		return md.getEduFileList(file_no);
 	}
+	
+	@Override
+	public List<FileDTO> getLFileList(int l_file_no) {
+		return md.getLFileList(l_file_no);
+	}
+	
+	@Override
+	public List<FileDTO> getCFileList(int c_file_no) {
+		return md.getCFileList(c_file_no);
+	}
+
+	@Override
+	public int updateMentorEFile(int mentorNo) {
+		return md.updateMentorEFile(mentorNo);
+	}
+
+	@Override
+	public int updateMentorLFile(int mentorNo) {
+		return md.updateMentorLFile(mentorNo);
+	}
+	
+	@Override
+	public int updateMentorCFile(int mentorNo) {
+		return md.updateMentorCFile(mentorNo);
+	}
+
 
 //*****************************병걸 작성***************************************
 
@@ -562,11 +588,6 @@ public class MasterServiceImpl implements MasterService {
 	public int getReadyMentors() {
 		return md.getReadyMentors();
 	}
-
-
-
-
-	
 
 
 

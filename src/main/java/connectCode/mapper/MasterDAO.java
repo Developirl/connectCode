@@ -187,9 +187,16 @@ public interface MasterDAO {
 	
 	List<FileDTO> getEduFileList(int file_no);
 	
+	List<FileDTO> getLFileList(int l_file_no);
 	
+	List<FileDTO> getCFileList(int c_file_no);
 	
-//*****************************병걸 작성***************************************
+	int updateMentorEFile(int mentorNo);
+	int updateMentorLFile(int mentorNo);
+	int updateMentorCFile(int mentorNo);
+
+	
+	//*****************************병걸 작성***************************************
 
 	public int insertVisitorInfo(VisitDTO visitor);
 	
@@ -201,6 +208,13 @@ public interface MasterDAO {
 	public int getMentees();
 	public int getUnreadyMentors();
 	public int getReadyMentors();
+
+
+
+
+
+
+
 
 //*****************************병걸 작성***************************************
 	

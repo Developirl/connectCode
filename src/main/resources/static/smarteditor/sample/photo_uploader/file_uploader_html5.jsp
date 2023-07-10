@@ -35,7 +35,7 @@
         String dftFilePath = request.getSession().getServletContext().getRealPath("/");
         //파일 기본경로 _ 상세경로
 //        String filePath = dftFilePath + "SE2" + File.separator + "multiupload" + File.separator;
-        String filePath = dftFilePath + "resources" + File.separator + "upload" + File.separator +"food"+File.separator;
+        String filePath = dftFilePath + "upload-files" + File.separator;
 //        String filePath = session.getServletContext()+"/resources/upload/food/";
 //        String filePath = session.getServletContext()+"/resources/upload/food/";
         File file = new File(filePath);
@@ -66,7 +66,7 @@
         sFileInfo += "&bNewLine=true";    
         sFileInfo += "&sFileName=" + filename;    
 //      sFileInfo += "&sFileURL=/smarteditorSample/SE2/multiupload/"+realFileNm;
-        sFileInfo += "&sFileURL=/resources/upload/food/"+realFileNm;
+        sFileInfo += "&sFileURL=/upload-files/"+realFileNm;
         out.println(sFileInfo);
     }
 %>
