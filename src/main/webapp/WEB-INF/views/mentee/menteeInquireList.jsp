@@ -16,6 +16,15 @@
                 
                 <div class="col-8">
                 	<div style="text-align: right; margin-top:50px;"><button class="btn btn-secondary" id="wirteFormBtn">문의하기</button></div>
+               		<c:if test="${empty inquireList }">
+               		<div align="center">
+               			<br><br><br><br><br><br><br><br><br><br>
+               			<span style="font-family: 'Noto Sans KR', sans-serif!important;font-weight: bold;">작성한 게시글이 존재하지 않습니다.</span> 
+               			<br><br><br><br><br><br>
+               		</div>
+               		</c:if>
+          
+               		<c:if test="${ ! empty inquireList }">
                 	<table class="inquireTable">
                 		<caption>1대1 문의 게시판</caption>
                 		<tr>
@@ -25,8 +34,10 @@
                 			<th style="width:20%">답변여부</th>
                 		</tr>
                 		<c:set var="num" value="${pageMaker.total-((pageMaker.currentPage-1)*10)}" />
+                		
                 		<c:forEach var="inquire" items="${inquireList}">
 							<tr>
+							
 								<td>${num}</td>
 								<td><span class="inquireDetailBtn" data-value="${inquire.post_no}" style="cursor:pointer">${inquire.title}</span></td>
 								<td><fmt:formatDate value="${inquire.reg_date}" pattern="yyyy-MM-dd"/></td>
@@ -38,6 +49,7 @@
 							<c:set var="num" value="${num - 1}" />                			
                 		</c:forEach>
                 	</table>
+                	</c:if>
                 	
                		<div style="text-align:center; margin-top:50px;">
                			<c:if test="${pageMaker.prev}">

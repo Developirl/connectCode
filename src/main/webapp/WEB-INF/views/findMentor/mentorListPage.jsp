@@ -397,7 +397,9 @@ $(document).ready(function(){
 	
 	
 	// 북마크 Ajax 처리하기!
-	$(".mybookmark").click(function(){
+	$(".mybookmark").click(function(event){
+		
+		event.stopPropagation();
 		
 		// 해당 북마크 유무 가져옴
 		var clickchecked = $(this).data('value');
@@ -716,9 +718,9 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 			<!--  프로필 카드 영역 -->
 			
 			<c:if test="${ empty list }">
-			<br><br>
+			<br><br><br><br><br><br>
 			<div align=center style="font-family:'Noto Sans KR', sans-serif!important;font-weight: bold;">검색한 항목에 해당하는 멘토가 존재하지 않습니다 .</div>
-			<br><br><br><br><br><br><br><br><br><br>
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 			</c:if>
 			
 			
@@ -727,7 +729,7 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 			
 			   <c:forEach var="i" items="${list}" varStatus="st">
 					<div class="js-allcontentbox" >
-						<div class="js-profileCard" >
+						<div class="js-profileCard" onclick="goMentorProfileDetailPage('${i.mentor_no}',${i.checkedBookmark })">
 						
 						
 						<input type=hidden class="bookmark_hiddenbox_${st.index}" id="hiddenbox_${i.mentor_no}" value="${i.checkedBookmark}">
@@ -740,27 +742,7 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 							    <div align=right id="bookmarkfill_${i.mentor_no}" data-value="${i.mentor_no}">
 							    	<i class="bi bi-bookmark-fill fs-3 mybookmark" data-value="1"></i>
 							    </div>
-<%-- 							<c:if test="${i.checkedBookmark == 0 }">
-							    <div align=right id="bookmark_${i.mentor_no}" data-value="${i.mentor_no}">
-							    	<i class="bi bi-bookmark fs-3 mybookmark" data-value="0"></i>
-							    </div>
-							</c:if>
-						
-							<c:if test="${i.checkedBookmark == 1 }">
-							    <div align=right id="bookmarkfill_${i.mentor_no}" data-value="${i.mentor_no}">
-							    	<i class="bi bi-bookmark-fill fs-3 mybookmark" data-value="1"></i>
-							    </div>
-							</c:if>--%>
 						</sec:authorize>
-
-						<%--
-							<sec:authorize access="hasRole('ROLE_12')">
-							<sec:authorize access="hasAnyRole('ROLE_12')">
-								<div class="grid-sample" style="height: 600px;">
-									<div id="grid_data" style="height: 600px;">이건 멘티 계정</div>
-								</div>
-							</sec:authorize>
-						 --%>
 
 
 							<table class="js-profileCardtable">
@@ -778,7 +760,15 @@ function goMentorProfileDetailPage(mentor_no,bookmark){
 									<span class="js-profileCardName">${i.name }</span>
 									<span class="js-profileCardIntro js-mino">${i.intro }</span>
 									<span class="js-profileCardIntro js-company-mini">${i.company }</span>
-									<span class="js-profileCardIntro js-career-mini">${i.years }년차  &nbsp;${i.task }</span>
+									<span class="js-profileCardIntro js-career-mini">
+									<c:if test="${i.years == 0}">
+									신입
+									</c:if>
+									<c:if test="${i.years != 0}">
+									${i.years }년차  
+									</c:if>
+									
+									&nbsp;${i.task }</span>
 								<!-- </span> -->	
 								</td>
 								</tr>

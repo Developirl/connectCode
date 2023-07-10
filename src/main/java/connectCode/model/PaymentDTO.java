@@ -13,11 +13,8 @@ public class PaymentDTO {
 	private int pay_amount;
 	private String pay_state;
 	private String pay_time;
-	//private Timestamp pay_time;
 	private String cancel_pay_time;
-	//private Timestamp cancel_pay_time;
 	private String refund_time;
-	//private Timestamp refund_time;
 	private String iamport_order_no;
 	private String buyer_name;
 	private String buyer_email;

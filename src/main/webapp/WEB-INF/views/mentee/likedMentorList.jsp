@@ -16,7 +16,11 @@
                 
                 	<c:if test="${ empty likedMentorList }">
 					<br><br>
-						<div align=center style="font-family:'Noto Sans KR', sans-serif!important;font-weight: bold;">즐겨찾기한 멘토가 존재하지 않습니다 .</div>
+						<div align=center style="font-family:'Noto Sans KR', sans-serif!important;font-weight: bold;">
+						<br><br><br><br><br><br><br><br><br><br>
+						즐겨찾기한 멘토가 존재하지 않습니다 .
+						<br><br><br><br><br><br><br>
+						</div>
 					</c:if>
                 	
                 	<div class="js-mentorlistwrapper">

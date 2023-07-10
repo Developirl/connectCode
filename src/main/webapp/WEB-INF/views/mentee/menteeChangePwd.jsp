@@ -10,6 +10,7 @@
 	<%@ include file="../public/header.jsp"%>
 
 		<!-- 실제 콘텐츠 들어가는 부분 -->
+		<div class="jisoo-modify-font-noto">
         <div class="container-fluid main-content">
             <div class="row">
                 
@@ -58,6 +59,7 @@
                 <!-- 여백 -->
                 <div class="col-2"></div>
             </div>
+        </div>
         </div>
 	
 	<%@ include file="../public/footer.jsp"%>

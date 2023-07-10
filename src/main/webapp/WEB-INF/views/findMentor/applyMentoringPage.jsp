@@ -481,7 +481,7 @@ $(document).ready(function(){
 	var csrf = "${_csrf.headerName}";
 	var csrfToken = "${_csrf.token}";
 	
-	
+	$(".js-payment-box-font-css").hide(); // 처음에는 결제 버튼을 숨긴다. 
 
 	// -----------------------
 	
@@ -583,6 +583,7 @@ $(document).ready(function(){
 	/* -------------------  멘토링 종류 선택 후 들어온 경우 ---------------------- */
 	if('${kind}'!=null && '${kind}'!=''){
 		
+		$(".js-payment-box-font-css").show();
 		
 		$('.js-sel-radio[data-value="${kind}"]').prop('checked', true);
 		// 맨 아래 가격 설정
@@ -608,10 +609,12 @@ $(document).ready(function(){
 	/* --------------------------  멘토링 종류 선택시  ------------------------ */
 	
 	$('.js-sel-radio').change(function() {
+		
+		$(".js-payment-box-font-css").show();
 		  
 		if ($(this).is(':checked')) {
-		    $("#js-pay-print").text($(this).data('pay')+' 원');
-		    $("#js-final-price").text($(this).data('pay')+' 원');
+		    $("#js-pay-print").text(addCommasToPrice($(this).data('pay'))+' 원');
+		    $("#js-final-price").text(addCommasToPrice($(this).data('pay'))+' 원');
 		  }
 		  
 		  // 30분 대면 멘토링이면 당일 예약을 막는다. 
@@ -867,7 +870,6 @@ function goPaymentbox(){
 	var git = $("#js-menteegit").val();
 	var blog = $("#js-menteeblog").val();
 	var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
-	alert("결제 전 넘기는 변수 \n "+mentoring_kind+"\n"+reserve_day+"\n"+reserve_time+"\n"+mentor_no+"\n"+amount);
 	
 	
 	// ajax로 현재 선택한 멘토링 kind에 대한 정보를 구해와서 모달 div 사이에 넣는다. 
@@ -889,7 +891,7 @@ function goPaymentbox(){
 		  success: function(rsp) {
 			  
 			  $("#selected_mentor_info_box").html(rsp);
-			  var amount = $("#js-pay-print").text(addCommasToPrice($('.js-sel-radio[data-value="${kind}"]').data('pay'))+' 원');
+			  var amount = $("#js-pay-print").text(addCommasToPrice($('input[type="radio"][name="mentoring_kind"]:checked').data('pay'))+' 원');
 			  $("#js-final-price").html(amount);
 			  
 		  },
@@ -910,7 +912,6 @@ function openPaymentModal() {
     const modal = document.querySelector('.payment_modal');
     var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
     $("#js-final-price").html(amount);
-    alert("amount:"+amount);
     modal.style.display = 'block';
 }
 
@@ -950,7 +951,6 @@ function createOrderNum(){
 		orderNum += Math.floor(Math.random() * 8);	
 	}
 	
-    alert("주문번호:"+orderNum);
 	return orderNum;
 }
 
@@ -998,8 +998,6 @@ function requestPay() {
 	var name = $('input[type="radio"][name="mentoring_kind"]:checked').data('value');
 	var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
 	
-	alert("name :"+name);
-	alert("amount :"+amount);
 	closePaymentModal()// 기존 모달 닫기
   //      pg: 'kakaopay',danal_tpay
 	

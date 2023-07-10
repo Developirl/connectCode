@@ -96,7 +96,6 @@
 
 .gogoReivew{
 	color:#004EA2;
-	text-decoration: overline;
 	cursor: pointer;
 }
 .gogoReivew:hover{
@@ -105,7 +104,6 @@
 
 .cancelPayment{
 	color:#B31259;
-	text-decoration: overline;
 	cursor: pointer;
 }
 
@@ -133,6 +131,42 @@
 }
 
 .js-review-modal-body {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 600px;
+	/*height: 600px;*/
+	padding: 50px 30px;
+	text-align: center;
+	background-color: rgb(255, 255, 255);
+	border-radius: 10px;
+	box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+	transform: translateX(-50%) translateY(-50%);
+	z-index:1;
+	max-height: 80%;
+    overflow: auto;
+	
+}
+/* ---------------- 결제 취소 클릭시 정보 보여주는 모달 -------------------- */
+
+.payment_cancel_modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right:0;
+	bottom:0;
+	width: 100%!important;
+	height: 100%!important;
+	display: none;
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index:999;
+}
+
+.payment_cancel_modal.show {
+	display: block;
+}
+
+.payment_cancel_modal_body {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -196,6 +230,56 @@
 	border:2px solid #004EA2;
 	color:white;
 	background: #004EA2;
+}
+
+
+
+
+/* ---------------결제 취소 모달 띄우는 css -----------------*/
+.js-mentorInfopage-outerbox *{
+	font-family: 'Noto Sans KR', sans-serif!important;
+	color:#5D5D5D;
+	font-size:11pt;
+	text-align: left !important;
+}
+
+.js-mentorInfopage-outerbox{
+	border:1px solid #E1E6E6;
+	padding:30px 15px;
+	border-right: none;
+	border-left:none;
+	border-bottom:none;
+	align-content: left;
+	align-items: left;
+}
+
+.js-mentorinfo-title{
+	font-family: 'Noto Sans KR', sans-serif!important;
+	font-size:14pt!important;
+	margin-bottom: 15px;
+}
+
+.js-mentorinfo-gray{
+	color:#999999;
+	font-weight: 700;
+}
+.paymentCancelTable td{
+	padding-left: 20px;
+}
+
+.payment_cancel_submit_butt{
+	border:2px solid #B31259;
+	border-radius: 5px;
+	padding: 5px 10px;
+	text-align: center;
+	font-weight:500;
+	font-family: 'Noto Sans KR', sans-serif!important;
+	background: white;
+	color:#B31259;
+}
+.payment_cancel_submit_butt:hover{
+	color:white;
+	background: #B31259;
 }
 </style>
 
@@ -277,11 +361,11 @@
 	                						<c:if test="${i.review_no == 0 && i.menClassification != 35  }">
 	                								<div class="cancelPayment" data-value="${i.mentoring_no}"
 	                									data-orderNo="${i.order_no}" data-impNo="${i.iamport_order_no}" data-payNO="${i.payment_no}"
-	                									 onclick="openPayCancelModal(${i.payment_no});">멘토링 취소하기</div>
+	                									 onclick="openPayCancelModal(${i.payment_no});">멘토링 취소 및 환불</div>
 	                						</c:if>
 	                						<c:if test="${i.review_no == 0 && i.menClassification == 35  }">
 	                								<div class="gogoReivew" data-value="${i.mentoring_no}"
-	                									 onclick="buildReviewModal(${i.mentoring_no},'${i.name }');">리뷰 작성하기</div>
+	                									 onclick="buildReviewModal(${i.mentoring_no},'${i.name }');">리뷰 작성</div>
 	                						</c:if>
                 						</td>
                 					</tr>
@@ -343,6 +427,26 @@
         </div>
         
         <br><br><br><br><br><br><br>
+        
+        
+        
+        
+        
+        <%-- 결제 클릭시 띄우는 모달 영역 --%>
+	<div class="payment_cancel_modal">
+      <div class="payment_cancel_modal_body" align=center>
+    
+        <div id="payment_cancel_info_box" align=center></div>
+        <input type=button value="결제 취소" class="payment_cancel_submit_butt" onclick="mentoringCancelReal()">    
+    	<div class="jh-modal-cancelbutt" onclick="closePaymentCancelModal();">
+    	<input type="hidden" class="for_cancel_payment_no">
+    	<i class="bi bi-x-circle"></i>
+    	</div>    
+    	 
+      </div>
+    </div>
+        
+        
         <script>
         
     	// 시큐리티용 변수 
@@ -403,7 +507,11 @@
 					var mentoring_no = $("#mentoring_no_no").val();
 					var rating = $("#lastRating").val();
 					var content = $(".form-control").val();
-					alert("리뷰 작성시 전달하는 값들 \nrating = "+rating+"\ncontent="+content+"\nmentoring_no="+mentoring_no);
+					
+			    	var csrf = "${_csrf.headerName}";
+			    	var csrfToken = "${_csrf.token}";
+					
+					
 					// review를 insert 하는 요청을 보낸다. 
 					$.ajax({
 						  url: '/mentee/insertReviewAndAlarm',
@@ -468,18 +576,52 @@
 		    modal.style.display = 'none';
 		}
 		
+		
+		
+		// 멘토링 취소 및 환불 클릭시 모달을 띄운다. 
 		function openPayCancelModal(payment_no){
+		    const modal = document.querySelector('.payment_cancel_modal');
+		    
+		    $(".for_cancel_payment_no").val(payment_no);
+		    
+	    	var csrf = "${_csrf.headerName}";
+	    	var csrfToken = "${_csrf.token}";
+		    
+		    $.ajax({
+                url: "/payment/getPaymentCancelInfo", 
+                type: "POST",
+                beforeSend: function(xhr){
+                	xhr.setRequestHeader(csrf,csrfToken);
+                },
+                data : { payment_no : payment_no },
+                success: function(res){
+					console.log("성공?");
+	            	$("#payment_cancel_info_box").html(res);
+                },error:function(xhr, status, error){
+                	console.log(error); 
+                }
+            });// end ajax
+		    
+		    
+		    
+		    
+		    modal.style.display = 'block';
+		}
+		
+		function closePaymentCancelModal(){
+		    const modal = document.querySelector('.payment_cancel_modal');
+		    modal.style.display = 'none';
+		    
+		}
+		
+		
+		
+		function mentoringCancelReal(){
 			
-			console.log("payment_no ="+payment_no);
+			var payment_no = $(".for_cancel_payment_no").val();
 			
-			// 시큐리티용 변수 
-			var csrf = "${_csrf.headerName}";
-			var csrfToken = "${_csrf.token}";
-			
-			if(confirm('정말 예약 취소하시겠습니까? ')){
-				
-	
-	            $.ajax({
+			if(confirm("멘토링 예약을 정말 취소하시겠습니까?")){
+				$.ajax({
 	                url: "/payment/refund", 
 	                type: "GET",
 	                dataType: 'JSON',
@@ -498,12 +640,12 @@
 	                	console.log('결제 취소 실패');
 	                }
 	            }) // end ajax
-	            
-	
 				
-			}// end if
+			}else{
+				closePaymentCancelModal();
+			}
 			
-			
+            
 		}
 
 

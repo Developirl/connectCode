@@ -21,6 +21,7 @@ import com.google.gson.JsonObject;
 
 import connectCode.mapper.PaymentDAO;
 import connectCode.model.MentoringDTO;
+import connectCode.model.MyMentoringBean;
 import connectCode.model.PaymentDTO;
 
 @Service
@@ -156,6 +157,11 @@ public class PaymentService {
 		}
 		
 		return dao.orderCancle(payment_no);
+	}
+
+
+	public MentoringDTO getPaymentCancelInfo(int payment_no) {
+		return dao.getPaymentCancelInfo(payment_no);
 	}
 	
 	

@@ -3,9 +3,6 @@
     
 <div class="mino-menteeMypageNavBox">
    <table class="mino-menteeMypageNavTable">
-       <tr>
-           <th style="font-size: 20px;">ConnectCode</th>
-       </tr>
        <tr style="border-bottom: 40px solid white;"></tr>
         <tr>
             <td>

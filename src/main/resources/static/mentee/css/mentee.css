@@ -1,12 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+
+
 .mino-menteeMypageNavBox{
     margin-top: 70px;
 }
+
+
 .mino-menteeMypageNavTable{
     margin: 0 auto;
 }
+
+.mino-menteeMypageNavTable td{
+	padding: 5px 0;	
+}
+.mino-menteeMypageNavTable *{
+	font-family: 'Noto Sans KR', sans-serif!important;
+}
 .mino-menteeMypageNavTable a{
     text-decoration: none;
-    color: black;
+	color:#5D5D5D;
+}
+
+
+.mino-menteeMypageNavTable a:hover{
+	font-weight: bold;
 }
 .mino-space{
     border-bottom: 10px solid white;
@@ -45,7 +62,7 @@
     width: 100%;
 }
 .mino-mypageMentoringTable td{
-    font-size: 20px; font-weight: bold; padding-top: 15px;
+    font-size: 18px; font-weight: 500; padding-top: 15px;
 }
 .mino-mypageMentoringTable th{
     text-align: center; border-bottom: 1px solid black; padding-bottom: 20px; font-size: 25px;
@@ -185,10 +202,13 @@
 
 /* --------------------------------------- 혜지 작성 ---------------------------------------------------*/
 #hjdelete_wrap {
-	margin-top: 100px;
-	margin-bottom: 100px;
+	margin-top: 150px;
+	margin-bottom: 150px;
 }
 
+.jisoo-modify-font-noto *{
+	font-family: 'Noto Sans KR', sans-serif!important;	
+}
 .hjtitle1{
 	font-weight: bold;
 	font-size: 40px;
@@ -200,34 +220,45 @@
 }
 
 .hjtitle3{
-	font-weight: bold;
+	font-weight: 500;
+	color:#A6A6A6;
 }
 
 .hjpasswd {
-	width: 400px;
+	width:600px;
 	height: 40px;
 	margin: 20px 0 0 0;
+	border:1px solid #ccc;
+	border-radius: 3px;
 } 
-
+.hjpasswdtextarea{
+	width:600px;
+	border:1px solid #ccc;
+	border-radius: 3px;
+	resize: none;
+	margin-bottom:20px;
+}
 .hjinput1 {
-	width: 504px;
-	height: 40px;
+	width: 600px;
+	padding:10px 0;
 	margin: 15px;
 	background-color: #004EA2;
 	color: white;
 	font-size: 15pt;
 	font-weight: bold;
 	border: none;
+	border-radius: 3px;
 }
 
 .hjinput2 {
-	width: 504px;
-	height: 40px;
+	width: 600px;
+	padding:10px 0;
 	background-color: #d3d3d3;
 	color: white;
 	font-size: 15pt;
 	font-weight: bold;
 	border: none;
+	border-radius: 3px;
 }
 
 .hjmain{
@@ -251,6 +282,7 @@
 	color : white;
 	font-size: 20px;
 	font-weight: bold;
+	border-radius: 8px;
 }
 
 .hjsubmitBtn{
@@ -262,6 +294,7 @@
 	font-size: 20px;
 	font-weight: bold;
 	margin: 100 0 0 225px;
+	border-radius: 8px;
 }
 
 /* --------------------------------------- 혜지 작성 ---------------------------------------------------*/

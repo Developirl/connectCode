@@ -14,7 +14,7 @@
                 
                 
                 <div class="col-8">
-                
+                <div class="jisoo-modify-font">
                 <!-- 이달의 인기 멘토 시작 -->
                     <div class="container-fluid">
                         <br /><br />
@@ -22,16 +22,23 @@
                         <br />
                         <div class="row">
                         	<c:forEach var="mentor" items="${pMentorList}" begin="0" end="3">
-                        		<div class="col-3" style="padding-left: 15px; padding-right: 15px;">
-	                                <div class="mino-card" style="width: 18rem; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
+                        		<div class="col-3" style="padding-left: 15px; padding-right: 15px; ">
+	                                <div class="mino-card" style="width: 100%; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
 	                                    <img src="/download/${mentor.physical_name}" class="card-img-top" alt="profile_img" />
 	                                    <div class="card-body mino-card-body">
 	                                        <h6 class="mino-bold" style="margin-top: 10px" >${mentor.company}</h6>
 	                                        <h5 class="card-title mino-bold" style="margin-bottom: 15px;">${mentor.name}</h5>
 	                                        <span class="mino-bold">${fn:replace(mentor.technology,',',' ')}</span><br />
+	                                        
 	                                        <span class="mino-bold">
 	                                     		 <c:set var="i" value="${fn:indexOf(mentor.mentoring_location,'구 ')}"/>
-	                                     		 ${fn:substring(mentor.mentoring_location,0,i+1)}&nbsp;&#183;&nbsp;${mentor.years}년차
+	                                     		 ${fn:substring(mentor.mentoring_location,0,i+1)}&nbsp;&#183;&nbsp;
+	                                     		 <c:if test="${mentor.years == 0}">
+	                                     		 신입
+	                                     		 </c:if>
+	                                     		 <c:if test="${mentor.years != 0}">
+	                                     		 ${mentor.years}년차
+	                                     		 </c:if>
 	                                        </span>
 	                                    </div>
 	                                </div>
@@ -42,7 +49,7 @@
                         <div class="row">
                         	<c:forEach var="mentor" items="${pMentorList}" begin="4" end="7">
                         		<div class="col-3" style="padding-left: 15px; padding-right: 15px;">
-	                                <div class="mino-card" style="width: 18rem; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
+	                                <div class="mino-card" style="width: 100%; cursor:pointer;" onclick="location.href='/findMentor/MentorProfileDetailPage?mentor_no=${mentor.mentor_no}'" >
 	                                    <img src="/download/${mentor.physical_name}" class="card-img-top" alt="profile_img" />
 	                                    <div class="card-body mino-card-body">
 	                                        <h6 class="mino-bold" style="margin-top: 10px" >${mentor.company}</h6>
@@ -50,7 +57,13 @@
 	                                        <span class="mino-bold">${fn:replace(mentor.technology,',',' ')}</span><br />
 	                                        <span class="mino-bold">
 	                                        	 <c:set var="i" value="${fn:indexOf(mentor.mentoring_location,'구 ')}"/>
-	                                     		 ${fn:substring(mentor.mentoring_location,0,i)}&nbsp;&#183;&nbsp;${mentor.years}년차
+	                                     		 ${fn:substring(mentor.mentoring_location,0,i)}&nbsp;&#183;&nbsp;
+	                                     		 <c:if test="${mentor.years == 0}">
+	                                     		 신입
+	                                     		 </c:if>
+	                                     		 <c:if test="${mentor.years != 0}">
+	                                     		 ${mentor.years}년차
+	                                     		 </c:if>
 	                                        </span>
 	                                    </div>
 	                                </div>
@@ -93,7 +106,7 @@
                     	</table>
                     </div>
                     <!-- 최신 멘토 후기 END -->
-                    
+                </div>    
                 </div>
                 <!-- <div class="col-8"> END -->
                 

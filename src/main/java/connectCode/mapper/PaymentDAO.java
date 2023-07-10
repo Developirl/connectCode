@@ -13,4 +13,6 @@ public interface PaymentDAO {
 
 	public int orderCancle(int payment_no);
 
+	public MentoringDTO getPaymentCancelInfo(int payment_no);
+
 }
