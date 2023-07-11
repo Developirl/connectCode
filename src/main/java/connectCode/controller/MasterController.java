@@ -192,27 +192,22 @@ public class MasterController {
 	public String mentorDetailApply(int mentor_no) {
 
 		MentorDTO mentor = ms.mentorDetail(mentor_no);
-		List<MentorDTO> career = ms.mentorCareer(mentor_no);
-		List<MentorDTO> education = ms.mentorEducation(mentor_no);
-		List<MentorDTO> license = ms.mentorLicense(mentor_no);
-
-		System.out.println("career:::::::::::::::::::::"+career);
-		System.out.println("education::::::::::::::::::"+education);
-		System.out.println("license::::::::::::::::::::::"+license);
-		
-		System.out.println(mentor);
+		List <String> file_no = ms.mentorfile_no(mentor_no);
 
 		String phone = mentor.getPhone();
-		/* System.out.println(phone); */
 
-//		ms.mentorDetailApply(phone); 
+		ms.mentorDetailApply(phone); 
 		ms.mentorlApplyUpdate(mentor);
 		ms.mentorApplyAlarm(mentor);
+
+		for(String file: file_no) {
+			ms.deleteFile(file);			
+		}
 		
 		int mentorNo = mentor.getMentor_no();
-//			ms.updateMentorEFile(mentorNo); 
-//			ms.updateMentorLFile(mentorNo); 
-//			ms.updateMentorCFile(mentorNo); 
+			ms.updateMentorEFile(mentorNo); 
+			ms.updateMentorLFile(mentorNo); 
+			ms.updateMentorCFile(mentorNo); 
 		
 		return "redirect:/master/masterMentorApplyList";
 	}
@@ -222,18 +217,22 @@ public class MasterController {
 	public String mentorDetailRefuse(int mentor_no) {
 
 		MentorDTO mentor = ms.mentorDetail(mentor_no);
-
+		List <String> file_no = ms.mentorfile_no(mentor_no);
+		
 		String phone = mentor.getPhone();
-//		System.out.println(phone);
 
-//		ms.mentorDetailRefuse(phone);
+		ms.mentorDetailRefuse(phone);
 		ms.mentorlRefuseUpdate(mentor);
 		ms.mentorApplyRefuse(mentor);
 		
+		for(String file: file_no) {
+			ms.deleteFile(file);			
+		}
+
 		int mentorNo = mentor.getMentor_no();
-		 	ms.updateMentorEFile(mentorNo); 
-		 	ms.updateMentorLFile(mentorNo); 
-		 	ms.updateMentorCFile(mentorNo);
+		 	 ms.updateMentorEFile(mentorNo); 
+		 	 ms.updateMentorLFile(mentorNo); 
+		 	 ms.updateMentorCFile(mentorNo);
 
 		return "redirect:/master/masterMentorApplyList";
 	}
