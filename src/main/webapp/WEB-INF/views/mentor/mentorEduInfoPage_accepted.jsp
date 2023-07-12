@@ -31,14 +31,14 @@
 						<div style="display: flex;">
 							<div class="mentor_info infoCtg">입학일자</div>
 							<div class="mentor_info infoInp">
-								<input type="text" class="datepicker-here entering_date${status.index} width100" id="entering_date" name="entering_date"
+								<input type="text" class="entering_date${status.index} width100" id="entering_date${status.index}" name="entering_date"
 						       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
 							</div>
 						</div>
 						<div style="display: flex;">
 							<div class="mentor_info infoCtg">졸업일자</div>
 							<div class="mentor_info infoInp">
-								<input type="text" class="datepicker-here graduation_date${status.index} width100" id="graduation_date" name="graduation_date"
+								<input type="text" class="graduation_date${status.index} width100" id="graduation_date${status.index}" name="graduation_date"
 						       			data-min-view="months" data-view="months" data-date-format="yyyy-mm" readonly="readonly">
 							</div>
 						</div>
@@ -83,6 +83,9 @@
 	
 				$(document).ready(function(){
 					
+					// 현재 날짜 [datepicker에 사용]
+					var currentDate = new Date();
+					
 					// 사용자 입력 값 가져와서 selected 옵션 걸기
 					$('.degree${status.index}').val('${edu_sel.degree}').prop("selected",true);
 				
@@ -93,6 +96,9 @@
 					$('#editCheck${status.index}').change(function() {
 						if ($(this).is(':checked')) {
 							$('#school${status.index}').removeAttr('readonly');
+							$('#entering_date${status.index}').addClass('datepicker-here');
+							$('#graduation_date${status.index}').addClass('datepicker-here');
+							$(".datepicker-here").datepicker({maxDate : currentDate}); 
 							$('#degree${status.index}').removeAttr('disabled');
 							$('#major${status.index}').removeAttr('readonly');
 							$('#minor${status.index}').removeAttr('readonly');
@@ -100,7 +106,16 @@
 									+ '<input type="file" name="files" onchange="selectFile(this);" accept=".jpg,.jpeg,.png,.docx,.pdf" required>'
 									+ '<button type="button" class="small_jh btn_jh del_btn" style="margin: 0px;" onclick="removeFile(this);"><span>파일삭제</span></button>'
 									+ '<button type="button" class="small_jh btn_jh add_btn" style="margin: 0px;" onclick="addFile();"><span>파일추가</span></button></div>');
-						} 
+						} else {
+							$('#school${status.index}').prop('readonly', true);
+							$(".datepicker-here").datepicker("destroy");
+							$('#entering_date${status.index}').removeClass('datepicker-here');
+							$('#graduation_date${status.index}').removeClass('datepicker-here');
+							$('#degree${status.index}').prop('disabled', true);
+							$('#major${status.index}').prop('readonly', true);
+							$('#minor${status.index}').prop('readonly', true);
+							$('#file_append').empty();
+						}
 					});
 				});
 				

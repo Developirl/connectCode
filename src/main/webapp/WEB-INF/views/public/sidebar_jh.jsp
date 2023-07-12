@@ -16,6 +16,7 @@
 
 <!-- air-datepicker -->
 <link href="/mentor/datepicker/air-datepicker/dist/css/datepicker.min.css" rel="stylesheet" type="text/css" media="all"><!-- Air datepicker css -->
+<script src="/mentor/datepicker/air-datepicker/dist/js/datepicker.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
