@@ -11,7 +11,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
 
-    * {
+    .container * {
       font-family: 'Noto Sans KR', sans-serif !important;
     }
 
@@ -46,8 +46,6 @@
 </head>
 <body>
   <%@include file="../public/header.jsp"%>
-  <br>
-  <span class="ys_freeupdateheader">Free Mentoring 글 작성</span>
   <br>
   <div class="container">
     <form action="/freeMentoring/freeMentoringUpdate.do" method="post">

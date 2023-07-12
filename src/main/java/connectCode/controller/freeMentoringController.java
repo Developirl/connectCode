@@ -52,11 +52,9 @@ public class freeMentoringController{
 //            
 //            MenteeDTO mentee = service.getMentee(member_no);
 
-            System.out.println("서치: "+free.getSearch());
             
             int total = service.getFreeBoardCount(free);
             
-            System.out.println("토탈 : " + total);
             
             // FindMentorPageMaker 객체 생성 및 초기화
             FindMentorPageMaker pageMaker = new FindMentorPageMaker(limit, currentPage, total, block);
@@ -78,8 +76,6 @@ public class freeMentoringController{
             int limitdata2 = startRow - endRow +1;
             
             
-            System.out.println("토탈 - 스타트로우 : "+limitdata);	//1
-            System.out.println("스타트 로우 - 엔드로우 +1 : "+ limitdata2); //2
 
             List<freeMentoringBoardDTO> list = service.getList(free, limitdata, limitdata2);
 
@@ -104,6 +100,7 @@ public class freeMentoringController{
     	}
     	
        freeMentoringBoardDTO dto = service.freeRead(free_no);
+       System.out.println("게시글 정보 : "+dto);
        
        service.updatefreeReadCount(free_no);
        
@@ -121,7 +118,6 @@ public class freeMentoringController{
        }
 
        
-       System.out.println("멤버노 디테일: " + mentor_no);
        
        
        int total = service.getFreeReplyCount(free_no);
@@ -185,7 +181,6 @@ public class freeMentoringController{
 
 		MenteeDTO mentee = service.getMentee(member.getMember_no());
 
-		System.out.println("멘티 노 " + mentee.getMentee_no());
 
 		model.addAttribute("mentee", mentee);
 
@@ -219,7 +214,6 @@ public class freeMentoringController{
 				page = "1";
 			}
 			freeMentoringBoardDTO dto = service.freeRead(free_no);
-			System.out.println("프리노 업데이트 폼 :"+dto.getFree_no());
 			model.addAttribute("DTO",dto );
 			
 			model.addAttribute("page", page);			
