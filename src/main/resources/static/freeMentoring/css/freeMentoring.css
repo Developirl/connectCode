@@ -1,0 +1,124 @@
+@import
+   url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+   
+@import url('https://fonts.googleapis.com/css2?family=Domine:wght@600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap'); 
+
+.ys_pagerow{
+margin-top: 150px;
+margin-bottom: 80px;
+}
+
+.ys_freeheader{
+/*font-family:'Noto Sans KR', sans-serif !important;*/
+font-family: 'Domine', serif!important;
+margin-top: 100px;
+font-size:20pt;
+}
+
+.ys_writebut{
+margin-right: 50px;
+}
+
+.ys_freetable #ys_freelisttr .ys_freetitle{
+text-decoration: none;
+}
+
+.ys_pagerow .ys_allpage a.pagelink .active{
+background-color: #808080!important;
+}
+.active{
+background-color: #808080!important;
+}
+
+
+.ys_freetable a{
+	color:black;
+}
+.ys_freetable a:hover{
+	color:black;
+}
+
+.ys_freetable{
+  margin-top:60px;
+  table-layout: fixed;
+  white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 요소 내부에서 넘치는 부분은 숨김 */
+}
+
+.ys_freetable th:hover{
+	background-color: none;
+}
+.freementoringList_title{
+  white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 요소 내부에서 넘치는 부분은 숨김 */
+  text-overflow: ellipsis;
+}
+
+.overflow {
+  white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 설정 */
+  overflow: hidden; /* 요소 내부에서 넘치는 부분은 숨김 */
+  text-overflow: ellipsis;
+  width:100%;
+}
+.ys_freetable{
+	width:100%;
+}
+
+.ys_freetable tr{
+	width:100%;
+}
+
+
+.form-control{
+	padding:3px 10px!important;
+}
+
+.freeMentoring_butt{
+	border:1px solid #004EA2;
+	padding:3px 10px;
+	color:#004EA2;
+	background:white;
+	font-weight: 500;
+	border-radius: 5px;
+}
+.freeMentoring_butt:hover{
+	background:#004EA2;
+	color:white;
+}
+/* 내가 사용하는 개인 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;500&display=swap');
+.jisoo-noto-font{
+    font-family: 'Noto Sans KR', sans-serif!important;
+    color:#808080!important;
+}
+
+.page-item:active {
+	background: #808080!important;
+    color:white!important;
+}
+
+.active>.page-link{
+	background:#808080!important;
+	border-color:#808080!important;
+	color:white!important;
+}
+.active>.page-link:hover{
+	font-weight: bold;
+}
+
+
+.jisoo-free-container{
+	text-align: center!important;
+	margin:0 auto!important;
+	align-content: center;
+	align-items: center;
+}
+
+
+.pagination{
+	width:15%;
+	text-align: center!important;
+	margin:0 auto!important;
+	align-content: center;
+	align-items: center;
+}
