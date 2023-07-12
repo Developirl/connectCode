@@ -195,6 +195,9 @@ public interface MasterDAO {
 	int updateMentorLFile(int mentorNo);
 	int updateMentorCFile(int mentorNo);
 
+	List<String> mentorfile_no(int mentor_no);
+	
+	int deleteFile(String file);
 	
 	//*****************************병걸 작성***************************************
 
@@ -208,6 +211,8 @@ public interface MasterDAO {
 	public int getMentees();
 	public int getUnreadyMentors();
 	public int getReadyMentors();
+
+
 
 
 

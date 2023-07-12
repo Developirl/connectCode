@@ -544,6 +544,17 @@ public class MasterServiceImpl implements MasterService {
 	public int updateMentorCFile(int mentorNo) {
 		return md.updateMentorCFile(mentorNo);
 	}
+	
+	@Override
+	public List<String> mentorfile_no(int mentor_no) {
+		return md.mentorfile_no(mentor_no);
+	}
+	
+	@Override
+	public int deleteFile(String file) {
+		return md.deleteFile(file);
+	}
+
 
 
 //*****************************병걸 작성***************************************
@@ -588,6 +599,9 @@ public class MasterServiceImpl implements MasterService {
 	public int getReadyMentors() {
 		return md.getReadyMentors();
 	}
+
+
+
 
 
 

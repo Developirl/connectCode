@@ -211,6 +211,10 @@ public interface MasterService {
 	int updateMentorLFile(int mentorNo);
 	int updateMentorCFile(int mentorNo);
 	
+	List<String> mentorfile_no(int mentor_no);
+	
+	int deleteFile(String file);
+
 	//*****************************병걸 작성***************************************
 
 	void insertVisitorInfo(VisitDTO visitor);
@@ -223,6 +227,10 @@ public interface MasterService {
 	int getMentees();
 	int getUnreadyMentors();
 	int getReadyMentors();
+
+
+
+
 
 
 

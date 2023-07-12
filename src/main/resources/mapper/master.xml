@@ -792,6 +792,11 @@
 		where year(quit_date)=year(current_date())
 	</select>
 	
+	<select id="mentorfile_no" resultType="String">
+		select file_no from education where mentor_no=#{mentor_no} union select file_no from license where mentor_no=#{mentor_no}
+		union select file_no from career where mentor_no=#{mentor_no}
+	</select>
+
 	<update id="updateMentorEFile">
 	 	update education set file_no=null where mentor_no=#{mentorNo}
 	</update>
@@ -803,6 +808,12 @@
 	<update id="updateMentorCFile">
 	 	update career set file_no=null where mentor_no=#{mentorNo}
 	</update>
+	
+	<delete id="deleteFile">
+		delete from file where file_no=#{file_no}
+	</delete>
+	
+
 
 
 	<!-- *****************************병걸 작성*************************************** -->
