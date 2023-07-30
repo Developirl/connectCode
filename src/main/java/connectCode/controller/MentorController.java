@@ -207,21 +207,13 @@ public class MentorController {
 	@PostMapping("mentorBasicInfo_Up")
 	public String mentorBasicInfo_Up(MentorDTO mentor, Model model) {
 
-		System.out.println("mentorBasicInfo_Up :: mentor_no :: "+mentor.getMentor_no());
-
 		// mentor 테이블 update 수행 [프사, 소개글, 상담불가요일, 상담가능시간]
 		ms.mentorTBL_update(mentor);
 
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
-		System.out.println(mentor.getFiles() == null);
-		System.out.println("Files size ::: "+mentor.getFiles().size());
-		System.out.println("mentor.getFile_no(): "+mentor.getFile_no());
-		System.out.println("mentor.getFiles(): "+mentor.getFiles());
-		
 		// file 테이블 insert [다중 파일 처리] 
 		List<FileDTO> files = fileUtils.uploadFiles(mentor.getFiles()); 
-		System.out.println(files);
 		  
 		fileService.saveFiles(mentor.getFile_no(), files);
 		
@@ -233,8 +225,6 @@ public class MentorController {
 	// 멘토 프로필 수정 [기본정보 입력 완료] 페이지
 	@GetMapping("mentorBasicInfoPage_View")
 	public String mentorBasicInfoPage_View(MentorDTO mentor, Model model) {
-		
-		System.out.println("mentorBasicInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
 		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
@@ -251,15 +241,11 @@ public class MentorController {
 	@GetMapping("mentorPersonInfoPage")
 	public String mentorPersonInfoPage(MentorDTO mentor, Model model) {
 
-		System.out.println("mentorPersonInfoPage :: mentor_no :: "+mentor.getMentor_no());
-		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
 		// email split
 		String email[] = mentor_select.getEmail().split("@");
-		
-		System.out.println("email:"+Arrays.toString(email));
 		
 		model.addAttribute("email", email);
 		model.addAttribute("msel", mentor_select);
@@ -271,11 +257,9 @@ public class MentorController {
 	@PostMapping("mentorPersonInfo_UP")
 	public String mentorPersonInfo_UP(MentorDTO mentor, Model model) {
 
-		System.out.println("mentorPersonInfo_UP :: mentor_no :: "+mentor.getMentor_no());
 
 		// update 수행
 		int result = ms.mentorTBL_update(mentor);
-		System.out.println("result:"+result);
 
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
@@ -299,8 +283,6 @@ public class MentorController {
 	@GetMapping("mentorPersonInfoPage_View")
 	public String mentorPersonInfoPage_View(MentorDTO mentor, Model model) {
 
-		System.out.println("mentorPersonInfoPage_View :: mentor_no :: "+mentor.getMentor_no());
-		
 		// mentor_no으로 mentor 테이블 전체 검색
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		
@@ -315,8 +297,6 @@ public class MentorController {
 	// 멘토 프로필 수정 [서비스요금 작성 전] 페이지
 	@GetMapping("mentorServiceCharPage")
 	public String mentorServiceCharPage(MentorDTO mentor, Model model) {
-		
-		System.out.println("mentorServiceCharPage :: mentor_no :: "+mentor.getMentor_no());
 		
 		// mentor_no으로 mentor 테이블 전체 검색 
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
@@ -346,7 +326,6 @@ public class MentorController {
 										@RequestParam("meet_mentoring_fee") String meet_mentoring_fee, 
 										MentorDTO mentor, Model model) {
 
-		System.out.println("mentorServiceChar_Up_first :: mentor_no :: "+mentor.getMentor_no());
 		
 		// 이용하지 않을 [상담 종류] 체크 안할 경우, [상담 요금]에 "0"을 넣음 => null 값 insert 못하므로오 ..왜?!
 		if(call_mentoring_fee.equals("")) {
@@ -379,7 +358,6 @@ public class MentorController {
 	@GetMapping("mentorServiceCharPage_View")
 	public String mentorServiceCharPage_View(MentorDTO mentor, Model model) {
 		
-		System.out.println("mentorServiceCharPage_View :: mentor_no :: "+mentor.getMentor_no());
 		
 		MentorDTO mentor_select = ms.mentorProfile(mentor);
 		List<MentorDTO> serviceTBL_select = ms.service_select(mentor);
