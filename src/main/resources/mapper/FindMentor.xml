@@ -39,27 +39,17 @@
 
 
 	<!-- 멘토 리스트를 가져온다. -->
-	<select id="getMentorList"
-		parameterType="connectCode.model.FindMentorDTO"
+	<select id="getMentorList" parameterType="connectCode.model.FindMentorDTO"
 		resultType="connectCode.model.FindMentorDTO">
-
-		SELECT *
-		FROM (
-		SELECT subquery.*, f.file_url, f.physical_name
-		FROM (
-		SELECT DISTINCT m.*,
-		c.years,
-		c.company, c.task, c.entering_date
-		FROM mentor m
-		JOIN career c
-		USING (mentor_no)
+		SELECT * FROM (
+		SELECT subquery.*, f.file_url, f.physical_name FROM (
+		SELECT DISTINCT m.*, c.years, c.company, c.task, c.entering_date 
+		FROM mentor m JOIN career c USING (mentor_no)
 		<where>
-		m.classification = 23 
-		
+			m.classification = 23 
 			<if test="gender != null and gender != ''">
 				AND gender = #{gender}
 			</if>
-
 			<if test="technology != null and technology != ''">
 				AND (
 				<foreach item="keyword" collection="technology.split(';')"
@@ -68,8 +58,6 @@
 				</foreach>
 				)
 			</if>
-
-
 			<if test="mentoring_location != null and mentoring_location != ''">
 				AND TRIM(SUBSTRING_INDEX(mentoring_location, ' ', 1)) =
 				#{mentoring_location}
@@ -83,18 +71,10 @@
 		JOIN
 		(SELECT mentor_no, MAX(entering_date) maxda FROM
 		career GROUP BY mentor_no)
-		AS max_dates
-
-		ON
-
-		subquery.mentor_no =
-		max_dates.mentor_no
+		AS max_dates ON subquery.mentor_no = max_dates.mentor_no
 		AND subquery.entering_date = max_dates.maxda
-		LEFT
-		JOIN file f ON subquery.profile_img_no = f.file_no
-		ORDER BY
-		subquery.mentor_no DESC
-		) AS orderedData
+		LEFT JOIN 
+		file f ON subquery.profile_img_no = f.file_no ORDER BY subquery.mentor_no DESC ) AS orderedData
 
 	</select>
 <!-- 	<select id="getMentorList"      이건 페이징 처리하는 경우 코드
@@ -210,9 +190,13 @@
 	
 	<!--  멘토 디테일 페이지에서 멘토 프로필 정보 가져오는 쿼리문 -->
 	<select id="getMentorProfile" parameterType="int" resultType="connectCode.model.FindMentorDTO">
-		select a.mentor_no,f.file_url,f.physical_name,a.name,a.company,a.task,a.intro,a.mentoring_location from 
-		( select * from mentor join career using(mentor_no) where mentor_no = #{mentor_no} 
-		order by entering_date desc limit 1) a left join file f ON a.profile_img_no = f.file_no
+	    SELECT a.mentor_no,f.file_url,f.physical_name,a.name,a.company,a.task,a.intro,a.mentoring_location  
+		FROM 
+			( SELECT * FROM mentor JOIN career USING(mentor_no) WHERE mentor_no = #{mentor_no} 
+		ORDER BY 
+			entering_date DESC LIMIT 1) a 
+		LEFT JOIN 
+			file f ON a.profile_img_no = f.file_no
 	</select>
 	
 	<!--  멘토 경력사항 리스트  -->

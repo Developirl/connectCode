@@ -399,10 +399,12 @@ $(document).ready(function(){
 	// 북마크 Ajax 처리하기!
 	$(".mybookmark").click(function(event){
 		
-		event.stopPropagation();
+		//프로필 카드 클릭시 상세페이지로 이동하는 event 막음
+		event.stopPropagation(); 
 		
 		// 해당 북마크 유무 가져옴
 		var clickchecked = $(this).data('value');
+		
 		//DB에 update할 값 설정
 		if(clickchecked==0){
 			clickchecked = 1;
@@ -410,7 +412,7 @@ $(document).ready(function(){
 			clickchecked = 0;
 		}
 		
-		//mentor_no을 가져온다
+		//mentor_no을 가져온다 ( 멘토 식별자  )
 		var mentor_no = $(this).parent().data('value');
 		
 		$.ajax({
@@ -426,8 +428,6 @@ $(document).ready(function(){
 	          }, 
 			  success: function(bookmark) {
 				  
-			
-				  
 				    // 즐겨찾기 취소한 경우
 				  if(parseInt(bookmark) === 0){
 					  $("#bookmark_"+mentor_no+" i").show();
@@ -437,19 +437,12 @@ $(document).ready(function(){
 				  }else if(parseInt(bookmark) === 1){
 					  $("#bookmark_"+mentor_no+" i").hide();
 					  $("#bookmarkfill_"+mentor_no+" i").show();
-					  
-					  
 				  }
-				  
-				  
-				
-				  
 			  },
 			  error: function(xhr, status, error) {
 			    console.log(error); 
 			  }
 			});
-		
 	});
 	
 	

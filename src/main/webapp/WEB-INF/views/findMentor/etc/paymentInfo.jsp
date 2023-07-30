@@ -87,7 +87,7 @@
 						<img src="/findMentor/img/payment_icon_yellow_small.png" class="js_payment_img_kakao">
 					</td>
 					
-					<td width="20%">
+					<td width="25%">
 					    <label for="kakao_radio"><span class="js-mentorinfo-gray">카카오 결제</span></label>
 					</td>
 					<td>
@@ -98,11 +98,22 @@
 					<td width="15%">
 					<img src="/findMentor/img/card.png" class="js_payment_img">
 					</td>
-					<td width="20%">			
+					<td width="25%">			
 		 			<label for="danal_radio"><span class="js-mentorinfo-gray">카드 결제</span></label>
 					</td>
 					<td>			
 		 			<input type="radio" name="pgName" id="danal_radio" class="payment_method" value="danal_tpay">
+					</td>
+				</tr>
+				<tr>
+					<td width="15%">
+					<img src="/findMentor/img/card.png" class="js_payment_img">
+					</td>
+					<td width="25%">			
+		 			<label for="danal_radio"><span class="js-mentorinfo-gray">HNH KCP 결제</span></label>
+					</td>
+					<td>			
+		 			<input type="radio" name="pgName" id="danal_radio" class="payment_method" value="kcp.A52CY">
 					</td>
 				</tr>
 			</table>
