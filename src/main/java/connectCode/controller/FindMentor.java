@@ -196,7 +196,7 @@ public class FindMentor {
 		List<FindMentorInfoDTO> review = service.getReviewList(mentor_no);
 		
 		// 별점 구하기
-		int avgRating = service.getReivewAVG(review);
+		Double avgRating = service.getReivewAVG(review);
 		
 		model.addAttribute("mentorInfo",dto);// 멘토 카드 정보
 		model.addAttribute("key",kakaokey1);

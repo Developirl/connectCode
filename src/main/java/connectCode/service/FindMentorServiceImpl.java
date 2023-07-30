@@ -128,7 +128,7 @@ public class FindMentorServiceImpl implements FindMentorService {
 	
 	// 별점 구하기
 	@Override
-	public int getReivewAVG(List<FindMentorInfoDTO> review) {
+	public Double getReivewAVG(List<FindMentorInfoDTO> review) {
 		List<FindMentorInfoDTO> list = review;
 		
 		double tmp = 0;
@@ -138,7 +138,7 @@ public class FindMentorServiceImpl implements FindMentorService {
 		tmp /= list.size();
 		
 		
-		return (int)Math.round(tmp);
+		return Math.round(tmp * 2) / 2.0;
 	}
 	
 	
@@ -267,7 +267,7 @@ public class FindMentorServiceImpl implements FindMentorService {
 		
 		// 4 params(to, from, type, text) are mandatory. must be filled
 		HashMap<String, String> params = new HashMap<String, String>();
-		params.put("to", "01065054737"); // 수신전화번호
+		params.put("to", phone); // 수신전화번호
 		params.put("from", myphone); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 		params.put("type", "SMS");
 		params.put("text", msg); // 문자 내용 입력
@@ -282,7 +282,7 @@ public class FindMentorServiceImpl implements FindMentorService {
 		}
 		
 		HashMap<String, String> params2 = new HashMap<String, String>();
-		params2.put("to", "01065054737"); // 수신전화번호
+		params2.put("to", phone); // 수신전화번호
 		params2.put("from", myphone); // 발신전화번호. 테스트시에는 발신,수신 둘다 본인 번호로 하면 됨
 		params2.put("type", "SMS");
 		params2.put("text", msg2); // 문자 내용 입력
