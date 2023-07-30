@@ -961,6 +961,8 @@ function requestPay() {
 	// 시큐리티용 변수 
 	var csrf = "${_csrf.headerName}";
 	var csrfToken = "${_csrf.token}";
+	
+	// 결제 완료시 멘토링 테이블에 저장할 파일 복합키 값
 	var file_no = '';
 	
 	
@@ -999,7 +1001,6 @@ function requestPay() {
 	var amount = $('input[type="radio"][name="mentoring_kind"]:checked').data('pay');
 	
 	closePaymentModal()// 기존 모달 닫기
-  //      pg: 'kakaopay',danal_tpay
 	
     // IMP.request_pay(param, callback) 결제창 호출
     var uid = '';
@@ -1016,9 +1017,6 @@ function requestPay() {
     }, function (rsp) { // callback
         if (rsp.success) { // 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
             uid = rsp.imp_uid;
-            console.log('1번 '+JSON.stringify(rsp));
-            console.log('2번 '+rsp);
-    
     
             // 결제검증
             $.ajax({
@@ -1031,14 +1029,7 @@ function requestPay() {
                 // 결제를 요청했던 금액과 실제 결제된 금액이 같으면 해당 주문건의 결제가 정상적으로 완료된 것으로 간주한다.
                 if (amount == data.response.amount) {
                 	console.log("결제한거 저장까지 함");
-                	
-       /*         	var git_yn = $('input[type="radio"][class="js-gitview"]:checked').val();
-                	var blog_yn = $('input[type="radio"][class="js-blogview"]:checked').val();
-                	alert("git_yn = "+git_yn);
-                	alert("git_yn null인가? "+git_yn==null);
-                	alert("blog_yn = "+blog_yn==null);
-       */         	
-       
+
        			var gityn = $('input[type="radio"][class="js-gitview"]:checked').val();
        			var blogyn = $('input[type="radio"][class="js-blogview"]:checked').val();
        			
@@ -1048,11 +1039,7 @@ function requestPay() {
        				if(blogyn != 'N' && blogyn != 'Y'){
        					blogyn = null;
        				}	
-       
                 	
-                    // jQuery로 HTTP 요청
-                    // 주문정보 생성 및 테이블에 저장 
-		        	
                         // 데이터를 json으로 보내기 위해 바꿔준다.
                         requestData = JSON.stringify({
                         	"payment_method" : rsp.pay_method, 
@@ -1114,8 +1101,6 @@ function requestPay() {
             } else {
                 alert("결제가 취소되었습니다.");
             }
-    
-    
         }); // 내부 function 끝
 }
 

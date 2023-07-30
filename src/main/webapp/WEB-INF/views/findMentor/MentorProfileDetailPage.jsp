@@ -299,7 +299,9 @@ i{
 	cursor: pointer;
 }
 </style>
+
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 
 

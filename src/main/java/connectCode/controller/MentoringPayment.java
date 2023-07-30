@@ -83,46 +83,33 @@ public class MentoringPayment {
 	@RequestMapping(value = "/order/complete", method = RequestMethod.POST)
 	public int paymentComplete(@RequestBody MentoringDTO mentoringDTO) throws Exception {
 
-		System.out.println("dto 를 꺼내볼까용?");
-		System.out.println(mentoringDTO);
-		
-		 System.out.println("imp_uid:"+mentoringDTO.getIamport_order_no());
-		 System.out.println("merchant_uid:"+mentoringDTO.getOrder_no());
-		 System.out.println("orderDTO 객체 출력:"+mentoringDTO);
-		 
-		 System.out.println();
-		
 		 Timestamp time = fmservice.getReserveDate(mentoringDTO.getReserve_day(), mentoringDTO.getReserve_time());
 		 
 		 mentoringDTO.setReserve_date(time);
 		 
-		 // 여기서 mentoring table 값 셋팅해준다. 
-		 
-
+		 // service 클래스에서 iamport 의 key값을 주고 토큰을 구해온다. 
 		 String token = payService.getToken();
 		    
-		    // 결제 완료된 금액
-		    String amount = payService.paymentInfo(mentoringDTO.getIamport_order_no(), token);
+		 // service 클래스에서 결제 완료 후 가격을 구해온다. 
+		 String amount = payService.paymentInfo(mentoringDTO.getIamport_order_no(), token);
 		    
-		    int res = 1;
-		    
-		    
-		    // 결제 금액 오류시 해당 메소드를 빠져나간다. 
-		    if (mentoringDTO.getPay_amount() != Long.parseLong(amount)) {
-				res = 0;
-				// 결제 취소
-				payService.payMentCancle(token, mentoringDTO.getIamport_order_no(), amount,"결제 금액 오류");
-				return res;
-			}
+		 int res = 1;
 		    
 		    
-			payService.insertMentoringAndPayment(mentoringDTO);
-			System.out.println("insertMentoringAndPayment 매소드 사용시: "+mentoringDTO);
+		 // 결제 금액 오류시 해당 메소드를 빠져나간다. 
+		 if (mentoringDTO.getPay_amount() != Long.parseLong(amount)) {
+			 res = 0;
+			// 결제 취소
+			payService.payMentCancle(token, mentoringDTO.getIamport_order_no(), amount,"결제 금액 오류");
+			return res;
+		}
 		    
-			findMentor.sendMentoringApplyalarm(mentoringDTO);
+		    
+		payService.insertMentoringAndPayment(mentoringDTO);
+		findMentor.sendMentoringApplyalarm(mentoringDTO);
 			
 		    
-		    return mentoringDTO.getPayment_no();
+		return mentoringDTO.getPayment_no();
 
 	}
 	

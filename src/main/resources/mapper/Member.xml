@@ -66,7 +66,7 @@
   
   <!-- 일반회원 insert 멘티 -->
   <insert id="insertNormalMentee">
-  INSERT INTO MENTEE (name, phone, gender, birthday, email, mentoring_location,
+  INSERT INTO mentee (name, phone, gender, birthday, email, mentoring_location,
 	  desired_job, technology_stack, git, blog, bank, account, account_name, member_no)
 	  VALUES(#{param1.name}, #{param1.phone}, #{param1.gender},
 	   #{param1.birthday}, #{param1.email},#{param1.mentoring_location},#{param1.desired_job},
@@ -102,7 +102,7 @@
   
   <!-- 멘토 테이블 insert -->
    <insert id="insertNormalMentor">
-  INSERT INTO MENTOR (name, phone, gender, birthday, email, intro, account, bank, account_name,
+  INSERT INTO mentor (name, phone, gender, birthday, email, intro, account, bank, account_name,
   profile_img_no, technology, mentoring_location, unable_date, mentoring_time, classification,
   member_no)	 
   VALUES(#{param1.name}, #{param1.phone}, #{param1.gender}, #{param1.birthday}, #{param1.email},
