@@ -146,10 +146,16 @@
 	
 	<!--  멘토의 리뷰 가져오기  -->
 	<select id="getReviewList" parameterType="int" resultType="FindMentorInfoDTO">
-		SELECT a.*,m.name,s.* FROM 
-		( SELECT * FROM review JOIN mentoring USING(mentoring_no) WHERE classification=35 ) a 
-			JOIN mentee m USING(mentee_no)  
-				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no}   
+		SELECT a.*,m.name,s.* 
+		FROM ( 
+			SELECT * 
+			FROM review JOIN mentoring 
+				USING(mentoring_no) WHERE classification=35 
+			) a 
+		JOIN mentee m 
+			USING(mentee_no)  
+		JOIN service s 
+			USING(service_no) WHERE s.mentor_no = #{mentor_no}   
 	</select>
 	
 	<!-- 멘토의 nuable_date와 mentoring_time을 가져온다.  -->

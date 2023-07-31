@@ -166,7 +166,6 @@ public class FindMentor {
 		
 		// 멘토 카드 
 		FindMentorDTO dto = service.getMentorProfile(mentor_no);
-		System.out.println(dto);
 		
 		 int member_no = 0;
 	        
@@ -177,8 +176,7 @@ public class FindMentor {
 	        
 	    int bookmark = service.getCheckedBookmark(member_no,mentor_no);    
 		
-		dto.setCheckedBookmark(bookmark); // 여기 에러 났었는데? NullPointer
-		System.out.println("bookmark 값 :"+bookmark);
+		dto.setCheckedBookmark(bookmark); 
 		
 		// 멘토 경력 사항
 		List<FindMentorInfoDTO> careerlist = service.getCareerList(mentor_no);
@@ -208,7 +206,6 @@ public class FindMentor {
 		model.addAttribute("reviewcount",review.size());
 		model.addAttribute("avg",avgRating);
 		
-		System.out.println(dto.getMentoring_location());
 		
 		return "findMentor/MentorProfileDetailPage";
 	}

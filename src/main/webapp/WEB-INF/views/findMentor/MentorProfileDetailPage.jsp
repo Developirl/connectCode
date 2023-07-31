@@ -776,27 +776,10 @@ function goApplyMentoringPage(kind){
 		      			<div class="js-MentorProfile-L" id="js-review">멘토링 후기</div>
 		      			<br>
 		      			
-		      			
-		      			<%-- <c:set var="avg" value="${avg}" />
-						평균 별점
-						<c:forEach begin="1" end="5" var="i">
-							<c:choose>
-								<c:when test="${i <= avg}">
-									<i class="bi bi-star-fill" style="color:#F2B661;font-size:14pt;"></i>
-									<!-- 별 아이콘에 filled 클래스 적용 -->
-								</c:when>
-								<c:otherwise>
-									<i class="bi bi-star" style="color:#F2B661;font-size:14pt;"></i>
-									<!-- 별 아이콘에 empty 클래스 적용 -->
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>  --%>
-						
 						<c:set var="avg" value="${avg}" />
 						평균 별점 
 						<c:forEach begin="1" end="5" var="i">
 						    <c:set var="roundedAvg" value="${(avg - (i-1)) > 0.5 ? 1 : (((avg - (i-1)) == 0.5 ) ? 0.5 : 0)}" />
-						    <!-- 평균 값을 0.5 단위로 반올림하여 roundedAvg 변수에 저장 -->
 						    
 						    <c:choose>
 						        <c:when test="${roundedAvg == 1}">
