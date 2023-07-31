@@ -24,7 +24,8 @@ import connectCode.model.FileDTO;
 @Component
 public class FileUtils {
 
-	private String uploadPath = Paths.get("C:","connectCode","upload-files").toString();
+	//private String uploadPath = Paths.get("C:","connectCode","upload-files").toString();
+	private String uploadPath = "/home/ec2-user/apps/connectCode/upload-files";
 	
 	/* 다중 파일 업로드 */
 	public List<FileDTO> uploadFiles(List<MultipartFile> multipartFiles) {

@@ -6,6 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
+apply plugin: 'war'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -33,7 +34,6 @@ dependencies {
 	implementation 'javax.servlet:jstl:1.2'
 	implementation 'net.nurigo:javaSDK:2.2'
 	implementation 'com.google.code.gson:gson:2.8.2'
-	implementation 'org.springframework.boot:spring-boot-starter-session'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
