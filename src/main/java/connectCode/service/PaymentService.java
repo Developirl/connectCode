@@ -14,6 +14,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -29,11 +30,16 @@ public class PaymentService {
 	
 	@Autowired
 	private PaymentDAO dao;
+	
+	
+	@Value("${iamport_key}")
+	private String apiKey;
+
+	@Value("${iamport_secret}")
+	private String apiSecret;
 
 	
-	private String impKey="2186618541054470";
-
-	private String impSecret="x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF";
+	
 
 	public String getToken() throws Exception {
 
@@ -48,8 +54,8 @@ public class PaymentService {
 		conn.setDoOutput(true);
 		JsonObject json = new JsonObject();
 
-		json.addProperty("imp_key", impKey);
-		json.addProperty("imp_secret", impSecret);
+		json.addProperty("imp_key", apiKey);
+		json.addProperty("imp_secret", apiSecret);
 		
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 		
