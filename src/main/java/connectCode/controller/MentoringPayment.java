@@ -21,7 +21,6 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
 import connectCode.model.MentoringDTO;
-import connectCode.model.PaymentDTO;
 import connectCode.service.FindMentorService;
 import connectCode.service.PaymentService;
 
@@ -29,15 +28,13 @@ import connectCode.service.PaymentService;
 @RequestMapping("/payment/*")
 public class MentoringPayment {
 
-	@Value("${iamport_rest_api_key}")
-	private String imaport_key;
+	@Value("${iamport_key}")
+	private String apiKey;
 
-	@Value("${iamport_api_secret}")
-	private String iamport_secret;
+	@Value("${iamport_secret}")
+	private String apiSecret;
 
-	private IamportClient client = new IamportClient("2186618541054470",
-			"x4P1ndP7RQsdC0kG26uycOp0efeF0WeIVKUyfzJlLzBPUqDJna7g68KqJAeIMK6hxk9bRxC3rpjlHLuF");
-
+	
 	@Autowired
 	private PaymentService payService;
 	
@@ -47,35 +44,19 @@ public class MentoringPayment {
 	@Autowired
 	private FindMentorService fmservice;
 
-	
-	
-	/*
-	// 결제하는 창으로 이동한다.
-	@GetMapping("kakaopay")
-	public String KakaopayForm() {
-		return "findMentor/kakaopay2";
-	}
-	*/
+
 
 	// 결제 검증
 	@ResponseBody
 	@PostMapping(value = "/order/verify_iamport/{imp_uid}")
 	public IamportResponse<Payment> verifyIamportPost(@PathVariable(value = "imp_uid") String imp_uid)
 			throws IamportResponseException, IOException {
-		System.out.println("verify_iamport 까지 도달");
-
-		System.out.println("key:" + imaport_key);
-		System.out.println("secret:" + iamport_secret);
-
+		
+		IamportClient client = new IamportClient(apiKey,apiSecret);
+		
 		return client.paymentByImpUid(imp_uid);
 	}
 
-	// 결제 정보 DB에 저장하기 위해 값을 받는다.
-	/*
-	 * @PostMapping("/order/complete") public void paymentComplete(String
-	 * imp_uid,String orderDate) { System.out.println("imp_uid : "+imp_uid);
-	 * System.out.println("orderDate : "+orderDate); }
-	 */
 
 	// 진짜 결제
 	// @RequestMapping(value ="order/complete", consumes = "application/json")
