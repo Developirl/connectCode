@@ -41,124 +41,49 @@
 	<!-- 멘토 리스트를 가져온다. -->
 	<select id="getMentorList" parameterType="connectCode.model.FindMentorDTO"
 		resultType="connectCode.model.FindMentorDTO">
-		SELECT * FROM (
-		SELECT subquery.*, f.file_url, f.physical_name FROM (
-		SELECT DISTINCT m.*, c.years, c.company, c.task, c.entering_date 
-		FROM mentor m JOIN career c USING (mentor_no)
-		<where>
-			m.classification = 23 
-			<if test="gender != null and gender != ''">
-				AND gender = #{gender}
-			</if>
-			<if test="technology != null and technology != ''">
-				AND (
-				<foreach item="keyword" collection="technology.split(';')"
-					separator=" OR ">
-					technology LIKE CONCAT('%', #{keyword}, '%')
-				</foreach>
-				)
-			</if>
-			<if test="mentoring_location != null and mentoring_location != ''">
-				AND TRIM(SUBSTRING_INDEX(mentoring_location, ' ', 1)) =
-				#{mentoring_location}
-			</if>
-
-			<if test="years != 0">
-				AND years >= #{years}
-			</if>
-		</where>
-		) AS subquery
-		JOIN
-		(SELECT mentor_no, MAX(entering_date) maxda FROM
-		career GROUP BY mentor_no)
-		AS max_dates ON subquery.mentor_no = max_dates.mentor_no
-		AND subquery.entering_date = max_dates.maxda
-		LEFT JOIN 
-		file f ON subquery.profile_img_no = f.file_no ORDER BY subquery.mentor_no DESC ) AS orderedData
-
-	</select>
-<!-- 	<select id="getMentorList"      이건 페이징 처리하는 경우 코드
-		parameterType="connectCode.model.FindMentorDTO"
-		resultType="connectCode.model.FindMentorDTO">
-
-		SELECT *
+		SELECT mentorList.* 
 		FROM (
-		SELECT subquery.*, f.file_url
-		FROM (
-		SELECT DISTINCT m.*,
-		c.years,
-		c.company, c.task, c.entering_date
-		FROM mentor m
-		JOIN career c
-		USING (mentor_no)
-		<where>
-			<if test="gender != null and gender != ''">
-				AND gender = #{gender}
-			</if>
-
-			<if test="technology != null and technology != ''"> <trim prefix="AND" 
-				prefixOverrides="OR"> <foreach item="keyword" collection="technology.split(',')" 
-				separator=" OR "> FIND_IN_SET(#{keyword}, REPLACE(technology, ' ', '')) > 
-				0 OR </foreach> </trim> </if>
-			<if test="technology != null and technology != ''">
-				AND (
-				<foreach item="keyword" collection="technology.split(';')"
-					separator=" OR ">
-					technology LIKE CONCAT('%', #{keyword}, '%')
-				</foreach>
-				)
-			</if>
-
-
-			<if test="mentoring_location != null and mentoring_location != ''">
-				AND TRIM(SUBSTRING_INDEX(mentoring_location, ' ', 1)) =
-				#{mentoring_location}
-			</if>
-
-			<if test="years != 0">
-				AND years >= #{years}
-			</if>
-		</where>
-		) AS subquery
-		JOIN
-		(SELECT mentor_no, MAX(entering_date) maxda FROM
-		career GROUP BY mentor_no)
-		AS max_dates
-
-		ON
-
-		subquery.mentor_no =
-		max_dates.mentor_no
-		AND subquery.entering_date = max_dates.maxda
-		LEFT
-		JOIN file f ON subquery.profile_img_no = f.file_no
-		ORDER BY
-		subquery.mentor_no DESC
-		LIMIT #{startRow},
-		#{endRow}
-		) AS orderedData
-
+			SELECT filter.*, f.file_url, f.physical_name 
+			FROM (
+				SELECT DISTINCT m.*, c.years, c.company, c.task, c.entering_date 
+				FROM mentor m JOIN career c USING (mentor_no)
+						<where>
+							m.classification = 23 
+								<if test="gender != null and gender != ''">
+									AND gender = #{gender}
+								</if>
+								<if test="technology != null and technology != ''">
+									AND (
+									<foreach item="keyword" collection="technology.split(';')"
+										separator=" OR ">
+										technology LIKE CONCAT('%', #{keyword}, '%')
+									</foreach>
+									)
+								</if>
+								<if test="mentoring_location != null and mentoring_location != ''">
+									AND TRIM(SUBSTRING_INDEX(mentoring_location, ' ', 1)) =
+									#{mentoring_location}
+								</if>
+					
+								<if test="years != 0">
+									AND years >= #{years}
+								</if>
+						</where>
+				) AS filter 
+				
+				JOIN (
+					SELECT mentor_no, MAX(entering_date) maxdate 
+					FROM career 
+					GROUP BY mentor_no
+				) AS max_dates 
+						ON filter.mentor_no = max_dates.mentor_no AND filter.entering_date = max_dates.maxdate 
+				
+				LEFT JOIN file f 
+					ON filter.profile_img_no = f.file_no 
+					ORDER BY filter.mentor_no DESC 
+			) as mentorList
 	</select>
- -->
 
-
-
-
-
-
-	<!-- 멘토의 reivew 수를 구한다. -->
-	<!-- 
-	<select id="getReviewcount" parameterType="int" resultType="int">
-		select count(*) as reviewcount from mentor
-		join
-		(select * from service
-		join
-		(select * from mentoring join review using (mentoring_no)
-		)a using
-		(service_no)
-		)b using (mentor_no) where mentor_no=#{mentor_no};
-	</select>
-	 -->
 	
 	<!-- 멘토의 리뷰 수를 구한다. : 위 주석의 경우는 classification 설정을 안한 경우 -->
 	<select id="getReviewcount" parameterType="int" resultType="int">
@@ -221,10 +146,16 @@
 	
 	<!--  멘토의 리뷰 가져오기  -->
 	<select id="getReviewList" parameterType="int" resultType="FindMentorInfoDTO">
-		SELECT a.*,m.name,s.* FROM 
-		( SELECT * FROM review JOIN mentoring USING(mentoring_no) WHERE classification=35 ) a 
-			JOIN mentee m USING(mentee_no)  
-				JOIN service s USING(service_no) WHERE s.mentor_no = #{mentor_no}   
+		SELECT a.*,m.name,s.* 
+		FROM ( 
+			SELECT * 
+			FROM review JOIN mentoring 
+				USING(mentoring_no) WHERE classification=35 
+			) a 
+		JOIN mentee m 
+			USING(mentee_no)  
+		JOIN service s 
+			USING(service_no) WHERE s.mentor_no = #{mentor_no}   
 	</select>
 	
 	<!-- 멘토의 nuable_date와 mentoring_time을 가져온다.  -->

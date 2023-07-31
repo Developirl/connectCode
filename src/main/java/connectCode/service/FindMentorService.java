@@ -28,7 +28,7 @@ public interface FindMentorService {
 
 	List<FindMentorInfoDTO> getReviewList(int mentor_no);
 
-	int getReivewAVG(List<FindMentorInfoDTO> review);
+	Double getReivewAVG(List<FindMentorInfoDTO> review);
 
 	List<String> getDayList();
 
