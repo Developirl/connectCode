@@ -73,8 +73,7 @@ connectCode의 취지는 개발자로서의 꿈을 이루기 위해 노력하고
 <h2>4. ERD 및 작업흐름도</h2>
 <div id="Erd">
 <h3> 📌 ERD 구조</h3>
-<img src="https://i.imgur.com/7YzFkbl.png" >
-![erd](https://github.com/Developirl/connectCode/assets/130443015/3b0b430a-0a77-4e8c-9954-ffe77ebb4a87)
+<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/130443015/257717965-3b0b430a-0a77-4e8c-9954-ffe77ebb4a87.jpg" >
 <h3> 📌 작업흐름도</h3>
 <img src="https://i.imgur.com/DUqsdAP.jpg">  
 </div>
